@@ -22,23 +22,19 @@
 如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以直接下载最新版本基础包。并从零开始创建你的新项目
 
 1. [下载最新基础包]()
-2. 修改行为包配置
+2. 修改行为包配置(manifest.json)
 
 ```json
 {
-    // manifest.json
     "header": {
-        "description": "SAPI-Pro示例行为包", //改描述
-        "name": "SAPI-Pro示例行为包", //改名字
-        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a", //该uuid
+        "description": "SAPI-Pro示例行为包(请修改描述)",
+        "name": "SAPI-Pro示例行为包(请修改名字)",
+        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a(改uuid)",
         "version": [1, 0, 0]
-        //...
     },
     "modules": [
         {
-            //...
-            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80" //改uuid
-            //...
+            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80(改uuid)"
         }
     ]
 }
