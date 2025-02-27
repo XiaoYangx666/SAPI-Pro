@@ -25,21 +25,23 @@
 2. 修改行为包配置
 
 ```json
-// manifest.json
-"header": {
-        "description": "SAPI-Pro示例行为包",//改描述
-        "name": "SAPI-Pro示例行为包",//改名字
+{
+    // manifest.json
+    "header": {
+        "description": "SAPI-Pro示例行为包", //改描述
+        "name": "SAPI-Pro示例行为包", //改名字
         "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a", //该uuid
-        "version": [1, 0, 0],
+        "version": [1, 0, 0]
         //...
-},
-"modules": [
+    },
+    "modules": [
         {
             //...
-            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80", //改uuid
+            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80" //改uuid
             //...
         }
-    ],
+    ]
+}
 ```
 
 3. 修改库配置
@@ -197,14 +199,14 @@ world.sendMessage(info.author);
 
 ## 参考文档
 
-[SAPI-Pro 参考文档]()
+[SAPI-Pro 参考文档](docs/globals.md)
 
 ## 支持与贡献
 
 欢迎各位大佬莅临修改
 
 问题反馈：<2408807389@qq.com>  
- GitHub 仓库：[github.com/SAPI-Pro]()
+GitHub 仓库：[https://github.com/XiaoYangx666/SAPI-Pro](https://github.com/XiaoYangx666/SAPI-Pro)
 Gitee 仓库 : [gitee.com/ykxyx666_admin/SAPI-Pro](gitee.com/ykxyx666_admin/SAPI-Pro)
 
 > 🛠️ 推荐开发环境：
