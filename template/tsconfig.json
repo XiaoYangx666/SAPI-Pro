@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "moduleResolution": "node",
+        "module": "ES2020",
+        "declaration": false,
+        "noLib": false,
+        "sourceMap": false,
+        "pretty": true,
+        "forceConsistentCasingInFileNames": true,
+        "preserveConstEnums": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "outDir": "scripts",
+        "rootDir": "src",
+        "allowJs": true,
+        "baseUrl": "./src"
+    },
+    "include": ["./src"],
+    "compileOnSave": false
+}

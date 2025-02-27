@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "@minecraft/server": "^1.18.0-beta.1.21.61-stable",
+        "@minecraft/server-ui": "^1.4.0-beta.1.21.61-stable"
+    },
+    "devDependencies": {
+        "typedoc": "^0.27.9",
+        "typedoc-plugin-markdown": "^4.4.2",
+        "typescript": "^5.7.3"
+    },
+    "scripts": {
+        "build": "tsc && python3 build.py"
+    }
+}
