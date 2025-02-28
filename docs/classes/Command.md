@@ -6,7 +6,7 @@
 
 # Class: Command
 
-Defined in: Command/main.ts:66
+Defined in: [Command/main.ts:66](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L66)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: Command/main.ts:66
 
 > **new Command**(`name`, `explain`, `isAdmin`, `handler`?, `validator`?, `isHidden`?, `isClient`?): [`Command`](Command.md)
 
-Defined in: Command/main.ts:86
+Defined in: [Command/main.ts:86](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L86)
 
 构造新命令(复杂的推荐用Command.fromObject)
 
@@ -72,7 +72,7 @@ Defined in: Command/main.ts:86
 
 > **explain**: `string`
 
-Defined in: Command/main.ts:68
+Defined in: [Command/main.ts:68](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L68)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: Command/main.ts:68
 
 > `optional` **handler**: [`commandHandler`](../type-aliases/commandHandler.md)\<[`ParsedParam`](../interfaces/ParsedParam.md)\>
 
-Defined in: Command/main.ts:71
+Defined in: [Command/main.ts:71](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L71)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: Command/main.ts:71
 
 > **isAdmin**: `boolean`
 
-Defined in: Command/main.ts:69
+Defined in: [Command/main.ts:69](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L69)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: Command/main.ts:69
 
 > `optional` **isClientCommand**: `boolean`
 
-Defined in: Command/main.ts:73
+Defined in: [Command/main.ts:73](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L73)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: Command/main.ts:73
 
 > **isHidden**: `boolean`
 
-Defined in: Command/main.ts:70
+Defined in: [Command/main.ts:70](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L70)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: Command/main.ts:70
 
 > **name**: `string`
 
-Defined in: Command/main.ts:67
+Defined in: [Command/main.ts:67](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L67)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: Command/main.ts:67
 
 > **paramBranches**: [`ParamDefinition`](../interfaces/ParamDefinition.md)[] = `[]`
 
-Defined in: Command/main.ts:74
+Defined in: [Command/main.ts:74](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L74)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: Command/main.ts:74
 
 > **subCommands**: [`Command`](Command.md)[] = `[]`
 
-Defined in: Command/main.ts:75
+Defined in: [Command/main.ts:75](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L75)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: Command/main.ts:75
 
 > `optional` **validator**: [`CommandValidator`](../interfaces/CommandValidator.md)
 
-Defined in: Command/main.ts:72
+Defined in: [Command/main.ts:72](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L72)
 
 ## Methods
 
@@ -144,7 +144,7 @@ Defined in: Command/main.ts:72
 
 > **addParam**(`param`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:111
+Defined in: [Command/main.ts:111](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L111)
 
 添加一条分支并在其中添加一条参数
 
@@ -164,7 +164,7 @@ Defined in: Command/main.ts:111
 
 > **addParamBranches**(`param`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:122
+Defined in: [Command/main.ts:122](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L122)
 
 添加多个命令参数分支
 
@@ -184,7 +184,7 @@ Defined in: Command/main.ts:122
 
 > **addParams**(`params`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:116
+Defined in: [Command/main.ts:116](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L116)
 
 添加一条参数分支的多个参数
 
@@ -204,7 +204,7 @@ Defined in: Command/main.ts:116
 
 > **addSubCommand**(`subCommand`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:97
+Defined in: [Command/main.ts:97](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L97)
 
 添加子命令
 
@@ -224,7 +224,7 @@ Defined in: Command/main.ts:97
 
 > **addSubCommands**(`subCommands`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:103
+Defined in: [Command/main.ts:103](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L103)
 
 添加一堆子命令
 
@@ -244,7 +244,7 @@ Defined in: Command/main.ts:103
 
 > `static` **fromObject**(`obj`): [`Command`](Command.md)
 
-Defined in: Command/main.ts:140
+Defined in: [Command/main.ts:140](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L140)
 
 从Object创建命令
 

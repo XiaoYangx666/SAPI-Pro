@@ -6,7 +6,7 @@
 
 # Class: commandParser
 
-Defined in: Command/main.ts:220
+Defined in: [Command/main.ts:220](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L220)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: Command/main.ts:220
 
 > **new commandParser**(): [`commandParser`](commandParser.md)
 
-Defined in: Command/main.ts:222
+Defined in: [Command/main.ts:222](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L222)
 
 #### Returns
 
@@ -26,7 +26,7 @@ Defined in: Command/main.ts:222
 
 > **commands**: `Map`\<`string`, [`Command`](Command.md)\>
 
-Defined in: Command/main.ts:221
+Defined in: [Command/main.ts:221](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L221)
 
 ## Methods
 
@@ -34,7 +34,7 @@ Defined in: Command/main.ts:221
 
 > **getCommandInfo**(`command`): `undefined` \| [`Command`](Command.md)
 
-Defined in: Command/main.ts:462
+Defined in: [Command/main.ts:462](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L462)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: Command/main.ts:462
 
 > **getCommandsList**(`admin`): `string`[]
 
-Defined in: Command/main.ts:465
+Defined in: [Command/main.ts:465](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L465)
 
 #### Parameters
 
@@ -70,7 +70,7 @@ Defined in: Command/main.ts:465
 
 > **parseCommand**(`input`, `player`): [`chatOpe`](../namespaces/Event/enumerations/chatOpe.md)
 
-Defined in: Command/main.ts:270
+Defined in: [Command/main.ts:270](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L270)
 
 直接解析一条命令
 
@@ -94,7 +94,7 @@ Defined in: Command/main.ts:270
 
 > **regClientCommand**(): `void`
 
-Defined in: Command/main.ts:246
+Defined in: [Command/main.ts:246](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L246)
 
 注册客户端命令(系统调用，不用管)
 
@@ -108,7 +108,7 @@ Defined in: Command/main.ts:246
 
 > **registerCommand**(`command`): `void`
 
-Defined in: Command/main.ts:228
+Defined in: [Command/main.ts:228](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L228)
 
 注册命令
 
@@ -128,7 +128,7 @@ Defined in: Command/main.ts:228
 
 > **regToHost**(): `void`
 
-Defined in: Command/main.ts:238
+Defined in: [Command/main.ts:238](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L238)
 
 客户端注册指令
 
@@ -142,7 +142,7 @@ Defined in: Command/main.ts:238
 
 > **runCommand**(`t`): `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
 
-Defined in: Command/main.ts:263
+Defined in: [Command/main.ts:263](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L263)
 
 运行命令注册回调
 
@@ -162,7 +162,7 @@ Defined in: Command/main.ts:263
 
 > `static` **ErrorMessage**(`player`, `command`, `value`, `params`, `current`, `tip`?): `void`
 
-Defined in: Command/main.ts:450
+Defined in: [Command/main.ts:450](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L450)
 
 #### Parameters
 

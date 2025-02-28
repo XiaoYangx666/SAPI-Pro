@@ -1,9 +1,13 @@
-import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent } from "@minecraft/server";
-type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
+import { ChatSendBeforeEvent, Player, ScriptEventCommandMessageAfterEvent } from "@minecraft/server";
+export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
+export interface chatEvents {
+    priority: number;
+    callback: (t: ChatSendBeforeEvent) => void | chatOpe;
+}
 /**
  * 聊天订阅
  */
-declare class chatBusClass {
+export declare class chatBusClass {
     private eventList;
     private send;
     constructor();
@@ -17,7 +21,7 @@ declare class chatBusClass {
      * 发布聊天事件
      * @param {ChatSendBeforeEvent} t 聊天事件
      */
-    publish(t: ChatSendBeforeEvent): boolean;
+    private publish;
     /**
      * 设置聊天处理函数(唯一)
      *
@@ -36,25 +40,25 @@ export declare enum chatOpe {
 /**
  * 订阅周期事件
  */
-declare class intervalBusClass {
+export declare class intervalBusClass {
     private secEventList;
     private minEventList;
     private tickEvents;
     private lasttime;
     private lastsec;
     constructor();
-    interval(): void;
+    private interval;
     subscribetick(callback: () => void): void;
     subscribesec(callback: (lastsec: number) => void): void;
     subscribemin(callback: () => void): void;
-    publishsec(lastsec: number): void;
-    publishmin(): void;
-    publishtick(): void;
+    private publishsec;
+    private publishmin;
+    private publishtick;
 }
 /**
  * 物品使用订阅
  */
-declare class itemBase {
+export declare class itemBase {
     private itemMap;
     constructor();
     /**
@@ -63,17 +67,17 @@ declare class itemBase {
      * @param {Function} func 绑定函数，函数参数player
      */
     bind(itemid: string, func: (player: Player) => void): void;
-    push(t: ItemUseAfterEvent): void;
+    private push;
 }
 /**ScriptEvent订阅 */
 export declare class ScriptEventBusClass {
     record: Map<any, any>;
+    constructor();
     /**注册scriptEvent */
     bind(id: string, func: (t: ScriptEventCommandMessageAfterEvent) => void): void;
-    publish(t: ScriptEventCommandMessageAfterEvent): void;
+    private publish;
 }
 export declare const intervalBus: intervalBusClass;
 export declare const chatBus: chatBusClass;
 export declare const itemBus: itemBase;
 export declare const ScriptEventBus: ScriptEventBusClass;
-export {};

@@ -6,7 +6,7 @@
 
 # Class: CommonForm
 
-Defined in: Form/commonForm.ts:4
+Defined in: [Form/commonForm.ts:4](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L4)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: Form/commonForm.ts:4
 
 > `static` **BodyInfoForm**(`id`, `title`, `body`): `void`
 
-Defined in: Form/commonForm.ts:84
+Defined in: [Form/commonForm.ts:84](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L84)
 
 注册一个简单的信息窗口
 
@@ -56,7 +56,7 @@ Defined in: Form/commonForm.ts:84
 
 > `static` **ButtonForm**(`id`, `data`): `void`
 
-Defined in: Form/commonForm.ts:6
+Defined in: [Form/commonForm.ts:6](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L6)
 
 常用的按钮表单
 
@@ -80,7 +80,7 @@ Defined in: Form/commonForm.ts:6
 
 > `static` **ButtonListForm**(`id`, `data`): `void`
 
-Defined in: Form/commonForm.ts:37
+Defined in: [Form/commonForm.ts:37](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L37)
 
 按钮列表表单
 
@@ -104,7 +104,7 @@ Defined in: Form/commonForm.ts:37
 
 > `static` **SimpleMessageForm**(`id`, `data`): `void`
 
-Defined in: Form/commonForm.ts:63
+Defined in: [Form/commonForm.ts:63](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L63)
 
 一个简单的提示窗口，仅含有两个按钮，
 

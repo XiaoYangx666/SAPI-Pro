@@ -6,7 +6,7 @@
 
 # Class: `abstract` DataBase\<T\>
 
-Defined in: DataBase.ts:5
+Defined in: [DataBase.ts:5](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L5)
 
 ## Extended by
 
@@ -24,7 +24,7 @@ Defined in: DataBase.ts:5
 
 > **new DataBase**\<`T`\>(`name`): [`DataBase`](DataBase.md)\<`T`\>
 
-Defined in: DataBase.ts:10
+Defined in: [DataBase.ts:10](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L10)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: DataBase.ts:10
 
 > **name**: `string`
 
-Defined in: DataBase.ts:8
+Defined in: [DataBase.ts:8](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L8)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: DataBase.ts:8
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
-Defined in: DataBase.ts:9
+Defined in: [DataBase.ts:9](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L9)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: DataBase.ts:9
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
-Defined in: DataBase.ts:7
+Defined in: [DataBase.ts:7](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L7)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: DataBase.ts:7
 
 > `static` **maxChunkBytes**: `number` = `32767`
 
-Defined in: DataBase.ts:6
+Defined in: [DataBase.ts:6](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L6)
 
 ## Methods
 
@@ -74,7 +74,7 @@ Defined in: DataBase.ts:6
 
 > `abstract` **clear**(): `void`
 
-Defined in: DataBase.ts:18
+Defined in: [DataBase.ts:18](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L18)
 
 #### Returns
 
@@ -86,7 +86,7 @@ Defined in: DataBase.ts:18
 
 > `abstract` **get**(`key`): `undefined` \| `T`
 
-Defined in: DataBase.ts:15
+Defined in: [DataBase.ts:15](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L15)
 
 #### Parameters
 
@@ -104,7 +104,7 @@ Defined in: DataBase.ts:15
 
 > `abstract` **keys**(): `string`[]
 
-Defined in: DataBase.ts:17
+Defined in: [DataBase.ts:17](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L17)
 
 #### Returns
 
@@ -116,7 +116,7 @@ Defined in: DataBase.ts:17
 
 > `abstract` **rm**(`key`): `void`
 
-Defined in: DataBase.ts:16
+Defined in: [DataBase.ts:16](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L16)
 
 #### Parameters
 
@@ -134,7 +134,7 @@ Defined in: DataBase.ts:16
 
 > `abstract` **set**(`key`, `value`): `void`
 
-Defined in: DataBase.ts:14
+Defined in: [DataBase.ts:14](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L14)
 
 #### Parameters
 
@@ -156,7 +156,7 @@ Defined in: DataBase.ts:14
 
 > `static` **clearAllDP**(): `void`
 
-Defined in: DataBase.ts:19
+Defined in: [DataBase.ts:19](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L19)
 
 #### Returns
 
@@ -168,7 +168,7 @@ Defined in: DataBase.ts:19
 
 > `static` **getAllKeys**(): `string`[]
 
-Defined in: DataBase.ts:25
+Defined in: [DataBase.ts:25](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L25)
 
 #### Returns
 
@@ -180,7 +180,7 @@ Defined in: DataBase.ts:25
 
 > `static` **getByteCount**(): `number`
 
-Defined in: DataBase.ts:22
+Defined in: [DataBase.ts:22](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L22)
 
 #### Returns
 
@@ -192,7 +192,7 @@ Defined in: DataBase.ts:22
 
 > `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
-Defined in: DataBase.ts:28
+Defined in: [DataBase.ts:28](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L28)
 
 #### Parameters
 
@@ -210,7 +210,7 @@ Defined in: DataBase.ts:28
 
 > `static` **getDBs**(): [`DataBase`](DataBase.md)\<`any`\>[]
 
-Defined in: DataBase.ts:31
+Defined in: [DataBase.ts:31](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L31)
 
 #### Returns
 

@@ -191,14 +191,14 @@ export class commandParser {
         const command = this.commands.get(name);
         if (!LibConfig.isHost && (!command || command.name == "help"))
             return chatOpe.skipsend; //不是主机，就不能操作命令
+        //如果是客户端命令，则让客户端自己处理
+        if (command && command.isClientCommand)
+            return chatOpe.skipsend;
         if (!command || (command.isAdmin && !isAdmin(player))) {
             if (!testMode)
                 player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
             return chatOpe.cancel;
         }
-        //如果是客户端命令，则让客户端自己处理
-        if (command.isClientCommand)
-            return chatOpe.skipsend;
         //命中，解析命令
         this.parseSubCommand(command, params, player);
         return chatOpe.cancel;
@@ -225,19 +225,19 @@ export class commandParser {
         if (subCommand.isAdmin && !isAdmin(player)) {
             return commandParser.ErrorMessage(player, command, paramStrings[current], paramStrings, current, "无权限执行此命令");
         }
+        //执行命令验证器
+        if (subCommand.validator != undefined) {
+            const validationResult = subCommand.validator(player);
+            if (validationResult !== true) {
+                this.ErrorMes(player, validationResult);
+                return;
+            }
+        }
         const params = this.parseParams(command, subCommand, paramStrings, current, player);
         if (params !== undefined) {
             //没有handler说明不需要参数或逻辑在子命令里，但返回了参数，则说明多了
             if (!subCommand.handler) {
                 return commandParser.ErrorMessage(player, command, paramStrings[current], paramStrings, current, "子命令错误");
-            }
-            //执行命令验证器
-            if (subCommand.validator != undefined) {
-                const validationResult = subCommand.validator(player);
-                if (validationResult !== true) {
-                    this.ErrorMes(player, validationResult);
-                    return;
-                }
             }
             if (!testMode)
                 subCommand.handler(player, params);

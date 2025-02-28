@@ -11,6 +11,11 @@ export declare function ArraytoVector3(locArray: [number, number, number]): {
 };
 export declare function Vector3toArray(vec: Vector3): number[];
 export declare function isNum(value: any): boolean;
+/**
+ * 返回玩家是否管理员
+ * 默认使用tag区分
+ * 你可以自己改
+ * */
 export declare function isAdmin(player: Player): boolean;
 export declare function getAllPlayers(): Player[];
 export declare function getPlayerById(id: string): Player | undefined;

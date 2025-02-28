@@ -6,7 +6,7 @@
 
 # Class: FormManager
 
-Defined in: Form/main.ts:156
+Defined in: [Form/main.ts:156](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L156)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: Form/main.ts:156
 
 > `static` **open**(`player`, `formId`, `initialData`?, `delay`?, `isfirst`?): `void`
 
-Defined in: Form/main.ts:204
+Defined in: [Form/main.ts:204](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L204)
 
 为玩家打开指定ID的表单
 需要先注册表单
@@ -61,7 +61,7 @@ Defined in: Form/main.ts:204
 
 > `static` **register**(`formData`): `void`
 
-Defined in: Form/main.ts:159
+Defined in: [Form/main.ts:159](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L159)
 
 注册一个表单
 
@@ -81,7 +81,7 @@ Defined in: Form/main.ts:159
 
 > `static` **registerAll**(`formDatas`): `void`
 
-Defined in: Form/main.ts:163
+Defined in: [Form/main.ts:163](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L163)
 
 注册一堆表单
 

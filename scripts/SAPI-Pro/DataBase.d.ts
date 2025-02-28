@@ -1,4 +1,4 @@
-import { Player, ScoreboardObjective, Vector3 } from "@minecraft/server";
+import { Player, Vector3 } from "@minecraft/server";
 type DPTypes = string | number | boolean | Vector3;
 export declare abstract class DataBase<T> {
     static maxChunkBytes: number;
@@ -50,8 +50,8 @@ export declare class ScoreBoardJSONDataBase extends DataBase<object> {
     clear(): void;
     rm(key: string): void;
     keys(): string[];
-    resetScoreBoard(): ScoreboardObjective;
-    setJSON(sync?: boolean): Promise<unknown> | undefined;
+    private resetScoreBoard;
+    private setJSON;
     private getJSON;
     edit(callback: (data: Record<string, any>) => boolean | void | undefined): void;
 }

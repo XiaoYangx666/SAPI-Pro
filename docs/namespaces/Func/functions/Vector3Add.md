@@ -8,7 +8,7 @@
 
 > **Vector3Add**(`vec1`, `vec2`): `object`
 
-Defined in: func.ts:83
+Defined in: [func.ts:88](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/func.ts#L88)
 
 ## Parameters
 

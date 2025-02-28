@@ -6,7 +6,7 @@
 
 # Enumeration: NavType
 
-Defined in: Form/main.ts:81
+Defined in: [Form/main.ts:81](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L81)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: Form/main.ts:81
 
 > **BACK**: `1`
 
-Defined in: Form/main.ts:85
+Defined in: [Form/main.ts:85](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L85)
 
 返回上一页
 
@@ -24,7 +24,7 @@ Defined in: Form/main.ts:85
 
 > **CLOSE**: `3`
 
-Defined in: Form/main.ts:89
+Defined in: [Form/main.ts:89](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L89)
 
 关闭所有
 
@@ -34,7 +34,7 @@ Defined in: Form/main.ts:89
 
 > **OPEN\_NEW**: `0`
 
-Defined in: Form/main.ts:83
+Defined in: [Form/main.ts:83](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L83)
 
 打开新页面
 
@@ -44,7 +44,7 @@ Defined in: Form/main.ts:83
 
 > **REOPEN**: `2`
 
-Defined in: Form/main.ts:87
+Defined in: [Form/main.ts:87](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L87)
 
 刷新当前页面
 
@@ -54,7 +54,7 @@ Defined in: Form/main.ts:87
 
 > **REPLACE**: `5`
 
-Defined in: Form/main.ts:93
+Defined in: [Form/main.ts:93](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L93)
 
 替换当前页面
 
@@ -64,6 +64,6 @@ Defined in: Form/main.ts:93
 
 > **RESET\_OPEN**: `4`
 
-Defined in: Form/main.ts:91
+Defined in: [Form/main.ts:91](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L91)
 
 重置并打开新页面

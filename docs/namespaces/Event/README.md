@@ -12,7 +12,18 @@
 
 ## Classes
 
+- [chatBusClass](classes/chatBusClass.md)
+- [intervalBusClass](classes/intervalBusClass.md)
+- [itemBase](classes/itemBase.md)
 - [ScriptEventBusClass](classes/ScriptEventBusClass.md)
+
+## Interfaces
+
+- [chatEvents](interfaces/chatEvents.md)
+
+## Type Aliases
+
+- [chatFunc](type-aliases/chatFunc.md)
 
 ## Variables
 

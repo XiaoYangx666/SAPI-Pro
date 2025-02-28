@@ -2,7 +2,7 @@ import { system, world } from "@minecraft/server";
 /**
  * 聊天订阅
  */
-class chatBusClass {
+export class chatBusClass {
     constructor() {
         this.eventList = [];
         this.send = (t) => {
@@ -61,7 +61,7 @@ export var chatOpe;
 /**
  * 订阅周期事件
  */
-class intervalBusClass {
+export class intervalBusClass {
     constructor() {
         this.secEventList = [];
         this.minEventList = [];
@@ -109,7 +109,7 @@ class intervalBusClass {
 /**
  * 物品使用订阅
  */
-class itemBase {
+export class itemBase {
     constructor() {
         this.itemMap = new Map();
         world.afterEvents.itemUse.subscribe((t) => itemBus.push(t));
@@ -137,6 +137,9 @@ class itemBase {
 export class ScriptEventBusClass {
     constructor() {
         this.record = new Map();
+        system.afterEvents.scriptEventReceive.subscribe((t) => {
+            this.publish(t);
+        });
     }
     /**注册scriptEvent */
     bind(id, func) {
@@ -148,9 +151,6 @@ export class ScriptEventBusClass {
             func(t);
     }
 }
-system.afterEvents.scriptEventReceive.subscribe((t) => {
-    ScriptEventBus.publish(t);
-});
 export const intervalBus = new intervalBusClass();
 export const chatBus = new chatBusClass();
 export const itemBus = new itemBase();

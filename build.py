@@ -21,24 +21,21 @@ def create_dir(build_dir):
         shutil.rmtree(build_dir)
     os.makedirs(build_dir)
 
-def copy_files_except_exclusions(source_dir, dest_dir, exclusions):
+def copy_files(source_dir, dest_dir):
     """
     复制目录中的文件到目标目录，排除某些文件和目录，且不覆盖目标目录中已存在的文件。
     :param source_dir: 源目录
     :param dest_dir: 目标目录
-    :param exclusions: 排除的文件或目录列表
     """
     for item in os.listdir(source_dir):
-        if item not in exclusions:
-            src_path = os.path.join(source_dir, item)
-            dest_path = os.path.join(dest_dir, item)
-
-            if os.path.isdir(src_path):
-                shutil.copytree(src_path, dest_path)
-                print(f"已复制目录: {src_path} -> {dest_path}")
-            else:
-                shutil.copy2(src_path, dest_path)
-                print(f"已复制文件: {src_path} -> {dest_path}")
+        src_path = os.path.join(source_dir, item)
+        dest_path = os.path.join(dest_dir, item)
+        if os.path.isdir(src_path):
+            shutil.copytree(src_path, dest_path)
+            print(f"已复制目录: {src_path} -> {dest_path}")
+        else:
+            shutil.copy2(src_path, dest_path)
+            print(f"已复制文件: {src_path} -> {dest_path}")
 
 def main():
     build_dir = "./build"
@@ -58,18 +55,16 @@ def main():
             print(f"已压缩: {src_dir} -> {zip_filename}")
 
     # 复制当前目录（排除 template 和 build）到 template 文件夹
-    current_dir = "."
     template_dir = "./template"
-    exclude_dirs = {"template", "build", "build.py", "node_modules", "docs", "package-lock.json", "readme.md", "readme_en.md", ".gitignore", ".git"}  # 排除的目录
-
     # 合并 template 目录与其他文件到临时目录
     temp_root_dir = os.path.join(build_dir, "temp_root")
     os.makedirs(temp_root_dir)
 
     # 复制 template 目录内容到临时目录
-    copy_files_except_exclusions(current_dir, temp_root_dir, exclude_dirs)
+    copy_files("./src",os.path.join(temp_root_dir,"src"))
+    copy_files("./scripts", os.path.join(temp_root_dir,"scripts"))
     if os.path.exists(template_dir):
-        copy_files_except_exclusions(template_dir, temp_root_dir, {})
+        copy_files(template_dir, temp_root_dir)
     else:
         print(f"错误：{template_dir} 目录不存在！")
         return

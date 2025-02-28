@@ -28,12 +28,17 @@ export function isNum(value: any): boolean {
     return !isNaN(parseFloat(value)) && !isNaN(value);
 }
 
+/**
+ * 返回玩家是否管理员
+ * 默认使用tag区分
+ * 你可以自己改
+ * */
 export function isAdmin(player: Player) {
     return player.hasTag("op");
 }
 
 export function getAllPlayers() {
-    return world.getPlayers({ excludeTags: ["jr"] });
+    return world.getPlayers();
 }
 export function getPlayerById(id: string) {
     return getAllPlayers().find((t) => t.id == id);

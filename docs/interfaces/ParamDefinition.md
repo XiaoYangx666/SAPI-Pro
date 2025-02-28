@@ -6,7 +6,7 @@
 
 # Interface: ParamDefinition
 
-Defined in: Command/main.ts:63
+Defined in: [Command/main.ts:63](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L63)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: Command/main.ts:63
 
 > `optional` **branches**: `paramBranches`[]
 
-Defined in: Command/main.ts:61
+Defined in: [Command/main.ts:61](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L61)
 
 参数分支
 
@@ -32,7 +32,7 @@ Defined in: Command/main.ts:61
 
 > `optional` **default**: [`parsedTypes`](../type-aliases/parsedTypes.md)
 
-Defined in: Command/main.ts:55
+Defined in: [Command/main.ts:55](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L55)
 
 默认值
 
@@ -46,7 +46,7 @@ Defined in: Command/main.ts:55
 
 > `optional` **enums**: `string`[]
 
-Defined in: Command/main.ts:51
+Defined in: [Command/main.ts:51](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L51)
 
 枚举值
 
@@ -60,7 +60,7 @@ Defined in: Command/main.ts:51
 
 > `optional` **explain**: `string`
 
-Defined in: Command/main.ts:57
+Defined in: [Command/main.ts:57](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L57)
 
 参数解释
 
@@ -74,7 +74,7 @@ Defined in: Command/main.ts:57
 
 > **name**: `string`
 
-Defined in: Command/main.ts:47
+Defined in: [Command/main.ts:47](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L47)
 
 参数名
 
@@ -88,7 +88,7 @@ Defined in: Command/main.ts:47
 
 > `optional` **optional**: `boolean`
 
-Defined in: Command/main.ts:53
+Defined in: [Command/main.ts:53](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L53)
 
 是否可选，默认否
 
@@ -102,7 +102,7 @@ Defined in: Command/main.ts:53
 
 > `optional` **subParams**: [`ParamDefinition`](ParamDefinition.md)[]
 
-Defined in: Command/main.ts:64
+Defined in: [Command/main.ts:64](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L64)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: Command/main.ts:64
 
 > **type**: `"string"` \| `"boolean"` \| `"float"` \| `"position"` \| `"target"` \| `"flag"` \| `"enum"` \| `"int"`
 
-Defined in: Command/main.ts:49
+Defined in: [Command/main.ts:49](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L49)
 
 参数类型
 
@@ -124,7 +124,7 @@ Defined in: Command/main.ts:49
 
 > `optional` **validator**: [`ParamValidator`](ParamValidator.md)
 
-Defined in: Command/main.ts:59
+Defined in: [Command/main.ts:59](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L59)
 
 参数验证器
 

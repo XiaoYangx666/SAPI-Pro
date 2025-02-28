@@ -6,7 +6,7 @@
 
 # Interface: SimpleMessageFormData
 
-Defined in: Form/commonForm.ts:146
+Defined in: [Form/commonForm.ts:146](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L146)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: Form/commonForm.ts:146
 
 > `optional` **body**: `string`
 
-Defined in: Form/commonForm.ts:148
+Defined in: [Form/commonForm.ts:148](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L148)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: Form/commonForm.ts:148
 
 > `optional` **button1**: `string`
 
-Defined in: Form/commonForm.ts:150
+Defined in: [Form/commonForm.ts:150](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L150)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: Form/commonForm.ts:150
 
 > `optional` **button2**: `string`
 
-Defined in: Form/commonForm.ts:151
+Defined in: [Form/commonForm.ts:151](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L151)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: Form/commonForm.ts:151
 
 > `optional` **generator**: (`form`, `player`, `context`) => `void`
 
-Defined in: Form/commonForm.ts:149
+Defined in: [Form/commonForm.ts:149](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L149)
 
 #### Parameters
 
@@ -64,7 +64,7 @@ Defined in: Form/commonForm.ts:149
 
 > **handler**: [`FormHandler`](FormHandler.md)
 
-Defined in: Form/commonForm.ts:152
+Defined in: [Form/commonForm.ts:152](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L152)
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: Form/commonForm.ts:152
 
 > `optional` **title**: `string`
 
-Defined in: Form/commonForm.ts:147
+Defined in: [Form/commonForm.ts:147](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L147)

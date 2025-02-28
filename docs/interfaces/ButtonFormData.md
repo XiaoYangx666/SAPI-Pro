@@ -6,7 +6,7 @@
 
 # Interface: ButtonFormData
 
-Defined in: Form/commonForm.ts:118
+Defined in: [Form/commonForm.ts:118](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L118)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: Form/commonForm.ts:118
 
 > `optional` **body**: `string`
 
-Defined in: Form/commonForm.ts:120
+Defined in: [Form/commonForm.ts:120](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L120)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: Form/commonForm.ts:120
 
 > `optional` **buttonGenerator**: [`buttonGenerator`](buttonGenerator.md)
 
-Defined in: Form/commonForm.ts:124
+Defined in: [Form/commonForm.ts:124](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L124)
 
 按钮生成器
 
@@ -32,7 +32,7 @@ Defined in: Form/commonForm.ts:124
 
 > `optional` **buttons**: `Record`\<`string`, [`FuncButton`](FuncButton.md)\>
 
-Defined in: Form/commonForm.ts:122
+Defined in: [Form/commonForm.ts:122](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L122)
 
 按钮对象
 
@@ -42,7 +42,7 @@ Defined in: Form/commonForm.ts:122
 
 > `optional` **generator**: [`formGenerator`](formGenerator.md)\<`ActionFormData`\>
 
-Defined in: Form/commonForm.ts:128
+Defined in: [Form/commonForm.ts:128](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L128)
 
 自定义生成器，如果只需要按钮可以用按钮生成器
 
@@ -52,7 +52,7 @@ Defined in: Form/commonForm.ts:128
 
 > `optional` **oncancel**: [`FormHandler`](FormHandler.md)
 
-Defined in: Form/commonForm.ts:126
+Defined in: [Form/commonForm.ts:126](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L126)
 
 取消事件
 
@@ -62,7 +62,7 @@ Defined in: Form/commonForm.ts:126
 
 > `optional` **title**: `string`
 
-Defined in: Form/commonForm.ts:119
+Defined in: [Form/commonForm.ts:119](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L119)
 
 ***
 
@@ -70,6 +70,6 @@ Defined in: Form/commonForm.ts:119
 
 > `optional` **validator**: [`FormValidator`](FormValidator.md)
 
-Defined in: Form/commonForm.ts:130
+Defined in: [Form/commonForm.ts:130](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/commonForm.ts#L130)
 
 表单验证器，验证失败则不打开表单

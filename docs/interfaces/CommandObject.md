@@ -6,7 +6,7 @@
 
 # Interface: CommandObject
 
-Defined in: Command/main.ts:16
+Defined in: [Command/main.ts:16](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L16)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: Command/main.ts:16
 
 > **explain**: `string`
 
-Defined in: Command/main.ts:20
+Defined in: [Command/main.ts:20](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L20)
 
 命令解释
 
@@ -24,7 +24,7 @@ Defined in: Command/main.ts:20
 
 > `optional` **handler**: [`commandHandler`](../type-aliases/commandHandler.md)\<[`ParsedParam`](ParsedParam.md)\>
 
-Defined in: Command/main.ts:26
+Defined in: [Command/main.ts:26](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L26)
 
 命令处理器
 
@@ -34,7 +34,7 @@ Defined in: Command/main.ts:26
 
 > `optional` **isAdmin**: `boolean`
 
-Defined in: Command/main.ts:22
+Defined in: [Command/main.ts:22](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L22)
 
 是否管理员命令,默认不是
 
@@ -44,7 +44,7 @@ Defined in: Command/main.ts:22
 
 > `optional` **isClientCommand**: `boolean`
 
-Defined in: Command/main.ts:33
+Defined in: [Command/main.ts:33](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L33)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: Command/main.ts:33
 
 > `optional` **isHiden**: `boolean`
 
-Defined in: Command/main.ts:24
+Defined in: [Command/main.ts:24](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L24)
 
 是否隐藏命令(不会显示在help中)
 
@@ -62,7 +62,7 @@ Defined in: Command/main.ts:24
 
 > **name**: `string`
 
-Defined in: Command/main.ts:18
+Defined in: [Command/main.ts:18](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L18)
 
 命令名
 
@@ -72,7 +72,7 @@ Defined in: Command/main.ts:18
 
 > `optional` **paramBranches**: `paramBranches`[]
 
-Defined in: Command/main.ts:30
+Defined in: [Command/main.ts:30](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L30)
 
 命令参数分支
 
@@ -82,7 +82,7 @@ Defined in: Command/main.ts:30
 
 > `optional` **subCommands**: [`CommandObject`](CommandObject.md)[]
 
-Defined in: Command/main.ts:32
+Defined in: [Command/main.ts:32](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L32)
 
 子命令列表
 
@@ -92,6 +92,6 @@ Defined in: Command/main.ts:32
 
 > `optional` **validator**: [`CommandValidator`](CommandValidator.md)
 
-Defined in: Command/main.ts:28
+Defined in: [Command/main.ts:28](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L28)
 
 命令验证器

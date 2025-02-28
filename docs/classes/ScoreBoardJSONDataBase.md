@@ -6,7 +6,7 @@
 
 # Class: ScoreBoardJSONDataBase
 
-Defined in: DataBase.ts:156
+Defined in: [DataBase.ts:156](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L156)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: DataBase.ts:156
 
 > **new ScoreBoardJSONDataBase**(`name`): [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
 
-Defined in: DataBase.ts:159
+Defined in: [DataBase.ts:159](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L159)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: DataBase.ts:159
 
 > **name**: `string`
 
-Defined in: DataBase.ts:8
+Defined in: [DataBase.ts:8](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L8)
 
 #### Inherited from
 
@@ -52,7 +52,7 @@ Defined in: DataBase.ts:8
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
-Defined in: DataBase.ts:9
+Defined in: [DataBase.ts:9](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L9)
 
 #### Inherited from
 
@@ -64,7 +64,7 @@ Defined in: DataBase.ts:9
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
-Defined in: DataBase.ts:7
+Defined in: [DataBase.ts:7](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L7)
 
 #### Inherited from
 
@@ -76,7 +76,7 @@ Defined in: DataBase.ts:7
 
 > `static` **maxChunkBytes**: `number` = `32767`
 
-Defined in: DataBase.ts:6
+Defined in: [DataBase.ts:6](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L6)
 
 #### Inherited from
 
@@ -88,7 +88,7 @@ Defined in: DataBase.ts:6
 
 > **clear**(): `void`
 
-Defined in: DataBase.ts:176
+Defined in: [DataBase.ts:176](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L176)
 
 #### Returns
 
@@ -104,7 +104,7 @@ Defined in: DataBase.ts:176
 
 > **edit**(`callback`): `void`
 
-Defined in: DataBase.ts:229
+Defined in: [DataBase.ts:229](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L229)
 
 #### Parameters
 
@@ -122,7 +122,7 @@ Defined in: DataBase.ts:229
 
 > **get**(`key`): `any`
 
-Defined in: DataBase.ts:172
+Defined in: [DataBase.ts:172](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L172)
 
 #### Parameters
 
@@ -144,7 +144,7 @@ Defined in: DataBase.ts:172
 
 > **keys**(): `string`[]
 
-Defined in: DataBase.ts:186
+Defined in: [DataBase.ts:186](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L186)
 
 #### Returns
 
@@ -156,23 +156,11 @@ Defined in: DataBase.ts:186
 
 ***
 
-### resetScoreBoard()
-
-> **resetScoreBoard**(): `ScoreboardObjective`
-
-Defined in: DataBase.ts:190
-
-#### Returns
-
-`ScoreboardObjective`
-
-***
-
 ### rm()
 
 > **rm**(`key`): `void`
 
-Defined in: DataBase.ts:181
+Defined in: [DataBase.ts:181](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L181)
 
 #### Parameters
 
@@ -194,7 +182,7 @@ Defined in: DataBase.ts:181
 
 > **set**(`key`, `value`): `void`
 
-Defined in: DataBase.ts:165
+Defined in: [DataBase.ts:165](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L165)
 
 #### Parameters
 
@@ -216,29 +204,11 @@ Defined in: DataBase.ts:165
 
 ***
 
-### setJSON()
-
-> **setJSON**(`sync`): `undefined` \| `Promise`\<`unknown`\>
-
-Defined in: DataBase.ts:196
-
-#### Parameters
-
-##### sync
-
-`boolean` = `false`
-
-#### Returns
-
-`undefined` \| `Promise`\<`unknown`\>
-
-***
-
 ### clearAllDP()
 
 > `static` **clearAllDP**(): `void`
 
-Defined in: DataBase.ts:19
+Defined in: [DataBase.ts:19](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L19)
 
 #### Returns
 
@@ -254,7 +224,7 @@ Defined in: DataBase.ts:19
 
 > `static` **getAllKeys**(): `string`[]
 
-Defined in: DataBase.ts:25
+Defined in: [DataBase.ts:25](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L25)
 
 #### Returns
 
@@ -270,7 +240,7 @@ Defined in: DataBase.ts:25
 
 > `static` **getByteCount**(): `number`
 
-Defined in: DataBase.ts:22
+Defined in: [DataBase.ts:22](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L22)
 
 #### Returns
 
@@ -286,7 +256,7 @@ Defined in: DataBase.ts:22
 
 > `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
-Defined in: DataBase.ts:28
+Defined in: [DataBase.ts:28](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L28)
 
 #### Parameters
 
@@ -308,7 +278,7 @@ Defined in: DataBase.ts:28
 
 > `static` **getDBs**(): [`DataBase`](DataBase.md)\<`any`\>[]
 
-Defined in: DataBase.ts:31
+Defined in: [DataBase.ts:31](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L31)
 
 #### Returns
 

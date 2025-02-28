@@ -187,13 +187,13 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
         this.getJSON();
         return Object.keys(this.data);
     }
-    resetScoreBoard() {
+    private resetScoreBoard() {
         if (world.scoreboard.getObjective(this.scoreboardName)) {
             world.scoreboard.removeObjective(this.scoreboardName);
         }
         return world.scoreboard.addObjective(this.scoreboardName);
     }
-    setJSON(sync: boolean = false) {
+    private setJSON(sync: boolean = false) {
         const data = this.data;
         if (sync) {
             const sb = this.resetScoreBoard();

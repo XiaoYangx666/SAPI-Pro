@@ -1,15 +1,15 @@
 import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
 
 //先不搞优先队列了，能用就行，反正只有注册的时候排序
-type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
-interface chatEvents {
+export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
+export interface chatEvents {
     priority: number;
     callback: (t: ChatSendBeforeEvent) => void | chatOpe;
 }
 /**
  * 聊天订阅
  */
-class chatBusClass {
+export class chatBusClass {
     private eventList: chatEvents[];
     private send: (t: ChatSendBeforeEvent) => boolean;
     constructor() {
@@ -34,7 +34,7 @@ class chatBusClass {
      * 发布聊天事件
      * @param {ChatSendBeforeEvent} t 聊天事件
      */
-    publish(t: ChatSendBeforeEvent) {
+    private publish(t: ChatSendBeforeEvent) {
         let Ope = undefined;
         if (this.eventList) {
             for (let event of this.eventList) {
@@ -67,7 +67,7 @@ export enum chatOpe {
 /**
  * 订阅周期事件
  */
-class intervalBusClass {
+export class intervalBusClass {
     private secEventList: ((lastsec: number) => void)[];
     private minEventList: (() => void)[];
     private tickEvents: (() => void)[];
@@ -81,7 +81,7 @@ class intervalBusClass {
         this.lastsec = Date.now();
         system.runInterval(this.interval.bind(this));
     }
-    interval() {
+    private interval() {
         if (Date.now() - this.lasttime >= 60000) {
             this.publishmin();
             this.lasttime = Date.now();
@@ -101,17 +101,17 @@ class intervalBusClass {
     subscribemin(callback: () => void) {
         this.minEventList.push(callback);
     }
-    publishsec(lastsec: number) {
+    private publishsec(lastsec: number) {
         for (let callback of this.secEventList) {
             callback(lastsec);
         }
     }
-    publishmin() {
+    private publishmin() {
         for (let callback of this.minEventList) {
             callback();
         }
     }
-    publishtick() {
+    private publishtick() {
         for (let callback of this.tickEvents) {
             callback();
         }
@@ -121,7 +121,7 @@ class intervalBusClass {
 /**
  * 物品使用订阅
  */
-class itemBase {
+export class itemBase {
     private itemMap: Map<string, (player: Player) => void>;
     constructor() {
         this.itemMap = new Map();
@@ -135,7 +135,7 @@ class itemBase {
     bind(itemid: string, func: (player: Player) => void) {
         this.itemMap.set(itemid, func);
     }
-    push(t: ItemUseAfterEvent) {
+    private push(t: ItemUseAfterEvent) {
         let itemid = t.itemStack.typeId;
         let player = t.source;
         if (!this.itemMap.has(itemid)) return;
@@ -149,18 +149,20 @@ class itemBase {
 /**ScriptEvent订阅 */
 export class ScriptEventBusClass {
     record = new Map();
+    constructor() {
+        system.afterEvents.scriptEventReceive.subscribe((t) => {
+            this.publish(t);
+        });
+    }
     /**注册scriptEvent */
     bind(id: string, func: (t: ScriptEventCommandMessageAfterEvent) => void) {
         ScriptEventBus.record.set(id, func);
     }
-    publish(t: ScriptEventCommandMessageAfterEvent) {
+    private publish(t: ScriptEventCommandMessageAfterEvent) {
         const func = ScriptEventBus.record.get(t.id);
         if (func) func(t);
     }
 }
-system.afterEvents.scriptEventReceive.subscribe((t) => {
-    ScriptEventBus.publish(t);
-});
 
 export const intervalBus = new intervalBusClass();
 export const chatBus = new chatBusClass();
