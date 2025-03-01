@@ -11,9 +11,6 @@ export declare abstract class DataBase<T> {
     abstract rm(key: string): void;
     abstract keys(): string[];
     abstract clear(): void;
-    static clearAllDP(): void;
-    static getByteCount(): number;
-    static getAllKeys(): string[];
     static getDB(name: string): DataBase<any> | undefined;
     static getDBs(): DataBase<any>[];
 }
@@ -40,6 +37,9 @@ export declare class DPDataBase extends DataBase<DPTypes> {
     private getListLen;
     private rmList;
     static isDPDataBase(db: DataBase<any>): db is DPDataBase;
+    static clearAllDP(): void;
+    static getByteCount(): number;
+    static getAllKeys(): string[];
 }
 export declare class ScoreBoardJSONDataBase extends DataBase<object> {
     private scoreboardName;

@@ -3,7 +3,7 @@
     "header": {
         "description": "SAPI-Pro示例行为包",
         "name": "SAPI-Pro示例行为包",
-        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a", //请自己修改
+        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a",
         "version": [1, 0, 0],
         "min_engine_version": [1, 21, 0]
     },
@@ -12,7 +12,7 @@
             "description": "scripts",
             "type": "script",
             "language": "javascript",
-            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80", //请自己修改
+            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80",
             "version": [1, 0, 0],
             "entry": "scripts/main.js"
         }

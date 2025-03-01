@@ -1,6 +1,6 @@
 [**Documentation**](../../../README.md)
 
-***
+---
 
 [Documentation](../../../globals.md) / [Event](../README.md) / intervalBus
 
@@ -8,4 +8,17 @@
 
 > `const` **intervalBus**: [`intervalBusClass`](../classes/intervalBusClass.md)
 
-Defined in: [Event.ts:167](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L167)
+##### 示例
+
+```typescript
+//简单tps计算
+let lasttick = system.currentTick;
+let tps = "20.0";
+intervalBus.subscribesec((lastsec) => {
+    tps = ((system.currentTick - lasttick) / ((Date.now() - lastsec) / 1000)).toFixed(1);
+    if (parseFloat(tps) > 20) tps = "20.0";
+    lasttick = system.currentTick;
+    cmd("scoreboard players reset * gg");
+    cmd(`scoreboard players set "§6tps §r${tps}" gg 3`);
+});
+```

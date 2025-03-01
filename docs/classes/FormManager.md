@@ -1,22 +1,12 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / FormManager
 
 # Class: FormManager
 
-Defined in: [Form/main.ts:156](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L156)
-
-## Constructors
-
-### new FormManager()
-
-> **new FormManager**(): [`FormManager`](FormManager.md)
-
-#### Returns
-
-[`FormManager`](FormManager.md)
+表单管理类
 
 ## Methods
 
@@ -24,10 +14,7 @@ Defined in: [Form/main.ts:156](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b
 
 > `static` **open**(`player`, `formId`, `initialData`?, `delay`?, `isfirst`?): `void`
 
-Defined in: [Form/main.ts:204](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L204)
-
-为玩家打开指定ID的表单
-需要先注册表单
+为玩家打开指定 ID 的表单,需要先注册表单
 
 #### Parameters
 
@@ -55,13 +42,11 @@ Defined in: [Form/main.ts:204](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b
 
 `void`
 
-***
+---
 
 ### register()
 
 > `static` **register**(`formData`): `void`
-
-Defined in: [Form/main.ts:159](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L159)
 
 注册一个表单
 
@@ -75,13 +60,30 @@ Defined in: [Form/main.ts:159](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b
 
 `void`
 
-***
+#### 示例
+
+```typescript
+import { ActionFormData } from "@minecraft/server-ui";
+import { FormManager } from "SAPI-Pro/Form/main";
+import { ActionFormResponse } from "@minecraft/server-ui";
+FormManager.register({
+    id: "test.main",
+    builder: (player, ctx) => {
+        const form = new ActionFormData().title("测试").body("测试啊测试啊测试啊").button("已阅");
+        return form;
+    },
+    handler: (player, res: ActionFormResponse, ctx) => {},
+    validator: (player, ctx) => {
+        return true;
+    },
+});
+```
+
+---
 
 ### registerAll()
 
 > `static` **registerAll**(`formDatas`): `void`
-
-Defined in: [Form/main.ts:163](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Form/main.ts#L163)
 
 注册一堆表单
 

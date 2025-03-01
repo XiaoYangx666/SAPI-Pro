@@ -5,15 +5,6 @@ export class DataBase {
         this.name = name;
         DataBase.DBMap[name] = this;
     }
-    static clearAllDP() {
-        world.clearDynamicProperties();
-    }
-    static getByteCount() {
-        return world.getDynamicPropertyTotalByteCount();
-    }
-    static getAllKeys() {
-        return world.getDynamicPropertyIds();
-    }
     static getDB(name) {
         return this.DBMap[name];
     }
@@ -145,6 +136,15 @@ export class DPDataBase extends DataBase {
     }
     static isDPDataBase(db) {
         return db.type == "DP";
+    }
+    static clearAllDP() {
+        world.clearDynamicProperties();
+    }
+    static getByteCount() {
+        return world.getDynamicPropertyTotalByteCount();
+    }
+    static getAllKeys() {
+        return world.getDynamicPropertyIds();
     }
 }
 DPDataBase.ListLenMark = "arrlen";

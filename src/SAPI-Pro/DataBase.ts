@@ -16,15 +16,6 @@ export abstract class DataBase<T> {
     abstract rm(key: string): void;
     abstract keys(): string[];
     abstract clear(): void;
-    static clearAllDP() {
-        world.clearDynamicProperties();
-    }
-    static getByteCount() {
-        return world.getDynamicPropertyTotalByteCount();
-    }
-    static getAllKeys() {
-        return world.getDynamicPropertyIds();
-    }
     static getDB(name: string): DataBase<any> | undefined {
         return this.DBMap[name];
     }
@@ -150,6 +141,15 @@ export class DPDataBase extends DataBase<DPTypes> {
     }
     static isDPDataBase(db: DataBase<any>): db is DPDataBase {
         return db.type == "DP";
+    }
+    static clearAllDP() {
+        world.clearDynamicProperties();
+    }
+    static getByteCount() {
+        return world.getDynamicPropertyTotalByteCount();
+    }
+    static getAllKeys() {
+        return world.getDynamicPropertyIds();
     }
 }
 

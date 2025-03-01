@@ -1,22 +1,18 @@
 [**Documentation**](../../../README.md)
 
-***
+---
 
 [Documentation](../../../globals.md) / [Event](../README.md) / chatBusClass
 
 # Class: chatBusClass
 
-Defined in: [Event.ts:12](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L12)
-
-聊天订阅
+聊天订阅类,请使用类的实例[chatBus](../variables/chatBus.md)
 
 ## Constructors
 
 ### new chatBusClass()
 
 > **new chatBusClass**(): [`chatBusClass`](chatBusClass.md)
-
-Defined in: [Event.ts:15](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L15)
 
 #### Returns
 
@@ -27,8 +23,6 @@ Defined in: [Event.ts:15](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 ### regsend()
 
 > **regsend**(`callback`): `void`
-
-Defined in: [Event.ts:56](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L56)
 
 设置聊天处理函数(唯一)
 
@@ -46,17 +40,13 @@ Defined in: [Event.ts:56](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 
 `void`
 
-***
+---
 
 ### subscribe()
 
 > **subscribe**(`callback`, `priority`): `void`
 
-Defined in: [Event.ts:29](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L29)
-
 订阅聊天事件
-
-返回值:是否取消原版聊天发送
 
 #### Parameters
 
@@ -67,6 +57,7 @@ Defined in: [Event.ts:29](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 ##### priority
 
 `number` = `0`
+优先级，高优先级的会先响应，不支持多包
 
 #### Returns
 

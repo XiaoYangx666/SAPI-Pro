@@ -1,6 +1,6 @@
 [**Documentation**](../../../README.md)
 
-***
+---
 
 [Documentation](../../../globals.md) / [Event](../README.md) / itemBus
 
@@ -8,4 +8,11 @@
 
 > `const` **itemBus**: [`itemBase`](../classes/itemBase.md)
 
-Defined in: [Event.ts:169](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L169)
+##### 示例
+
+```typescript
+//钟表菜单
+itemBus.bind("minecraft:clock", (player: Player) => {
+    FormManager.open(player, "menu.main");
+});
+```

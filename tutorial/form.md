@@ -6,11 +6,9 @@
 
 ## 表单系统
 
-表单系统可以自动的处理表单，包括表单上下文，返回上一层等等。这使用的是堆栈的数据结构，为每个玩家维护了一个表单堆栈。
-
 ### 注册基础表单
 
-基础表单依然使用原版表单的创建方式，但是可以自动管理上下文，自动处理用户表单堆等。我们已经封装好了一些[常用表单](#模板表单)使得你可以更轻松的创建。
+基础表单依然使用原版表单的创建方式，但是可以自动管理上下文，自动处理用户表单堆等。
 
 要注册一个基础表单，请通过`FormManager.register`，其中接受一个对象,必须是`FormData`。
 
@@ -51,7 +49,7 @@ builder 需要提供一个创建函数，每次都会使用它来创建表单。
 
 `FormHandler:(player: Player, response: ActionFormResponse | ModalFormResponse | MessageFormResponse, context: context):  NavigationCommand | undefined | void`
 
-**参数**：第二个参数是表单返回值，你需要指定一个，必须和 builder 中的相符合。第三个参数是上下文，你可以拿到上个表单传入的上下文或是 handler 设置的上下文。
+**参数**：第二个参数是表单返回值，你需要指定一个，必须和 builder 中的相符合。第三个参数是上下文，你可以拿到上个表单传入的上下文或是 handler 设置的上下文。  
 **返回值**：如果直接关掉就不用传返回值。如果想要操作表单，如上一级，打开新表单，重新打开表单等，你需要传入[NavigationCommand](#navigationcommand-表单导航操作)。
 
 #### validator?FormValidator
@@ -149,23 +147,10 @@ const clockMenu: ButtonFormData = {
                 return { type: NavType.OPEN_NEW, formId: "tpa.main" };
             },
         },
-        音乐播放器: {
-            icon: "blocks/jukebox_top",
-            func: (p) => {
-                musicForm(p, 5);
-                return undefined;
-            },
-        },
         领地: {
             icon: "blocks/grass_side_carried",
             func: () => {
                 return { type: NavType.OPEN_NEW, formId: "res.main" };
-            },
-        },
-        假人配置: {
-            icon: "ui/dressing_room_skins",
-            func: (p) => {
-                return { type: NavType.OPEN_NEW, formId: "sp.main" };
             },
         },
         //...更多省略...

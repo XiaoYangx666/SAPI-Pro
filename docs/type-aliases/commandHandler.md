@@ -1,14 +1,14 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / commandHandler
 
 # Type Alias: commandHandler()\<T\>
 
-> **commandHandler**\<`T`\>: (`player`, `params`) => `void`
+命令处理器
 
-Defined in: [Command/main.ts:12](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L12)
+> **commandHandler**\<`T`\>: (`player`, `params`) => `void`
 
 ## Type Parameters
 

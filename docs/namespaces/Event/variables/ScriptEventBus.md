@@ -1,6 +1,6 @@
 [**Documentation**](../../../README.md)
 
-***
+---
 
 [Documentation](../../../globals.md) / [Event](../README.md) / ScriptEventBus
 
@@ -8,4 +8,17 @@
 
 > `const` **ScriptEventBus**: [`ScriptEventBusClass`](../classes/ScriptEventBusClass.md)
 
-Defined in: [Event.ts:170](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L170)
+##### 示例
+
+```typescript
+//多行为包表单互通
+ScriptEventBus.bind("form:open", (t) => {
+    try {
+        const data = JSON.parse(t.message) as openFormData;
+        const player = getPlayerById(data.playerid);
+        if (player) {
+            FormManager.open(player, data.id, data.initialData, data.delay, false);
+        }
+    } catch (e) {}
+});
+```

@@ -1,6 +1,6 @@
 [**Documentation**](../../../README.md)
 
-***
+---
 
 [Documentation](../../../globals.md) / [Event](../README.md) / chatBus
 
@@ -8,4 +8,17 @@
 
 > `const` **chatBus**: [`chatBusClass`](../classes/chatBusClass.md)
 
-Defined in: [Event.ts:168](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L168)
+##### 示例
+
+```typescript
+//捕获#开头的消息
+chatBus.subscribe((t) => {
+    let cancel = false;
+    if (t.message[0] == "#") {
+        system.run(() => {
+            //进行一些操作
+        });
+    }
+    if (cancel) return chatOpe.cancel;
+});
+```

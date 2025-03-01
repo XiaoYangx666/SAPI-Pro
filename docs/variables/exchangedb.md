@@ -1,6 +1,6 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / exchangedb
 
@@ -8,4 +8,4 @@
 
 > `const` **exchangedb**: [`ScoreBoardJSONDataBase`](../classes/ScoreBoardJSONDataBase.md)
 
-Defined in: [DataBase.ts:377](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/DataBase.ts#L377)
+用来行为包交换的 json 计分板数据库
