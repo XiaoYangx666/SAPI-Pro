@@ -9,7 +9,7 @@ interface Config {
     forceHost: boolean;
     [key: string]: any;
 }
-interface PackInfo {
+export interface PackInfo {
     name: string;
     version: number;
     author: string;

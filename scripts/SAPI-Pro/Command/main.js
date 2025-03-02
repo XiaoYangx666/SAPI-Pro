@@ -1,7 +1,7 @@
 import { LibConfig } from "SAPI-Pro/Config";
 import { exchangedb } from "SAPI-Pro/DataBase";
 import { chatBus, chatOpe } from "SAPI-Pro/Event";
-import { isAdmin } from "SAPI-Pro/func";
+import { isAdmin, LibMessage } from "SAPI-Pro/func";
 import { PreOrdertraverse, traverseAct } from "./func";
 import { CommandHelp } from "./help";
 import { paramParser, paramTypes } from "./ParamTypes";
@@ -239,8 +239,14 @@ export class commandParser {
             if (!subCommand.handler) {
                 return commandParser.ErrorMessage(player, command, paramStrings[current], paramStrings, current, "子命令错误");
             }
-            if (!testMode)
-                subCommand.handler(player, params);
+            if (!testMode) {
+                try {
+                    subCommand.handler(player, params);
+                }
+                catch (e) {
+                    LibMessage("Command Run Error:" + e);
+                }
+            }
         }
     }
     parseParams(command, subCommand, params, current, player) {

@@ -185,7 +185,7 @@ world.sendMessage(info.author);
 ## 示例行为包
 
 [自动整理]()
-[MCBE 音乐播放器]()
+[MCBE 音乐播放器](https://gitee.com/ykxyx666_admin/music-player-mcbe)
 [简单假人]()
 
 ## 参考文档
@@ -197,7 +197,9 @@ world.sendMessage(info.author);
 欢迎各位大佬莅临修改
 
 问题反馈：<2408807389@qq.com>
-GitHub 仓库：[https://github.com/XiaoYangx666/SAPI-Pro](https://github.com/XiaoYangx666/SAPI-Pro)  
+
+GitHub 仓库：[https://github.com/XiaoYangx666/SAPI-Pro](https://github.com/XiaoYangx666/SAPI-Pro)
+
 Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](gitee.com/ykxyx666_admin/SAPI-Pro)
 
 > 🛠️ 推荐开发环境：

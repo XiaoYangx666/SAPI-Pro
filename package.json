@@ -9,6 +9,7 @@
         "typescript": "^5.7.3"
     },
     "scripts": {
-        "build": "tsc && python3 build.py"
+        "build": "python3 build.py --declaration false",
+        "build:declare":"python3 build.py --declaration true"
     }
 }
