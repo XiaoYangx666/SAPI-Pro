@@ -1,4 +1,5 @@
 import { system, world } from "@minecraft/server";
+import { LibError } from "./func";
 /**
  * 聊天订阅
  */
@@ -92,12 +93,22 @@ export class intervalBusClass {
     }
     publishsec(lastsec) {
         for (let callback of this.secEventList) {
-            callback(lastsec);
+            try {
+                callback(lastsec);
+            }
+            catch (e) {
+                LibError("secIntervalError(" + e + ")at" + callback.toString().slice(40));
+            }
         }
     }
     publishmin() {
         for (let callback of this.minEventList) {
-            callback();
+            try {
+                callback();
+            }
+            catch (e) {
+                LibError("MinintervalError(" + e + ")at" + callback.toString().slice(40));
+            }
         }
     }
     publishtick() {

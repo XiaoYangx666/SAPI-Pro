@@ -1,5 +1,6 @@
 import { system, world } from "@minecraft/server";
 import { libName } from "./Config";
+import { LibError } from "./func";
 export class DataBase {
     constructor(name) {
         this.name = name;
@@ -112,7 +113,7 @@ export class DPDataBase extends DataBase {
         for (let i = 0; i < length; i++) {
             const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
             if (part == undefined) {
-                console.error("GetList Failed");
+                LibError(`Error in getting list part ${i} of ${key}`);
                 return undefined;
             }
             data[i] = part;

@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import { libName } from "./Config";
+import { LibConfig, libName } from "./Config";
 export function cmd(text, async = true) {
     if (async) {
         world.getDimension("overworld").runCommandAsync(text);
@@ -34,7 +34,7 @@ export function isAdmin(player) {
     return player.hasTag("op");
 }
 export function getAllPlayers() {
-    return world.getPlayers();
+    return world.getAllPlayers().filter((t) => t != undefined);
 }
 export function getPlayerById(id) {
     return getAllPlayers().find((t) => t.id == id);
@@ -91,4 +91,7 @@ export function generateUUID() {
 }
 export function LibMessage(text) {
     console.log(`[${libName}]${text}`);
+}
+export function LibError(text) {
+    console.error(`[${libName}.Error]${LibConfig.packInfo.name}:${text}`);
 }

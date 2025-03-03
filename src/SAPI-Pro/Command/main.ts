@@ -2,7 +2,7 @@ import { ChatSendBeforeEvent, Player, Vector3 } from "@minecraft/server";
 import { LibConfig } from "SAPI-Pro/Config";
 import { exchangedb } from "SAPI-Pro/DataBase";
 import { chatBus, chatOpe } from "SAPI-Pro/Event";
-import { isAdmin, LibMessage } from "SAPI-Pro/func";
+import { isAdmin, LibError, LibMessage } from "SAPI-Pro/func";
 import { enterNodeFunc, PreOrdertraverse, traverseAct } from "./func";
 import { CommandHelp } from "./help";
 import { paramParser, paramTypes } from "./ParamTypes";
@@ -322,7 +322,7 @@ export class commandParser {
                 try {
                     subCommand.handler(player, params);
                 } catch (e) {
-                    LibMessage("Command Run Error:" + e);
+                    LibError("Command Run Error:" + e + "at" + command.name);
                 }
             }
         }
@@ -427,7 +427,13 @@ export class commandParser {
                 } else {
                     updateError(
                         index + checkResult.index,
-                        commandParser.BuildErrorMessage(command, paramStrings[index + checkResult.index], params, current + index + checkResult.index, checkResult.msg),
+                        commandParser.BuildErrorMessage(
+                            command,
+                            paramStrings[index + checkResult.index],
+                            params,
+                            current + index + checkResult.index,
+                            checkResult.msg
+                        ),
                         checkResult.canReplace
                     );
                 }
@@ -458,7 +464,11 @@ export class commandParser {
     }
 
     private static BuildErrorMessage(command: Command, value: string, params: string[], current: number, tip?: string | undefined) {
-        return `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "");
+        return (
+            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params
+                .slice(current + 1)
+                .join(" ")}”` + (tip ? `(${tip})` : "")
+        );
     }
 
     private ErrorMes(player: Player, msg: string) {

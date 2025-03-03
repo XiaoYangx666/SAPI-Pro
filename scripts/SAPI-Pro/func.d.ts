@@ -42,3 +42,4 @@ export declare function Vector3Add(vec1: Vector3, vec2: Vector3): {
 };
 export declare function generateUUID(): string;
 export declare function LibMessage(text: string): void;
+export declare function LibError(text: string): void;

@@ -1,7 +1,7 @@
 import { LibConfig } from "SAPI-Pro/Config";
 import { exchangedb } from "SAPI-Pro/DataBase";
 import { chatBus, chatOpe } from "SAPI-Pro/Event";
-import { isAdmin, LibMessage } from "SAPI-Pro/func";
+import { isAdmin, LibError } from "SAPI-Pro/func";
 import { PreOrdertraverse, traverseAct } from "./func";
 import { CommandHelp } from "./help";
 import { paramParser, paramTypes } from "./ParamTypes";
@@ -244,7 +244,7 @@ export class commandParser {
                     subCommand.handler(player, params);
                 }
                 catch (e) {
-                    LibMessage("Command Run Error:" + e);
+                    LibError("Command Run Error:" + e + "at" + command.name);
                 }
             }
         }
@@ -374,7 +374,9 @@ export class commandParser {
             player.sendMessage("§c" + commandParser.BuildErrorMessage(command, value, params, current, tip));
     }
     static BuildErrorMessage(command, value, params, current, tip) {
-        return `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "");
+        return (`语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params
+            .slice(current + 1)
+            .join(" ")}”` + (tip ? `(${tip})` : ""));
     }
     ErrorMes(player, msg) {
         if (!testMode)

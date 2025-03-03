@@ -1,6 +1,6 @@
 import { system } from "@minecraft/server";
 import { intervalBus, ScriptEventBus } from "SAPI-Pro/Event";
-import { getAllPlayers, getPlayerById } from "SAPI-Pro/func";
+import { getAllPlayers, getPlayerById, LibError } from "SAPI-Pro/func";
 class FormContextManager {
     static getStack(player) {
         return this.playerDataMap.get(player.id);
@@ -121,7 +121,7 @@ export class FormManager {
     static async showForm(player, formId, contextData) {
         const formData = this.getForm(formId);
         if (!formData)
-            throw new Error(`Form ${formId} not registered`);
+            return LibError(`Form ${formId} not registered`);
         const currentContext = FormContextManager.getTop(player);
         if (formData.validator) {
             const validation = formData.validator(player, currentContext?.data ?? {});

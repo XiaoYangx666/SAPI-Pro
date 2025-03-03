@@ -1,4 +1,5 @@
 import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
+import { LibError, LibMessage } from "./func";
 
 //先不搞优先队列了，能用就行，反正只有注册的时候排序
 export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
@@ -103,12 +104,20 @@ export class intervalBusClass {
     }
     private publishsec(lastsec: number) {
         for (let callback of this.secEventList) {
-            callback(lastsec);
+            try {
+                callback(lastsec);
+            } catch (e) {
+                LibError("secIntervalError(" + e + ")at" + callback.toString().slice(40));
+            }
         }
     }
     private publishmin() {
         for (let callback of this.minEventList) {
-            callback();
+            try {
+                callback();
+            } catch (e) {
+                LibError("MinintervalError(" + e + ")at" + callback.toString().slice(40));
+            }
         }
     }
     private publishtick() {
