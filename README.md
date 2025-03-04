@@ -4,20 +4,23 @@
 
 [简体中文](README.md)|[English](README_EN.md)
 
-## 核心特性
-
--   **命令解析**：支持多参数多分支命令解析与帮助显示
--   **表单管理**：自动管理表单上下文，及多层表单操作
--   **数据存储**：动态数据与计分板存储，支持超大文本分割
--   **多行为包支持**：使用 SAPI-Pro 的行为包可以互相调用表单及命令
+## 目录
+- [安装](#安装)
+    - [从模板创建](#方式一基础模板创建推荐)
+    - [现有项目集成](#方式二现有项目集成)
+- [模块详解](#核心模块详解)
+    - [命令系统](#命令系统)
+    - [表单管理](#表单管理)
+    - [数据存储](#-数据存储)
+- [示例行为包](#示例行为包)
+- [参考文档](#参考文档)
+- [支持与贡献](#支持与贡献)
 
 ---
 
-## 快速开始
+## 📦安装
 
-### 📦 安装方式
-
-#### 方式一：基础模板创建（推荐）
+### 方式一：基础模板创建（推荐）
 
 如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以直接下载最新版本基础包。并从零开始创建你的新项目
 
@@ -44,6 +47,7 @@
 
 ```typescript
 // src/SAPI-Pro/Config.ts
+// 或scripts/SAPI-Pro/Config.js
 export const packInfo: PackInfo = {
     name: "SAPI-Pro行为包", //行为包名
     version: 0.1, //行为包版本
@@ -57,12 +61,12 @@ export const packInfo: PackInfo = {
    完成配置后，你可以开始在`src/main.ts`中编写代码，通过`import`引入 SAPI-Pro 相关类。使用 tsc 编译为 js 即可以运行。
 
 > **提示**  
-> 如果你不使用 TypeScript，你可以直接删除 src 和 tsconfig 等文件。并在`scripts/SAPI-Pro/Config.js`中修改库配置,在`scripts/main.js `中写代码。  
+> 如果你不使用 TypeScript，可以直接删除 src 和 tsconfig 等文件。并在`scripts/`目录下操作。   
 > 不要删除`import "./SAPI-Pro/main"`语句,库需要初始化才能正常使用
 
-#### 方式二：现有项目集成
+### 方式二：现有项目集成
 
-1. 选择版本：[JavaScript 版]() | [TypeScript 版]()
+1. 下载：[最新版](releases/latest) 请下载ts或js版
 
 2. 将库文件解压至项目目录：(JS 版本同理)
 
@@ -86,11 +90,11 @@ export const packInfo: PackInfo = {
 
 ## 核心模块详解
 
-### 🎮 命令系统
+### 命令系统
 
-你可以使用两种方式来注册命令，即直接创建 Command 对象或使用`Command.fromObject`来创建。在命令较为复杂时，推荐从对象创建命令。
+为了创建命令，你可以使用 Command 构造函数来创建命令，或使用`Command.fromObject`。在命令较为复杂时，推荐后者。
 
-以下是两个简单的命令注册示例，通过 `param.name` 即可获得解析后的参数。你还可以创建更为复杂的命令，包含子命令、多个参数分支等,请阅读[命令注册](./tutorial/command.md)。
+以下是两个简单的命令注册示例。你还可以创建更为复杂的命令,请阅读[命令注册](./tutorial/command.md)。
 
 #### 命令示例
 
@@ -122,10 +126,11 @@ pcommand.registerCommand(killCmd);
 
 ---
 
-### 📋 表单管理
+###  表单管理
 
-通过 SAPI-Pro，你可以方便的进行表单管理，不管是创建表单，还是多层次表单，都无比轻松。此外，还内置了一些常用表单，如 ButtonForm,ButtonListForm 等，详见[模板表单](./tutorial/form.md#模板表单)。
+通过 SAPI-Pro，你可以方便的创建表单，操作多层次表单等。
 
+以下是一个简单的让用户不断输入的表单的示例，表单还有更多用法，请查阅[表单系统](./tutorial/form.md#表单系统)。
 #### 表单示例
 
 ```typescript
@@ -156,8 +161,6 @@ pcommand.registerCommand(
 );
 ```
 
-以上是一个简单的让用户不断输入的表单的部分代码，使用了`FormManager.register`注册表单。并使用`FormManager.open`来向用户展示表单。表单还有更多用法，请查阅[表单系统](./tutorial/form.md#表单系统)。
-
 ---
 
 ### 💾 数据存储
@@ -168,10 +171,14 @@ pcommand.registerCommand(
 
 ```typescript
 import { Configdb } from "SAPI-Pro/DataBase";
-Configdb.set("test", 1); //存储数值(还可以存string,Vector3,boolean)
-Configdb.setJSON("info", { author: "XiaoYangx666", version: 0.1 }); //存储对象
+ //存储数值(还可以存string,Vector3,boolean)
+Configdb.set("test", 1);
+ //存储对象
+Configdb.setJSON("info", { author: "XiaoYangx666", version: 0.1 });
+//获取存储的数据
 const testValue = Configdb.get("test") as number;
 const info = Configdb.getJSON("info") as any;
+//显示
 world.sendMessage(testValue.toString());
 world.sendMessage(info.author);
 ```
@@ -185,7 +192,9 @@ world.sendMessage(info.author);
 ## 示例行为包
 
 [自动整理]()
+
 [MCBE 音乐播放器](https://gitee.com/ykxyx666_admin/music-player-mcbe)
+
 [简单假人]()
 
 ## 参考文档
