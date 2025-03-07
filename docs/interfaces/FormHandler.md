@@ -1,16 +1,12 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / FormHandler
 
 # Interface: FormHandler()
 
-Defined in: Form/main.ts:54
-
-> **FormHandler**(`player`, `response`, `context`): `undefined` \| `void` \| [`NavigationCommand`](NavigationCommand.md) \| `Promise`\<`undefined` \| [`NavigationCommand`](NavigationCommand.md)\>
-
-Defined in: Form/main.ts:60
+> **FormHandler**(`player`, `response`, `context`): `undefined` \| `void` \| [NavigationCommand](NavigationCommand.md) \| `Promise`\<`undefined` \| [NavigationCommand](NavigationCommand.md)\>
 
 表单处理函数
 
@@ -34,4 +30,5 @@ Defined in: Form/main.ts:60
 
 ## Returns
 
-`undefined` \| `void` \| [`NavigationCommand`](NavigationCommand.md) \| `Promise`\<`undefined` \| [`NavigationCommand`](NavigationCommand.md)\>
+`undefined` \| `void` \| [NavigationCommand](NavigationCommand.md) \| `Promise`\<`undefined` \| [NavigationCommand](NavigationCommand.md)\>
+返回处理结果

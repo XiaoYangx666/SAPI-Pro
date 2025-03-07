@@ -2,7 +2,7 @@ import { ChatSendBeforeEvent, Player, Vector3 } from "@minecraft/server";
 import { LibConfig } from "SAPI-Pro/Config";
 import { exchangedb } from "SAPI-Pro/DataBase";
 import { chatBus, chatOpe } from "SAPI-Pro/Event";
-import { isAdmin } from "SAPI-Pro/func";
+import { isAdmin, LibError, LibMessage } from "SAPI-Pro/func";
 import { enterNodeFunc, PreOrdertraverse, traverseAct } from "./func";
 import { CommandHelp } from "./help";
 import { paramParser, paramTypes } from "./ParamTypes";
@@ -274,12 +274,12 @@ export class commandParser {
         const command = this.commands.get(name);
 
         if (!LibConfig.isHost && (!command || command.name == "help")) return chatOpe.skipsend; //不是主机，就不能操作命令
+        //如果是客户端命令，则让客户端自己处理
+        if (command && command.isClientCommand) return chatOpe.skipsend;
         if (!command || (command.isAdmin && !isAdmin(player))) {
             if (!testMode) player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
             return chatOpe.cancel;
         }
-        //如果是客户端命令，则让客户端自己处理
-        if (command.isClientCommand) return chatOpe.skipsend;
         //命中，解析命令
         this.parseSubCommand(command, params, player);
         return chatOpe.cancel;
@@ -304,21 +304,27 @@ export class commandParser {
         if (subCommand.isAdmin && !isAdmin(player)) {
             return commandParser.ErrorMessage(player, command, paramStrings[current], paramStrings, current, "无权限执行此命令");
         }
+        //执行命令验证器
+        if (subCommand.validator != undefined) {
+            const validationResult = subCommand.validator(player);
+            if (validationResult !== true) {
+                this.ErrorMes(player, validationResult);
+                return;
+            }
+        }
         const params = this.parseParams(command, subCommand, paramStrings, current, player);
         if (params !== undefined) {
             //没有handler说明不需要参数或逻辑在子命令里，但返回了参数，则说明多了
             if (!subCommand.handler) {
                 return commandParser.ErrorMessage(player, command, paramStrings[current], paramStrings, current, "子命令错误");
             }
-            //执行命令验证器
-            if (subCommand.validator != undefined) {
-                const validationResult = subCommand.validator(player);
-                if (validationResult !== true) {
-                    this.ErrorMes(player, validationResult);
-                    return;
+            if (!testMode) {
+                try {
+                    subCommand.handler(player, params);
+                } catch (e) {
+                    LibError("Command Run Error:" + e + "at" + command.name);
                 }
             }
-            if (!testMode) subCommand.handler(player, params);
         }
     }
 
@@ -452,7 +458,10 @@ export class commandParser {
     }
 
     private static BuildErrorMessage(command: Command, value: string, params: string[], current: number, tip?: string | undefined) {
-        return `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "");
+        return (
+            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` +
+            (tip ? `(${tip})` : "")
+        );
     }
 
     private ErrorMes(player: Player, msg: string) {

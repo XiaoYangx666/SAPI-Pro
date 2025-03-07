@@ -1,12 +1,12 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / NavigationCommand
 
 # Interface: NavigationCommand
 
-Defined in: Form/main.ts:96
+导航操作
 
 ## Properties
 
@@ -14,26 +14,20 @@ Defined in: Form/main.ts:96
 
 > `optional` **contextData**: `any`
 
-Defined in: Form/main.ts:102
-
 上下文
 
-***
+---
 
 ### formId?
 
 > `optional` **formId**: `string`
 
-Defined in: Form/main.ts:100
+表单 id
 
-表单id
-
-***
+---
 
 ### type
 
-> **type**: [`NavType`](../enumerations/NavType.md)
-
-Defined in: Form/main.ts:98
+> **type**: [NavType](../enumerations/NavType.md)
 
 导航操作类型

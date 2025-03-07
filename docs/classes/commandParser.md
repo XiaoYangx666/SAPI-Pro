@@ -1,20 +1,22 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / commandParser
 
 # Class: commandParser
 
-Defined in: Command/main.ts:220
+命令解析类，要注册命令，请使用类的实例[pcommand](../variables/pcommand.md)。
+
+## 常用函数
+
+[registerCommand](#registercommand)
 
 ## Constructors
 
 ### new commandParser()
 
 > **new commandParser**(): [`commandParser`](commandParser.md)
-
-Defined in: Command/main.ts:222
 
 #### Returns
 
@@ -26,15 +28,13 @@ Defined in: Command/main.ts:222
 
 > **commands**: `Map`\<`string`, [`Command`](Command.md)\>
 
-Defined in: Command/main.ts:221
-
 ## Methods
 
 ### getCommandInfo()
 
 > **getCommandInfo**(`command`): `undefined` \| [`Command`](Command.md)
 
-Defined in: Command/main.ts:462
+根据命令名获取注册的命令对象
 
 #### Parameters
 
@@ -46,13 +46,13 @@ Defined in: Command/main.ts:462
 
 `undefined` \| [`Command`](Command.md)
 
-***
+---
 
 ### getCommandsList()
 
 > **getCommandsList**(`admin`): `string`[]
 
-Defined in: Command/main.ts:465
+获取已注册的命令列表(只支持获取本包的，若是主机，则可以获取全部)
 
 #### Parameters
 
@@ -64,13 +64,11 @@ Defined in: Command/main.ts:465
 
 `string`[]
 
-***
+---
 
 ### parseCommand()
 
 > **parseCommand**(`input`, `player`): [`chatOpe`](../namespaces/Event/enumerations/chatOpe.md)
-
-Defined in: Command/main.ts:270
 
 直接解析一条命令
 
@@ -88,27 +86,23 @@ Defined in: Command/main.ts:270
 
 [`chatOpe`](../namespaces/Event/enumerations/chatOpe.md)
 
-***
+---
 
 ### regClientCommand()
 
 > **regClientCommand**(): `void`
 
-Defined in: Command/main.ts:246
-
-注册客户端命令(系统调用，不用管)
+注册客户端命令(用于多包互通，不用管)
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### registerCommand()
 
 > **registerCommand**(`command`): `void`
-
-Defined in: Command/main.ts:228
 
 注册命令
 
@@ -122,13 +116,11 @@ Defined in: Command/main.ts:228
 
 `void`
 
-***
+---
 
 ### regToHost()
 
 > **regToHost**(): `void`
-
-Defined in: Command/main.ts:238
 
 客户端注册指令
 
@@ -136,15 +128,13 @@ Defined in: Command/main.ts:238
 
 `void`
 
-***
+---
 
 ### runCommand()
 
 > **runCommand**(`t`): `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
 
-Defined in: Command/main.ts:263
-
-运行命令注册回调
+运行命令注册回调(系统调用)
 
 #### Parameters
 
@@ -156,13 +146,13 @@ Defined in: Command/main.ts:263
 
 `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
 
-***
+---
 
 ### ErrorMessage()
 
 > `static` **ErrorMessage**(`player`, `command`, `value`, `params`, `current`, `tip`?): `void`
 
-Defined in: Command/main.ts:450
+命令错误提示
 
 #### Parameters
 

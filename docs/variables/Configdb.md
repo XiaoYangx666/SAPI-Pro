@@ -1,6 +1,6 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / Configdb
 
@@ -8,4 +8,4 @@
 
 > `const` **Configdb**: [`DPDataBase`](../classes/DPDataBase.md)
 
-Defined in: DataBase.ts:378
+系统内置的用来存 Config 的动态属性数据库

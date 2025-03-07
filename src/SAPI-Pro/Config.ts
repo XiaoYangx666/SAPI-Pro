@@ -31,7 +31,7 @@ interface Config {
     [key: string]: any;
 }
 
-interface PackInfo {
+export interface PackInfo {
     name: string;
     version: number;
     author: string;

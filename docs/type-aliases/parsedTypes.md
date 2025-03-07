@@ -1,6 +1,6 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / parsedTypes
 
@@ -8,4 +8,4 @@
 
 > **parsedTypes**: `number` \| `boolean` \| `string` \| `Player` \| `Vector3`
 
-Defined in: Command/main.ts:13
+解析后的数据类型

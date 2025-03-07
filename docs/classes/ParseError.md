@@ -6,7 +6,7 @@
 
 # Class: ParseError
 
-Defined in: Command/main.ts:199
+Defined in: [Command/main.ts:199](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L199)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: Command/main.ts:199
 
 > **new ParseError**(`msg`?, `onlymsg`?, `index`?, `canReplace`?): [`ParseError`](ParseError.md)
 
-Defined in: Command/main.ts:205
+Defined in: [Command/main.ts:205](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L205)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: Command/main.ts:205
 
 > **canReplace**: `boolean`
 
-Defined in: Command/main.ts:204
+Defined in: [Command/main.ts:204](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L204)
 
 深度相同时是否允许被替换
 
@@ -54,7 +54,7 @@ Defined in: Command/main.ts:204
 
 > **index**: `number`
 
-Defined in: Command/main.ts:202
+Defined in: [Command/main.ts:202](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L202)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: Command/main.ts:202
 
 > `optional` **msg**: `string`
 
-Defined in: Command/main.ts:200
+Defined in: [Command/main.ts:200](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L200)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: Command/main.ts:200
 
 > `optional` **onlymsg**: `boolean`
 
-Defined in: Command/main.ts:201
+Defined in: [Command/main.ts:201](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L201)

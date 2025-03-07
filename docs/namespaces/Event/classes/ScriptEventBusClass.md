@@ -6,7 +6,7 @@
 
 # Class: ScriptEventBusClass
 
-Defined in: Event.ts:150
+Defined in: [Event.ts:150](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L150)
 
 ScriptEvent订阅
 
@@ -15,6 +15,8 @@ ScriptEvent订阅
 ### new ScriptEventBusClass()
 
 > **new ScriptEventBusClass**(): [`ScriptEventBusClass`](ScriptEventBusClass.md)
+
+Defined in: [Event.ts:152](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L152)
 
 #### Returns
 
@@ -26,7 +28,7 @@ ScriptEvent订阅
 
 > **record**: `Map`\<`any`, `any`\>
 
-Defined in: Event.ts:151
+Defined in: [Event.ts:151](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L151)
 
 ## Methods
 
@@ -34,7 +36,7 @@ Defined in: Event.ts:151
 
 > **bind**(`id`, `func`): `void`
 
-Defined in: Event.ts:153
+Defined in: [Event.ts:158](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L158)
 
 注册scriptEvent
 
@@ -47,24 +49,6 @@ Defined in: Event.ts:153
 ##### func
 
 (`t`) => `void`
-
-#### Returns
-
-`void`
-
-***
-
-### publish()
-
-> **publish**(`t`): `void`
-
-Defined in: Event.ts:156
-
-#### Parameters
-
-##### t
-
-`ScriptEventCommandMessageAfterEvent`
 
 #### Returns
 

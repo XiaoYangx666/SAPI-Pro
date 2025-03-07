@@ -8,7 +8,7 @@
 
 > **calChunk**(`pos`): `object`
 
-Defined in: func.ts:74
+Defined in: [func.ts:79](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/func.ts#L79)
 
 给定坐标点，计算其所在区块
 

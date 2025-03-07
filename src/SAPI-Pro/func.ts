@@ -1,5 +1,5 @@
 import { Player, Vector3, world } from "@minecraft/server";
-import { libName } from "./Config";
+import { LibConfig, libName } from "./Config";
 export function cmd(text: string, async = true): void {
     if (async) {
         world.getDimension("overworld").runCommandAsync(text);
@@ -28,12 +28,17 @@ export function isNum(value: any): boolean {
     return !isNaN(parseFloat(value)) && !isNaN(value);
 }
 
+/**
+ * 返回玩家是否管理员
+ * 默认使用tag区分
+ * 你可以自己改
+ * */
 export function isAdmin(player: Player) {
     return player.hasTag("op");
 }
 
 export function getAllPlayers() {
-    return world.getPlayers({ excludeTags: ["jr"] });
+    return world.getAllPlayers().filter((t) => t != undefined);
 }
 export function getPlayerById(id: string) {
     return getAllPlayers().find((t) => t.id == id);
@@ -95,4 +100,8 @@ export function generateUUID() {
 
 export function LibMessage(text: string) {
     console.log(`[${libName}]${text}`);
+}
+
+export function LibError(text: string) {
+    console.error(`[${libName}.Error]${LibConfig.packInfo.name}:${text}`);
 }

@@ -1,22 +1,33 @@
 [**Documentation**](../../README.md)
 
-***
+---
 
 [Documentation](../../globals.md) / Event
 
 # Event
 
+## Variables
+
+-   [chatBus](variables/chatBus.md)
+-   [intervalBus](variables/intervalBus.md)
+-   [itemBus](variables/itemBus.md)
+-   [ScriptEventBus](variables/ScriptEventBus.md)
+
 ## Enumerations
 
-- [chatOpe](enumerations/chatOpe.md)
+-   [chatOpe](enumerations/chatOpe.md)
 
 ## Classes
 
-- [ScriptEventBusClass](classes/ScriptEventBusClass.md)
+-   [chatBusClass](classes/chatBusClass.md)
+-   [intervalBusClass](classes/intervalBusClass.md)
+-   [itemBase](classes/itemBase.md)
+-   [ScriptEventBusClass](classes/ScriptEventBusClass.md)
 
-## Variables
+## Interfaces
 
-- [chatBus](variables/chatBus.md)
-- [intervalBus](variables/intervalBus.md)
-- [itemBus](variables/itemBus.md)
-- [ScriptEventBus](variables/ScriptEventBus.md)
+-   [chatEvents](interfaces/chatEvents.md)
+
+## Type Aliases
+
+-   [chatFunc](type-aliases/chatFunc.md)

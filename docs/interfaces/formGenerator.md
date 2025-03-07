@@ -1,20 +1,16 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / formGenerator
 
 # Interface: formGenerator()\<T\>
-
-Defined in: Form/commonForm.ts:110
 
 ## Type Parameters
 
 • **T**
 
 > **formGenerator**(`form`, `player`, `context`): `void`
-
-Defined in: Form/commonForm.ts:112
 
 自定义表单生成器，不要和原本的冲突了
 
@@ -30,7 +26,7 @@ Defined in: Form/commonForm.ts:112
 
 ### context
 
-[`context`](context.md)
+[context](context.md)
 
 ## Returns
 

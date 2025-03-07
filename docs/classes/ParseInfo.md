@@ -6,7 +6,7 @@
 
 # Class: ParseInfo
 
-Defined in: Command/main.ts:190
+Defined in: [Command/main.ts:190](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L190)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: Command/main.ts:190
 
 > **new ParseInfo**(`value`, `cnt`): [`ParseInfo`](ParseInfo.md)
 
-Defined in: Command/main.ts:193
+Defined in: [Command/main.ts:193](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L193)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: Command/main.ts:193
 
 > **cnt**: `number`
 
-Defined in: Command/main.ts:192
+Defined in: [Command/main.ts:192](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L192)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: Command/main.ts:192
 
 > **value**: [`parsedTypes`](../type-aliases/parsedTypes.md)
 
-Defined in: Command/main.ts:191
+Defined in: [Command/main.ts:191](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Command/main.ts#L191)

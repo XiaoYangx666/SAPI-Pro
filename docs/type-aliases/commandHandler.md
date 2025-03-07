@@ -1,14 +1,14 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / commandHandler
 
 # Type Alias: commandHandler()\<T\>
 
-> **commandHandler**\<`T`\>: (`player`, `params`) => `void`
+命令处理器
 
-Defined in: Command/main.ts:12
+> **commandHandler**\<`T`\>: (`player`, `params`) => `void`
 
 ## Type Parameters
 

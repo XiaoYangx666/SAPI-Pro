@@ -1,5 +1,6 @@
 import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
 import { libName } from "./Config";
+import { LibError } from "./func";
 
 type DPTypes = string | number | boolean | Vector3;
 export abstract class DataBase<T> {
@@ -16,15 +17,6 @@ export abstract class DataBase<T> {
     abstract rm(key: string): void;
     abstract keys(): string[];
     abstract clear(): void;
-    static clearAllDP() {
-        world.clearDynamicProperties();
-    }
-    static getByteCount() {
-        return world.getDynamicPropertyTotalByteCount();
-    }
-    static getAllKeys() {
-        return world.getDynamicPropertyIds();
-    }
     static getDB(name: string): DataBase<any> | undefined {
         return this.DBMap[name];
     }
@@ -126,7 +118,7 @@ export class DPDataBase extends DataBase<DPTypes> {
         for (let i = 0; i < length; i++) {
             const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
             if (part == undefined) {
-                console.error("GetList Failed");
+                LibError(`Error in getting list part ${i} of ${key}`);
                 return undefined;
             }
             data[i] = part as string;
@@ -150,6 +142,15 @@ export class DPDataBase extends DataBase<DPTypes> {
     }
     static isDPDataBase(db: DataBase<any>): db is DPDataBase {
         return db.type == "DP";
+    }
+    static clearAllDP() {
+        world.clearDynamicProperties();
+    }
+    static getByteCount() {
+        return world.getDynamicPropertyTotalByteCount();
+    }
+    static getAllKeys() {
+        return world.getDynamicPropertyIds();
     }
 }
 
@@ -187,13 +188,13 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
         this.getJSON();
         return Object.keys(this.data);
     }
-    resetScoreBoard() {
+    private resetScoreBoard() {
         if (world.scoreboard.getObjective(this.scoreboardName)) {
             world.scoreboard.removeObjective(this.scoreboardName);
         }
         return world.scoreboard.addObjective(this.scoreboardName);
     }
-    setJSON(sync: boolean = false) {
+    private setJSON(sync: boolean = false) {
         const data = this.data;
         if (sync) {
             const sb = this.resetScoreBoard();

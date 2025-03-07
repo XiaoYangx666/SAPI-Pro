@@ -1,18 +1,18 @@
 [**Documentation**](../README.md)
 
-***
+---
 
 [Documentation](../globals.md) / DataBase
 
 # Class: `abstract` DataBase\<T\>
 
-Defined in: DataBase.ts:5
+此为数据库基类，要存储请使用子类
 
 ## Extended by
 
-- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
-- [`DPDataBase`](DPDataBase.md)
-- [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
+-   [ScoreBoardDataBase](ScoreBoardDataBase.md)
+-   [DPDataBase](DPDataBase.md)
+-   [ScoreBoardJSONDataBase](ScoreBoardJSONDataBase.md)
 
 ## Type Parameters
 
@@ -23,8 +23,6 @@ Defined in: DataBase.ts:5
 ### new DataBase()
 
 > **new DataBase**\<`T`\>(`name`): [`DataBase`](DataBase.md)\<`T`\>
-
-Defined in: DataBase.ts:10
 
 #### Parameters
 
@@ -42,31 +40,25 @@ Defined in: DataBase.ts:10
 
 > **name**: `string`
 
-Defined in: DataBase.ts:8
-
-***
+---
 
 ### type
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
-Defined in: DataBase.ts:9
-
-***
+---
 
 ### DBMap
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
-Defined in: DataBase.ts:7
+最大单个存储
 
-***
+---
 
 ### maxChunkBytes
 
 > `static` **maxChunkBytes**: `number` = `32767`
-
-Defined in: DataBase.ts:6
 
 ## Methods
 
@@ -74,19 +66,15 @@ Defined in: DataBase.ts:6
 
 > `abstract` **clear**(): `void`
 
-Defined in: DataBase.ts:18
-
 #### Returns
 
 `void`
 
-***
+---
 
 ### get()
 
 > `abstract` **get**(`key`): `undefined` \| `T`
-
-Defined in: DataBase.ts:15
 
 #### Parameters
 
@@ -98,25 +86,21 @@ Defined in: DataBase.ts:15
 
 `undefined` \| `T`
 
-***
+---
 
 ### keys()
 
 > `abstract` **keys**(): `string`[]
 
-Defined in: DataBase.ts:17
-
 #### Returns
 
 `string`[]
 
-***
+---
 
 ### rm()
 
 > `abstract` **rm**(`key`): `void`
-
-Defined in: DataBase.ts:16
 
 #### Parameters
 
@@ -128,13 +112,11 @@ Defined in: DataBase.ts:16
 
 `void`
 
-***
+---
 
 ### set()
 
 > `abstract` **set**(`key`, `value`): `void`
-
-Defined in: DataBase.ts:14
 
 #### Parameters
 
@@ -150,49 +132,47 @@ Defined in: DataBase.ts:14
 
 `void`
 
-***
+---
 
 ### clearAllDP()
 
 > `static` **clearAllDP**(): `void`
 
-Defined in: DataBase.ts:19
+清空所有动态数据
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### getAllKeys()
 
 > `static` **getAllKeys**(): `string`[]
 
-Defined in: DataBase.ts:25
-
 #### Returns
 
 `string`[]
 
-***
+---
 
 ### getByteCount()
 
 > `static` **getByteCount**(): `number`
 
-Defined in: DataBase.ts:22
+获取 DP 占用的总存储空间
 
 #### Returns
 
 `number`
 
-***
+---
 
 ### getDB()
 
 > `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
-Defined in: DataBase.ts:28
+获取指定名称的数据库
 
 #### Parameters
 
@@ -204,13 +184,13 @@ Defined in: DataBase.ts:28
 
 `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
-***
+---
 
 ### getDBs()
 
 > `static` **getDBs**(): [`DataBase`](DataBase.md)\<`any`\>[]
 
-Defined in: DataBase.ts:31
+获取所有数据库
 
 #### Returns
 

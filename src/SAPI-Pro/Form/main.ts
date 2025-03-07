@@ -1,7 +1,7 @@
 import { Player, system } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { intervalBus, ScriptEventBus } from "SAPI-Pro/Event";
-import { getAllPlayers, getPlayerById } from "SAPI-Pro/func";
+import { getAllPlayers, getPlayerById, LibError } from "SAPI-Pro/func";
 
 export interface context {
     [key: string]: any;
@@ -57,7 +57,11 @@ export interface FormHandler {
      * @param response 表单返回
      * @param context 表单上下文，可用于获取传值
      */
-    (player: Player, response: ActionFormResponse | ModalFormResponse | MessageFormResponse, context: context): Promise<NavigationCommand | undefined> | NavigationCommand | undefined | void;
+    (player: Player, response: ActionFormResponse | ModalFormResponse | MessageFormResponse, context: context):
+        | Promise<NavigationCommand | undefined>
+        | NavigationCommand
+        | undefined
+        | void;
 }
 
 export interface FormValidator {
@@ -171,7 +175,7 @@ export class FormManager {
 
     private static async showForm(player: Player, formId: string, contextData?: any): Promise<void> {
         const formData = this.getForm(formId);
-        if (!formData) throw new Error(`Form ${formId} not registered`);
+        if (!formData) return LibError(`Form ${formId} not registered`);
         const currentContext = FormContextManager.getTop(player);
         if (formData.validator) {
             const validation = formData.validator(player, currentContext?.data ?? {});
