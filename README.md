@@ -24,7 +24,7 @@
 
 如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以直接下载最新版本基础包。并从零开始创建你的新项目
 
-1. [下载最新基础包]()
+1. [从Gitee下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从Github下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
 2. 修改行为包配置(manifest.json)
 
 ```json
@@ -66,7 +66,7 @@ export const packInfo: PackInfo = {
 
 ### 方式二：现有项目集成
 
-1. 下载：[最新版](releases/latest) 请下载ts或js版
+1. 下载：[从Gitee下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从Github下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest) 
 
 2. 将库文件解压至项目目录：(JS 版本同理)
 
@@ -191,11 +191,11 @@ world.sendMessage(info.author);
 
 ## 示例行为包
 
-[自动整理]()
+[自动整理](https://github.com/XiaoYangx666/SAPI-Pro_examples)
 
 [MCBE 音乐播放器](https://gitee.com/ykxyx666_admin/music-player-mcbe)
 
-[简单假人]()
+[简单假人](https://github.com/XiaoYangx666/SAPI-Pro_examples)
 
 ## 参考文档
 
@@ -209,7 +209,7 @@ world.sendMessage(info.author);
 
 GitHub 仓库：[https://github.com/XiaoYangx666/SAPI-Pro](https://github.com/XiaoYangx666/SAPI-Pro)
 
-Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](gitee.com/ykxyx666_admin/SAPI-Pro)
+Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](https://gitee.com/ykxyx666_admin/SAPI-Pro)
 
 > 🛠️ 推荐开发环境：
 >

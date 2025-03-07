@@ -427,13 +427,7 @@ export class commandParser {
                 } else {
                     updateError(
                         index + checkResult.index,
-                        commandParser.BuildErrorMessage(
-                            command,
-                            paramStrings[index + checkResult.index],
-                            params,
-                            current + index + checkResult.index,
-                            checkResult.msg
-                        ),
+                        commandParser.BuildErrorMessage(command, paramStrings[index + checkResult.index], params, current + index + checkResult.index, checkResult.msg),
                         checkResult.canReplace
                     );
                 }
@@ -465,9 +459,8 @@ export class commandParser {
 
     private static BuildErrorMessage(command: Command, value: string, params: string[], current: number, tip?: string | undefined) {
         return (
-            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params
-                .slice(current + 1)
-                .join(" ")}”` + (tip ? `(${tip})` : "")
+            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` +
+            (tip ? `(${tip})` : "")
         );
     }
 

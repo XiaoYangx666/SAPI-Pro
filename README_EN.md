@@ -26,7 +26,7 @@
 
 If you want to create a new script behavior pack based on SAPI-Pro, you can directly download the latest version of the base pack and start your new project from scratch.
 
-1. [Download the latest base pack]()
+1. [Download the latest base pack](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
 2. Modify the behavior pack configuration (manifest.json)
 
 ```json
@@ -68,7 +68,7 @@ export const packInfo: PackInfo = {
 
 ### Method 2: Integrate into Existing Project
 
-1. Download: [Latest Version](releases/latest) Please download the ts or js version.
+1. Download: [Latest Version](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest) Please download the ts or js version.
 
 2. Extract the library files into the project directory: (JS version is similar)
 
@@ -193,11 +193,11 @@ world.sendMessage(info.author);
 
 ## Example Behavior Packs
 
-[Sorter]()
+[Sorter](https://github.com/XiaoYangx666/SAPI-Pro_examples)
 
 [MCBE Music Player](https://gitee.com/ykxyx666_admin/music-player-mcbe)
 
-[Simple SP]()
+[Simple SP](https://github.com/XiaoYangx666/SAPI-Pro_examples)
 
 ## Reference Documentation
 
