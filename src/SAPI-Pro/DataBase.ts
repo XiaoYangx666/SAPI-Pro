@@ -1,6 +1,7 @@
 import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
 import { libName } from "./Config";
-import { LibError } from "./func";
+import { cmd, LibError } from "./func";
+import { DisplaySlotId } from "@minecraft/server";
 
 type DPTypes = string | number | boolean | Vector3;
 export abstract class DataBase<T> {
@@ -287,10 +288,12 @@ export class ScoreBoardDataBase extends DataBase<number> {
         super(name);
         this.type = "cSB";
         this.scoreboardName = this.type + "_" + name;
-        this.sb = this.getScoreBoard();
+        world.afterEvents.worldLoad.subscribe(() => {
+            this.sb = this.getScoreBoard();
+        });
     }
-    private getScoreBoard() {
-        if (this.sb && this.sb.isValid()) return this.sb;
+    getScoreBoard() {
+        if (this.sb && this.sb.isValid) return this.sb;
         let sb = world.scoreboard.getObjective(this.scoreboardName);
         if (!sb) sb = world.scoreboard.addObjective(this.scoreboardName);
         this.sb = sb;
@@ -318,10 +321,17 @@ export class ScoreBoardDataBase extends DataBase<number> {
             .map((t) => t.displayName);
     }
     clear() {
-        if (this.sb && this.sb.isValid()) {
+        if (this.sb && this.sb.isValid) {
             world.scoreboard.removeObjective(this.sb);
         }
         this.getScoreBoard();
+    }
+    /**重置所有积分项即reset * */
+    resetAll() {
+        cmd("scoreboard players reset * " + this.scoreboardName);
+    }
+    setDisplaySlot(SlotId: DisplaySlotId) {
+        world.scoreboard.setObjectiveAtDisplaySlot(SlotId, { objective: this.getScoreBoard() });
     }
 }
 /**判断是否超过字节限制 */

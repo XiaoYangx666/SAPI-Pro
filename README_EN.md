@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Dependencies-SAPI%201.18%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.6x-green)
+![Requires](https://img.shields.io/badge/Dependencies-SAPI%202.0.0%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.7x-green)
 
 > Translated By DeepSeek
 
@@ -134,7 +134,6 @@ Tested 10000 command parsing takes 1100ms, averaging 9 commands/ms. 1 tick can p
 With SAPI-Pro, you can easily create forms and manage multi-level forms.
 
 Here is a simple example of a form that continuously prompts the user for input. For more usage, please refer to [Form System](./tutorial/form.md#表单系统).
-
 #### Form Example
 
 ```typescript
@@ -219,4 +218,8 @@ Gitee Repository: [gitee.com/ykxyx666_admin/SAPI-Pro](gitee.com/ykxyx666_admin/S
 >
 > -   VSCode
 > -   TypeScript 4.7+
+<<<<<<< HEAD
 > -   Node.js 20+
+=======
+> -   Node.js 20+
+>>>>>>> master

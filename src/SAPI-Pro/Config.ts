@@ -17,7 +17,7 @@ export const LibConfig: Config = {
     forceHost: false,
     /**如果不想随机生成，可以自己改 */
     UUID: generateUUID(),
-    version: 0.1, //不要修改
+    version: 0.2, //不要修改
     isHost: false, //不要修改
     packInfo: packInfo, //在上面改
 };

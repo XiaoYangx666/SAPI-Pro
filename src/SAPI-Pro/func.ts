@@ -1,11 +1,12 @@
-import { Player, Vector3, world } from "@minecraft/server";
+import { Player, system, Vector3, world } from "@minecraft/server";
 import { LibConfig, libName } from "./Config";
-export function cmd(text: string, async = true): void {
+/**执行命令 */
+export function cmd(text: string, async = false): void {
     if (async) {
-        world.getDimension("overworld").runCommandAsync(text);
-    } else {
-        world.getDimension("overworld").runCommand(text);
+        system.run(() => world.getDimension("overworld").runCommand(text));
+        return;
     }
+    world.getDimension("overworld").runCommand(text);
 }
 
 export function tointloc(loc: Vector3): [number, number, number] {

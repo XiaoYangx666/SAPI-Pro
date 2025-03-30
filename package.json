@@ -6,8 +6,8 @@
         "email": "2408807389@qq.com"
     },
     "dependencies": {
-        "@minecraft/server": "1.18.0-beta.1.21.61-stable",
-        "@minecraft/server-ui": "1.4.0-beta.1.21.61-stable"
+        "@minecraft/server": "2.0.0-beta.1.21.70-stable",
+        "@minecraft/server-ui": "2.0.0-beta.1.21.70-stable"
     },
     "devDependencies": {
         "typedoc": "^0.27.9",
@@ -16,11 +16,11 @@
     },
     "scripts": {
         "build": "python3 build.py --declaration false",
-        "build:declare":"python3 build.py --declaration true"
+        "build:declare": "python3 build.py --declaration true"
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "1.18.0-beta.1.21.61-stable"
+            "@minecraft/server": "2.0.0-beta.1.21.70-stable"
         }
     }
 }

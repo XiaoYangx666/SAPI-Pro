@@ -57,11 +57,7 @@ export interface FormHandler {
      * @param response 表单返回
      * @param context 表单上下文，可用于获取传值
      */
-    (player: Player, response: ActionFormResponse | ModalFormResponse | MessageFormResponse, context: context):
-        | Promise<NavigationCommand | undefined>
-        | NavigationCommand
-        | undefined
-        | void;
+    (player: Player, response: ActionFormResponse | ModalFormResponse | MessageFormResponse, context: context): Promise<NavigationCommand | undefined> | NavigationCommand | undefined | void;
 }
 
 export interface FormValidator {
@@ -209,7 +205,7 @@ export class FormManager {
         if (!FormManager.forms.has(formId)) {
             //prettier-ignore
             if (isfirst) system.run(()=>{
-                system.scriptEvent("form:open", JSON.stringify({ id: formId, playerid: player.id, initialData: initialData, delay: delay }));
+                system.sendScriptEvent("form:open", JSON.stringify({ id: formId, playerid: player.id, initialData: initialData, delay: delay }));
             })
             return;
         }

@@ -4,23 +4,19 @@ import { LibConfig, PackInfo } from "../Config";
 import { exchangedb } from "../DataBase";
 import { LibMessage } from "../func";
 
-//重置脚本信息和命令注册
-world.beforeEvents.worldInitialize.subscribe(() => {
-    system.run(() => {
-        exchangedb.edit((data) => {
-            const sinfo = data["scriptsInfo"] as object;
-            if (sinfo == undefined || Object.keys(sinfo).length != 0) {
-                data["scriptsInfo"] = {};
-                data["cmd"] = {};
-                data["Host"] = undefined;
-                return true;
-            }
-            return false;
-        });
+world.afterEvents.worldLoad.subscribe(async () => {
+    //重置脚本信息和命令注册
+    exchangedb.edit((data) => {
+        const sinfo = data["scriptsInfo"] as object;
+        if (sinfo == undefined || Object.keys(sinfo).length != 0) {
+            data["scriptsInfo"] = {};
+            data["cmd"] = {};
+            data["Host"] = undefined;
+            return true;
+        }
+        return false;
     });
-});
-
-world.afterEvents.worldInitialize.subscribe(async () => {
+    await system.waitTicks(5);
     //设定自己信息
     LibConfig.isHost = false;
     if (LibConfig.forceHost) LibConfig.version = 999;
@@ -28,6 +24,8 @@ world.afterEvents.worldInitialize.subscribe(async () => {
         data["scriptsInfo"][LibConfig.UUID] = { version: LibConfig.version, info: LibConfig.packInfo } as packComInfo;
     });
     LibMessage(`已加载模块${LibConfig.packInfo.name},lib版本:${LibConfig.version}`);
+
+    //选举主机
     await elect_Host();
     if (!LibConfig.isHost) {
         pcommand.regToHost();

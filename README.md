@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%201.18%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.6x-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.0.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.7x-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
