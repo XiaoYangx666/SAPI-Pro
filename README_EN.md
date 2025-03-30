@@ -1,22 +1,23 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Dependencies-SAPI%201.18%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.6x-green)
+![Requires](https://img.shields.io/badge/Dependencies-SAPI%202.0.0%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.7x-green)
 
->Translated By DeepSeek
+> Translated By DeepSeek
 
 [简体中文](README.md)|[English](README_EN.md)
 
 ## Table of Contents
-- [Installation](#installation)
-    - [Create from Template](#method-1-create-from-basic-template-recommended)
-    - [Integrate into Existing Project](#method-2-integrate-into-existing-project)
-- [Core Modules Explained](#core-modules-explained)
-    - [Command System](#command-system)
-    - [Form Management](#form-management)
-    - [Data Storage](#-data-storage)
-- [Example Behavior Packs](#example-behavior-packs)
-- [Reference Documentation](#reference-documentation)
-- [Support and Contribution](#support-and-contribution)
+
+-   [Installation](#installation)
+    -   [Create from Template](#method-1-create-from-basic-template-recommended)
+    -   [Integrate into Existing Project](#method-2-integrate-into-existing-project)
+-   [Core Modules Explained](#core-modules-explained)
+    -   [Command System](#command-system)
+    -   [Form Management](#form-management)
+    -   [Data Storage](#-data-storage)
+-   [Example Behavior Packs](#example-behavior-packs)
+-   [Reference Documentation](#reference-documentation)
+-   [Support and Contribution](#support-and-contribution)
 
 ---
 
@@ -173,9 +174,9 @@ For data storage, SAPI-Pro provides three classes: `DPDataBase`, `ScoreBoardJSON
 
 ```typescript
 import { Configdb } from "SAPI-Pro/DataBase";
- // Store numbers (can also store string, Vector3, boolean)
+// Store numbers (can also store string, Vector3, boolean)
 Configdb.set("test", 1);
- // Store objects
+// Store objects
 Configdb.setJSON("info", { author: "XiaoYangx666", version: 0.1 });
 // Retrieve stored data
 const testValue = Configdb.get("test") as number;
@@ -217,4 +218,12 @@ Gitee Repository: [gitee.com/ykxyx666_admin/SAPI-Pro](gitee.com/ykxyx666_admin/S
 >
 > -   VSCode
 > -   TypeScript 4.7+
+<<<<<<< HEAD
 > -   Node.js 20+
+=======
+<<<<<<< HEAD
+> -   Node.js 20+
+=======
+> -   Node.js 20+
+>>>>>>> master
+>>>>>>> master
