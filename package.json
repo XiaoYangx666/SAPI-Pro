@@ -1,13 +1,13 @@
 {
     "name": "sapi-pro",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": {
         "name": "XiaoYangx666",
         "email": "2408807389@qq.com"
     },
     "dependencies": {
-        "@minecraft/server": "2.0.0-beta.1.21.70-stable",
-        "@minecraft/server-ui": "2.0.0-beta.1.21.70-stable"
+        "@minecraft/server": "2.1.0-beta.1.21.90-stable",
+        "@minecraft/server-ui": "2.1.0-beta.1.21.90-stable"
     },
     "devDependencies": {
         "typedoc": "^0.27.9",
@@ -20,7 +20,7 @@
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "2.0.0-beta.1.21.70-stable"
+            "@minecraft/server": "2.1.0-beta.1.21.90-stable"
         }
     }
 }

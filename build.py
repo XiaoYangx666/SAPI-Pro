@@ -4,6 +4,7 @@ import zipfile
 import subprocess
 import argparse
 import os
+import json
 
 def zip_directory(source_dir, output_zip):
     """
@@ -25,14 +26,12 @@ def create_dir(build_dir):
         shutil.rmtree(build_dir)
     build_dir.mkdir(parents=True)
 
-def copy_files(source_dir, dest_dir):
+def copy_files(source_dir:Path, dest_dir:Path):
     """
-    复制目录中的文件到目标目录，排除某些文件和目录，且不覆盖目标目录中已存在的文件。
+    复制目录中的文件到目标目录
     :param source_dir: 源目录
     :param dest_dir: 目标目录
     """
-    source_dir = Path(source_dir)
-    dest_dir = Path(dest_dir)
     
     if not source_dir.exists():
         print(f"错误：源目录 {source_dir} 不存在！")
@@ -50,7 +49,28 @@ def copy_files(source_dir, dest_dir):
             shutil.copy2(item, dest_path)
             print(f"已复制文件: {item} -> {dest_path}")
 
+def updateDependencies(template_dir:Path):
+    """
+    更新模板中的依赖版本，manifest需要手动更新
+    template_dir:模板路径
+    """
+    packageJson_dir=Path("package.json")
+    if(not packageJson_dir.exists() or not template_dir.exists()):
+        raise FileNotFoundError("package.json文件不存在")
+    
+    with open(packageJson_dir,'r',encoding='utf8') as f:
+        data=json.load(f)
+        dependencies=data['dependencies']
+    with open(template_dir/'package.json',mode='r') as f:
+        template=json.load(f)
+        template['dependencies']=dependencies
+        template['overrides']['@minecraft/server-ui']['@minecraft/server']=dependencies['@minecraft/server']
+    with open(template_dir/'package.json',mode='w') as f:
+        json.dump(template,f,ensure_ascii=False,indent=4)
+        
+
 def main():
+    # 获取参数
     parser = argparse.ArgumentParser()
     parser.add_argument('--declaration', type=str,default='true')
     args = parser.parse_args()
@@ -58,7 +78,7 @@ def main():
     scripts_dir = Path("./scripts")
     create_dir(build_dir)
     create_dir(scripts_dir)
-    print(args.declaration)
+    # 编译
     print("开始编译")
     result = subprocess.Popen(["tsc","--declaration",args.declaration],shell=os.name=="nt")
     result.wait()
@@ -68,7 +88,7 @@ def main():
     if main_dts.exists():
         main_dts.unlink()
     
-    # 定义要打包的目录和输出文件名
+    # 打包ts和js文件
     dirs_to_zip = [
         ("./src/SAPI-Pro", "SAPI-Pro_ts.zip"),
         ("./scripts/SAPI-Pro", "SAPI-Pro_js.zip")
@@ -82,10 +102,9 @@ def main():
             print(f"已压缩: {src_dir} -> {zip_filename}")
         else:
             print(f"警告：目录 {src_dir} 不存在，跳过压缩。")
-
-    # 复制当前目录（排除 template 和 build）到 template 文件夹
+    
+    # 定义目录
     template_dir = Path("./template")
-    # 合并 template 目录与其他文件到临时目录
     temp_root_dir = build_dir / "temp_root"
     temp_root_dir.mkdir(parents=True, exist_ok=True)
 
@@ -93,7 +112,9 @@ def main():
     copy_files(Path("./src"), temp_root_dir / "src")
     copy_files(Path("./scripts"), temp_root_dir / "scripts")
     
+    # 复制template目录
     if template_dir.exists():
+        updateDependencies(template_dir)
         copy_files(template_dir, temp_root_dir)
     else:
         print(f"错误：{template_dir} 目录不存在！")

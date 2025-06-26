@@ -1,6 +1,8 @@
-import { Player } from "@minecraft/server";
+import { CustomCommandParamType, Player } from "@minecraft/server";
 import { ArraytoVector3, getAllPlayers, rand, Vector3toArray } from "SAPI-Pro/func";
-import { ParamDefinition, ParseError, ParseInfo } from "./main";
+import { ParseError, ParseInfo } from "../commandClass";
+import { ParamDefinition } from "../interface";
+
 export enum paramTypes {
     flag,
     boolean,
@@ -11,6 +13,18 @@ export enum paramTypes {
     position,
     string,
 }
+
+/** 类型映射*/
+export const NativeTypeMapping: Record<keyof typeof paramTypes, CustomCommandParamType> = {
+    flag: CustomCommandParamType.String,
+    boolean: CustomCommandParamType.Boolean,
+    enum: CustomCommandParamType.String,
+    int: CustomCommandParamType.Integer,
+    float: CustomCommandParamType.Float,
+    target: CustomCommandParamType.PlayerSelector,
+    position: CustomCommandParamType.Location,
+    string: CustomCommandParamType.String,
+};
 
 interface parserContext {
     player: Player;
@@ -25,7 +39,7 @@ export interface paramParserDefinition {
     regexError?: string;
 }
 
-export const paramParser: Record<string, paramParserDefinition> = {
+export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition> = {
     enum: {
         parser(value, ctx) {
             const param = ctx.param!;

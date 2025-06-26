@@ -1,8 +1,9 @@
 import { system, world } from "@minecraft/server";
-import { Command, pcommand } from "../Command/main";
-import { LibConfig, PackInfo } from "../Config";
+import { LibConfig, PackInfo, packInfo } from "../Config";
 import { exchangedb } from "../DataBase";
 import { LibMessage } from "../func";
+import { Command } from "SAPI-Pro/Command/commandClass";
+import { pcommand } from "SAPI-Pro/main";
 
 world.afterEvents.worldLoad.subscribe(async () => {
     //重置脚本信息和命令注册
@@ -23,7 +24,11 @@ world.afterEvents.worldLoad.subscribe(async () => {
     exchangedb.edit((data) => {
         data["scriptsInfo"][LibConfig.UUID] = { version: LibConfig.version, info: LibConfig.packInfo } as packComInfo;
     });
-    LibMessage(`已加载模块${LibConfig.packInfo.name},lib版本:${LibConfig.version}`);
+    const pack = LibConfig.packInfo;
+    LibMessage(`已加载模块${pack.name},lib版本:${LibConfig.version}`);
+    if (LibConfig.packInfo.greeting) {
+        LibMessage(`[${pack.name}]${pack.greeting}`);
+    }
 
     //选举主机
     await elect_Host();

@@ -1,14 +1,18 @@
 {
     "dependencies": {
-        "@minecraft/server": "2.0.0-beta.1.21.70-stable",
-        "@minecraft/server-ui": "2.0.0-beta.1.21.70-stable"
+        "@minecraft/server": "2.1.0-beta.1.21.90-stable",
+        "@minecraft/server-ui": "2.1.0-beta.1.21.90-stable"
     },
     "devDependencies": {
         "typescript": "^5.7.3"
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "2.0.0-beta.1.21.70-stable"
+            "@minecraft/server": "2.1.0-beta.1.21.90-stable"
         }
+    },
+    "scripts": {
+        "update": "python3 tools/update.py",
+        "build": "tsc & python3 tools/build.py"
     }
 }
