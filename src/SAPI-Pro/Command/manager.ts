@@ -10,7 +10,6 @@ import { CommandParser } from "./parser/parser";
 export class CommandManager {
     commands: Map<string, Command>;
     nativeCommands: Command[] = [];
-    nativeNameSpace: string = "sapipro";
     testMode = false;
     help?: CommandHelp;
 
@@ -20,7 +19,7 @@ export class CommandManager {
         //注册原生指令
         system.beforeEvents.startup.subscribe((t) => {
             this.nativeCommands.forEach((cmd) => {
-                t.customCommandRegistry.registerCommand(cmd.toNative(this.nativeNameSpace), (origin: CustomCommandOrigin, ...args: any[]) => {
+                t.customCommandRegistry.registerCommand(cmd.toNative(LibConfig.packInfo.nameSpace), (origin: CustomCommandOrigin, ...args: any[]) => {
                     return this.runNativeCommand(cmd, origin, args);
                 });
             });
@@ -46,11 +45,6 @@ export class CommandManager {
     /**注册原生指令 */
     registerNative(command: Command) {
         this.nativeCommands.push(command);
-    }
-
-    /**原生指令设置命名空间 */
-    setNameSpace(nameSpace: string) {
-        this.nativeNameSpace = nameSpace;
     }
 
     /**客户端注册指令，系统调用，不管 */

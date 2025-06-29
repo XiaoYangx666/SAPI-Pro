@@ -4,12 +4,12 @@ import { CommandParser } from "./parser/parser";
 
 //初始化
 function initCommandSystem() {
-  const parser = new CommandParser();
-  const pcommand = new CommandManager(parser);
-  const help = new CommandHelp(pcommand, parser);
-  parser.init(pcommand);
-  pcommand.init(help);
-  return pcommand;
+    const parser = new CommandParser();
+    const pcommand = new CommandManager(parser);
+    const help = new CommandHelp(pcommand, parser);
+    parser.init(pcommand);
+    pcommand.init(help);
+    return pcommand;
 }
 
 export const pcommand = initCommandSystem();

@@ -1,6 +1,6 @@
 import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
 import { libName } from "./Config";
-import { LibError } from "./func";
+import { LibErrorMes } from "./func";
 import { DisplaySlotId } from "@minecraft/server";
 
 type DPTypes = string | number | boolean | Vector3;
@@ -122,7 +122,7 @@ export class DPDataBase extends DataBase<DPTypes> {
         for (let i = 0; i < length; i++) {
             const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
             if (part == undefined) {
-                LibError(`Error in getting list part ${i} of ${key}`);
+                LibErrorMes(`Error in getting list part ${i} of ${key}`);
                 return undefined;
             }
             data[i] = part as string;

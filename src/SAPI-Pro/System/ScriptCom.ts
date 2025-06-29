@@ -1,9 +1,9 @@
 import { system, world } from "@minecraft/server";
-import { LibConfig, PackInfo, packInfo } from "../Config";
+import { pcommand } from "SAPI-Pro/main";
+import { LibConfig, PackInfo } from "../Config";
 import { exchangedb } from "../DataBase";
 import { LibMessage } from "../func";
-import { Command } from "SAPI-Pro/Command/commandClass";
-import { pcommand } from "SAPI-Pro/main";
+import { regSysInfo } from "./sysinfo";
 
 world.afterEvents.worldLoad.subscribe(async () => {
     //重置脚本信息和命令注册
@@ -37,7 +37,7 @@ world.afterEvents.worldLoad.subscribe(async () => {
     } else {
         await system.waitTicks(5);
         pcommand.regClientCommand();
-        regSysCommand();
+        regSysInfo();
     }
 });
 
@@ -58,19 +58,7 @@ export async function elect_Host() {
     }
 }
 
-function regSysCommand() {
-    pcommand.registerCommand(
-        new Command("sysinfo", "显示SAPI-Pro系统信息", false, (player, params) => {
-            player.sendMessage(`\n§6=== §bSAPI-Pro §6| §a版本: ${LibConfig.version} §6===`);
-            player.sendMessage(`§e* §f主模块: §a${LibConfig.packInfo.name}`);
-            player.sendMessage(`§e* §f已注册命令: §c${pcommand.commands.size} 条`);
-            player.sendMessage(`§e* §f已加载模块: §d${Object.keys(exchangedb.get("scriptsInfo")).length} 个`);
-            player.sendMessage(`§7------------------------------------------`);
-        })
-    );
-}
-
-interface packComInfo {
+export interface packComInfo {
     version: number;
     info: PackInfo;
 }
