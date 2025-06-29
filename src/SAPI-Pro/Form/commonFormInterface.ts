@@ -7,7 +7,7 @@ export interface FuncButton {
     /**图标路径，从textures/后面开始输 */
     icon?: string;
     /**按钮点击事件 */
-    func: (player: Player, context: SAPIProFormContext<ActionFormData>) => void | Promise<void>;
+    func: (context: SAPIProFormContext<ActionFormData>) => void | Promise<void>;
 }
 export interface formGenerator<T extends formDataType> {
     /**自定义表单生成器，不要和原本的冲突了 */

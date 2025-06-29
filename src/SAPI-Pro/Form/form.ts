@@ -27,15 +27,15 @@ export class SAPIProFormContext<T extends formDataType> {
     }
 
     /**打开表单 */
-    push<T extends formDataType>(form: SAPIProForm<T>, args: contextArgs, delay = 0) {
+    push<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
         this.willBuild = false;
-        this.stack.push(args, form as any);
+        this.stack.push(args ?? {}, form as any);
         formManager._show(this.player, delay);
     }
     /**打开命名表单 */
-    pushNamed(name: string, args: contextArgs, delay = 0) {
+    pushNamed(name: string, args?: contextArgs, delay = 0) {
         this.willBuild = false;
-        this.stack.push(args);
+        this.stack.push(args ?? {});
         formManager._showNamed(this.player, name, delay);
     }
     /**返回上一个表单 */
@@ -75,7 +75,7 @@ export class SAPIProFormContext<T extends formDataType> {
         this.push(form, args, delay);
     }
     /**清空堆栈，并打开命名表单 */
-    offAllNamed(name: string, args: contextArgs, delay = 0) {
+    offAllNamed(name: string, args?: contextArgs, delay = 0) {
         this.willBuild = false;
         this.pushNamed(name, args, delay);
     }

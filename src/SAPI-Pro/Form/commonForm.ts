@@ -1,17 +1,9 @@
-import { Player } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData } from "@minecraft/server-ui";
-import { SAPIProForm, SAPIProFormContext } from "./form";
-import { contextArgs, formBeforeBuild, formDataType, formHandler } from "./interface";
-import {
-    ButtonFormData,
-    FuncButton,
-    ButtonListFormData,
-    SimpleMessageFormData,
-    formGenerator,
-} from "./commonFormInterface";
-class CommonFormClass {
+import { ButtonFormData, ButtonListFormData, FuncButton, SimpleMessageFormData, formGenerator } from "./commonFormInterface";
+import { SAPIProForm } from "./form";
+export class CommonForm {
     /**常用的按钮表单 */
-    ButtonForm(data: ButtonFormData) {
+    static ButtonForm(data: ButtonFormData) {
         const form: SAPIProForm<ActionFormData> = {
             builder: async (p, args) => {
                 const form = new ActionFormData();
@@ -32,7 +24,7 @@ class CommonFormClass {
                 const p = context.player;
                 const buttons = context.args.buttons as Record<string, FuncButton>;
                 if (res.selection != undefined) {
-                    return Object.values(buttons ?? {})[res.selection].func(p, context);
+                    return Object.values(buttons ?? {})[res.selection].func(context);
                 } else {
                     return data.oncancel ? data.oncancel(res, context) : undefined;
                 }
@@ -42,7 +34,7 @@ class CommonFormClass {
         return form;
     }
     /** 按钮列表表单*/
-    ButtonListForm(data: ButtonListFormData) {
+    static ButtonListForm(data: ButtonListFormData) {
         const form: SAPIProForm<ActionFormData> = {
             builder: async (p, args) => {
                 const form = new ActionFormData();
@@ -67,7 +59,7 @@ class CommonFormClass {
     /**
      * 一个简单的提示窗口，仅含有两个按钮，
      */
-    SimpleMessageForm(data: SimpleMessageFormData) {
+    static SimpleMessageForm(data: SimpleMessageFormData) {
         const form: SAPIProForm<MessageFormData> = {
             builder: async (p, args) => {
                 const form = new MessageFormData();
@@ -87,7 +79,7 @@ class CommonFormClass {
      * @param title 标题
      * @param body 内容，可以是生成器
      */
-    BodyInfoForm(title: string, body: formGenerator<ActionFormData> | string) {
+    static BodyInfoForm(title: string, body: formGenerator<ActionFormData> | string) {
         const form: SAPIProForm<ActionFormData> = {
             builder: async (p, args) => {
                 const form = new ActionFormData().title(title).button("确定");
@@ -106,5 +98,3 @@ class CommonFormClass {
         return form;
     }
 }
-
-export const CommonForm = new CommonFormClass();

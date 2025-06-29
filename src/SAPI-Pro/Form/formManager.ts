@@ -6,8 +6,8 @@ import { SAPIProForm } from "./form";
 import { contextArgs, formDataType, openFormData } from "./interface";
 import { formStackManager } from "./stackManager";
 
-interface SAPIProFormBatchRegister<T extends formDataType> {
-    [key: string]: SAPIProForm<T>;
+interface SAPIProFormBatchRegister {
+    [key: string]: SAPIProForm<formDataType>;
 }
 
 class FormNotFoundError extends Error {
@@ -35,7 +35,7 @@ class FormManager {
     }
 
     /**注册一堆表单 */
-    registerAll<T extends formDataType>(forms: SAPIProFormBatchRegister<T>) {
+    registerAll(forms: SAPIProFormBatchRegister) {
         for (let [name, form] of Object.entries(forms)) {
             this.forms.set(name, form);
         }
