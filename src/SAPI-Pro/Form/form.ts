@@ -55,28 +55,29 @@ export class SAPIProFormContext<T extends formDataType> {
         formStackManager.resetStack(this.player);
     }
     /**替换当前表单为新的命名表单 */
-    replace<T extends formDataType>(form: SAPIProForm<T>, args: contextArgs, delay = 0) {
+    replace<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
         this.willBuild = false;
         this.stack.pop();
-        this.stack.push(args, form as any);
+        this.stack.push(args ?? {}, form as any);
         formManager._show(this.player, delay);
     }
     /**替换当前表单为新的命名表单 */
-    replaceNamed(name: string, args: contextArgs, delay = 0) {
+    replaceNamed(name: string, args?: contextArgs, delay = 0) {
         this.willBuild = false;
         this.stack.pop();
-        this.stack.push(args);
+        this.stack.push(args ?? {});
         formManager._showNamed(this.player, name, delay);
     }
     /**清空堆栈，并打开表单 */
-    offAll<T extends formDataType>(form: SAPIProForm<T>, args: contextArgs, delay = 0) {
+    offAll<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
         this.willBuild = false;
-        formStackManager.resetStack(this.player);
+        this.stack.clear();
         this.push(form, args, delay);
     }
     /**清空堆栈，并打开命名表单 */
     offAllNamed(name: string, args?: contextArgs, delay = 0) {
         this.willBuild = false;
+        this.stack.clear();
         this.pushNamed(name, args, delay);
     }
 }

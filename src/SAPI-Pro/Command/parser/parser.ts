@@ -3,9 +3,9 @@ import { LibConfig } from "SAPI-Pro/Config";
 import { chatOpe } from "SAPI-Pro/Event";
 import { isAdmin, LibErrorMes } from "SAPI-Pro/func";
 import { enterNodeFunc, PreOrdertraverse, traverseAct } from "./func";
-import { ParamDefinition, parsedTypes } from "../interface";
+import { ParamDefinition, parsedTypes, ParseError } from "../interface";
 import { paramParser } from "./ParamTypes";
-import { Command, ParseError } from "../commandClass";
+import { Command } from "../commandClass";
 import { CommandManager } from "../manager";
 
 interface paramParseNode {
@@ -39,7 +39,8 @@ export class CommandParser {
         //如果是客户端命令，则让客户端自己处理
         if (command && command.isClientCommand) return chatOpe.skipsend;
         if (!command || (command.isAdmin && !isAdmin(player))) {
-            if (!this.manager?.testMode) player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
+            if (!this.manager?.testMode)
+                player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
             return chatOpe.cancel;
         }
         //命中，解析命令
@@ -66,7 +67,15 @@ export class CommandParser {
         const [subCommand, current] = this.findCommand(command, paramStrings);
         //权限判断
         if (subCommand.isAdmin && !isAdmin(player)) {
-            return this.ErrorMessage(player, command, paramStrings[current], paramStrings, current, showError, "无权限执行此命令");
+            return this.ErrorMessage(
+                player,
+                command,
+                paramStrings[current],
+                paramStrings,
+                current,
+                showError,
+                "无权限执行此命令"
+            );
         }
         //执行命令验证器
         if (subCommand.validator != undefined) {
@@ -82,7 +91,15 @@ export class CommandParser {
         if (params !== undefined) {
             //没有handler说明不需要参数或逻辑在子命令里，但返回了参数，则说明多了
             if (!subCommand.handler) {
-                return this.ErrorMessage(player, command, paramStrings[current], paramStrings, current, showError, "子命令错误");
+                return this.ErrorMessage(
+                    player,
+                    command,
+                    paramStrings[current],
+                    paramStrings,
+                    current,
+                    showError,
+                    "子命令错误"
+                );
             }
             if (this.manager?.testMode) return true;
             try {
@@ -97,11 +114,19 @@ export class CommandParser {
         }
     }
 
-    private parseParams(command: Command, subCommand: Command, params: string[], current: number, player: Player, showError = true) {
+    private parseParams(
+        command: Command,
+        subCommand: Command,
+        params: string[],
+        current: number,
+        player: Player,
+        showError = true
+    ) {
         const paramStrings = params.slice(current);
         //没有参数则返回
         if (subCommand.paramBranches.length == 0) {
-            if (paramStrings.length != 0) return this.BuildErrorMessage(command, paramStrings[0], params, current, "多余参数");
+            if (paramStrings.length != 0)
+                return this.BuildErrorMessage(command, paramStrings[0], params, current, "多余参数");
             return {};
         }
         //转换后参数对象
@@ -161,7 +186,9 @@ export class CommandParser {
             if (paramDef.validator) {
                 const validationResult = paramDef.validator(parsed.value, player);
                 if (validationResult !== true) {
-                    return validationResult instanceof ParseError ? validationResult : new ParseError(validationResult, true);
+                    return validationResult instanceof ParseError
+                        ? validationResult
+                        : new ParseError(validationResult, true);
                 }
             }
             T.parsed = parsed.value;
@@ -176,7 +203,16 @@ export class CommandParser {
                 // console.warn("解析成功" + JSON.stringify(T));
                 if (!paramDef.subParams?.length) {
                     if (index + 1 < paramStrings.length) {
-                        updateError(index, this.BuildErrorMessage(command, params[current + index + 1], params, current + index + 1, "多余参数"));
+                        updateError(
+                            index,
+                            this.BuildErrorMessage(
+                                command,
+                                params[current + index + 1],
+                                params,
+                                current + index + 1,
+                                "多余参数"
+                            )
+                        );
                         return traverseAct.back;
                     } else {
                         setParamValue([...stack, [T, 0]]);
@@ -191,7 +227,13 @@ export class CommandParser {
                 } else {
                     updateError(
                         index + checkResult.index,
-                        this.BuildErrorMessage(command, paramStrings[index + checkResult.index], params, current + index + checkResult.index, checkResult.msg),
+                        this.BuildErrorMessage(
+                            command,
+                            paramStrings[index + checkResult.index],
+                            params,
+                            current + index + checkResult.index,
+                            checkResult.msg
+                        ),
                         checkResult.canReplace
                     );
                 }
@@ -217,15 +259,33 @@ export class CommandParser {
         return success ? parsedParamDict : paramError.msg;
     }
 
-    ErrorMessage(player: Player, command: Command, value: string, params: string[], current: number, showError: boolean, tip?: string | undefined) {
+    ErrorMessage(
+        player: Player,
+        command: Command,
+        value: string,
+        params: string[],
+        current: number,
+        showError: boolean,
+        tip?: string | undefined
+    ) {
         if (this.manager?.testMode) return;
         const msg = "§c" + this.BuildErrorMessage(command, value, params, current, tip);
         if (!showError) return msg;
         player.sendMessage(msg);
     }
 
-    private BuildErrorMessage(command: Command, value: string, params: string[], current: number, tip?: string | undefined) {
-        return `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${value ?? ""}<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "");
+    private BuildErrorMessage(
+        command: Command,
+        value: string,
+        params: string[],
+        current: number,
+        tip?: string | undefined
+    ) {
+        return (
+            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${
+                value ?? ""
+            }<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "")
+        );
     }
 
     private ErrorMes(player: Player, msg: string, showError: boolean) {

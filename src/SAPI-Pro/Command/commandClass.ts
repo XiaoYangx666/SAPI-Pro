@@ -178,26 +178,3 @@ export class Command {
         return { mandatory: branch, optional: optional };
     }
 }
-
-export class ParseInfo {
-    value: parsedTypes;
-    cnt: number;
-    constructor(value: parsedTypes, cnt = 1) {
-        this.value = value;
-        this.cnt = cnt;
-    }
-}
-
-export class ParseError {
-    msg?: string;
-    onlymsg?: boolean;
-    index: number;
-    /**深度相同时是否允许被替换 */
-    canReplace: boolean;
-    constructor(msg?: string, onlymsg?: boolean, index: number = 0, canReplace: boolean = true) {
-        this.msg = msg;
-        this.onlymsg = onlymsg;
-        this.index = index;
-        this.canReplace = canReplace;
-    }
-}

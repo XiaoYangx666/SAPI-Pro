@@ -1,7 +1,6 @@
 import { CustomCommandParamType, Player } from "@minecraft/server";
 import { ArraytoVector3, getAllPlayers, rand, Vector3toArray } from "SAPI-Pro/func";
-import { ParseError, ParseInfo } from "../commandClass";
-import { ParamDefinition } from "../interface";
+import { ParamDefinition, ParseError, ParseInfo } from "../interface";
 
 export enum paramTypes {
     flag,

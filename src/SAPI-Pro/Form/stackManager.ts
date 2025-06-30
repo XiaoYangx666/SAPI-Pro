@@ -18,6 +18,9 @@ export class PlayerFormStack {
         if (this.stack.length == 0) return;
         return this.stack[this.stack.length - 1];
     }
+    clear() {
+        this.stack = [];
+    }
     getPlayer() {
         return this.player;
     }

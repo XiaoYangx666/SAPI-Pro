@@ -50,14 +50,14 @@ for path in files:
     if file.exists():
         copy_files(file,buildTemp/file.name)
 # 压缩与重命名
-shutil.make_archive(buildRoot/name,'zip',buildRoot,"temp")
+shutil.make_archive(buildRoot/name,'zip',buildRoot/'temp')
 shutil.rmtree(buildTemp)
 file = Path(buildRoot/f'{name}.zip')
 new_file = file.with_suffix(".mcpack")
 file.rename(new_file)
 # 再次压缩
 if enableZip:
-    zip_file=Path(buildRoot/f'{name}.zip')
+    zip_file=Path(buildRoot/f'{name}.mcpack')
     with zipfile.ZipFile(file, mode='w', compression=zipfile.ZIP_DEFLATED) as zipf:
         zipf.write(zip_file, arcname=zip_file.name)  # arcname 设定压缩包内的文件名
 print("打包完成")
