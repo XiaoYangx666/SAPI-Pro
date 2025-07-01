@@ -11,7 +11,7 @@ export interface FuncButton {
 }
 export interface formGenerator<T extends formDataType> {
     /**自定义表单生成器，不要和原本的冲突了 */
-    (form: T, player: Player, args: contextArgs): void;
+    (form: T, player: Player, args: contextArgs): void | Promise<void>;
 }
 export interface buttonGenerator {
     /**按钮生成器，用于自定义按钮 */
@@ -48,7 +48,7 @@ export interface ButtonListFormData<> {
 export interface SimpleMessageFormData {
     title?: string;
     body?: string;
-    generator?: (form: MessageFormData, player: Player, args: contextArgs) => void;
+    generator?: (form: MessageFormData, player: Player, args: contextArgs) => void | Promise<void>;
     button1?: string;
     button2?: string;
     handler: formHandler<MessageFormData>;

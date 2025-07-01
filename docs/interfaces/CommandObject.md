@@ -1,8 +1,8 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / CommandObject
+[sapi-pro](../globals.md) / CommandObject
 
 # Interface: CommandObject
 
@@ -14,7 +14,7 @@
 
 命令解释
 
----
+***
 
 ### handler?
 
@@ -22,7 +22,7 @@
 
 命令处理器
 
----
+***
 
 ### isAdmin?
 
@@ -30,21 +30,21 @@
 
 是否管理员命令,默认不是
 
----
+***
 
 ### isClientCommand?
 
 > `optional` **isClientCommand**: `boolean`
 
----
+***
 
 ### isHiden?
 
 > `optional` **isHiden**: `boolean`
 
-是否隐藏命令(不会显示在 help 中)
+是否隐藏命令(不会显示在help中)
 
----
+***
 
 ### name
 
@@ -52,15 +52,15 @@
 
 命令名
 
----
+***
 
 ### paramBranches?
 
-> `optional` **paramBranches**: `paramBranches`[]
+> `optional` **paramBranches**: [`paramBranches`](../type-aliases/paramBranches.md)[]
 
 命令参数分支
 
----
+***
 
 ### subCommands?
 
@@ -68,7 +68,7 @@
 
 子命令列表
 
----
+***
 
 ### validator?
 

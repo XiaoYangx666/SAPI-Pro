@@ -1,12 +1,10 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
 ***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / intervalBusClass
+[sapi-pro](../../../globals.md) / [Event](../README.md) / intervalBusClass
 
 # Class: intervalBusClass
-
-Defined in: [Event.ts:70](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L70)
 
 订阅周期事件
 
@@ -15,8 +13,6 @@ Defined in: [Event.ts:70](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 ### new intervalBusClass()
 
 > **new intervalBusClass**(): [`intervalBusClass`](intervalBusClass.md)
-
-Defined in: [Event.ts:76](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L76)
 
 #### Returns
 
@@ -27,8 +23,6 @@ Defined in: [Event.ts:76](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 ### subscribemin()
 
 > **subscribemin**(`callback`): `void`
-
-Defined in: [Event.ts:101](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L101)
 
 #### Parameters
 
@@ -46,8 +40,6 @@ Defined in: [Event.ts:101](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55
 
 > **subscribesec**(`callback`): `void`
 
-Defined in: [Event.ts:98](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L98)
-
 #### Parameters
 
 ##### callback
@@ -63,8 +55,6 @@ Defined in: [Event.ts:98](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55b
 ### subscribetick()
 
 > **subscribetick**(`callback`): `void`
-
-Defined in: [Event.ts:95](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L95)
 
 #### Parameters
 

@@ -1,24 +1,24 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / ParamObject
+[sapi-pro](../globals.md) / ParamObject
 
 # Interface: ParamObject
 
 ## Extended by
 
--   [`ParamDefinition`](ParamDefinition.md)
+- [`ParamDefinition`](ParamDefinition.md)
 
 ## Properties
 
 ### branches?
 
-> `optional` **branches**: `paramBranches`[]
+> `optional` **branches**: [`paramBranches`](../type-aliases/paramBranches.md)[]
 
 参数分支
 
----
+***
 
 ### default?
 
@@ -26,7 +26,7 @@
 
 默认值
 
----
+***
 
 ### enums?
 
@@ -34,7 +34,7 @@
 
 枚举值
 
----
+***
 
 ### explain?
 
@@ -42,7 +42,7 @@
 
 参数解释
 
----
+***
 
 ### name
 
@@ -50,7 +50,7 @@
 
 参数名
 
----
+***
 
 ### optional?
 
@@ -58,7 +58,7 @@
 
 是否可选，默认否
 
----
+***
 
 ### type
 
@@ -66,7 +66,7 @@
 
 参数类型
 
----
+***
 
 ### validator?
 

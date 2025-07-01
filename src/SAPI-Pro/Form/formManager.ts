@@ -18,7 +18,7 @@ class FormNotFoundError extends Error {
     }
 }
 
-class FormManager {
+export class FormManagerClass {
     private forms = new Map<string, SAPIProForm<any>>();
 
     /**@internal 不要调用，不要调用，不要调用 */
@@ -144,5 +144,5 @@ class FormManager {
     }
 }
 
-export const formManager = new FormManager();
+export const formManager = new FormManagerClass();
 formManager._bind();

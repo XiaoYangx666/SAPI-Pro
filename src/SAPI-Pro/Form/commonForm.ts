@@ -1,5 +1,11 @@
 import { ActionFormData, ActionFormResponse, MessageFormData } from "@minecraft/server-ui";
-import { ButtonFormData, ButtonListFormData, FuncButton, SimpleMessageFormData, formGenerator } from "./commonFormInterface";
+import {
+    ButtonFormData,
+    ButtonListFormData,
+    FuncButton,
+    SimpleMessageFormData,
+    formGenerator,
+} from "./commonFormInterface";
 import { SAPIProForm } from "./form";
 export class CommonForm {
     /**常用的按钮表单 */
@@ -9,7 +15,7 @@ export class CommonForm {
                 const form = new ActionFormData();
                 if (data.title) form.title(data.title);
                 if (data.body) form.body(data.body);
-                if (data.generator) data.generator(form, p, args);
+                if (data.generator) await data.generator(form, p, args);
                 const generatedButtons = data.buttonGenerator ? data.buttonGenerator(p, args) : {};
                 let buttons = Object.assign({}, data.buttons ?? {});
                 Object.assign(buttons, generatedButtons);
@@ -41,7 +47,7 @@ export class CommonForm {
                 if (data.title) form.title(data.title);
                 if (data.body) form.body(data.body);
                 if (data.generator) {
-                    data.generator(form, p, args);
+                    await data.generator(form, p, args);
                 }
                 return form;
             },
@@ -67,7 +73,7 @@ export class CommonForm {
                 if (data.body) form.body(data.body);
                 if (data.button1) form.button1(data.button1);
                 if (data.button2) form.button2(data.button2);
-                if (data.generator) data.generator(form, p, args);
+                if (data.generator) await data.generator(form, p, args);
                 return form;
             },
             handler: data.handler,
@@ -86,7 +92,7 @@ export class CommonForm {
                 if (typeof body == "string") {
                     form.body(body);
                 } else {
-                    body(form, p, args);
+                    await body(form, p, args);
                 }
                 return form;
             },

@@ -1,20 +1,20 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / ParamDefinition
+[sapi-pro](../globals.md) / ParamDefinition
 
 # Interface: ParamDefinition
 
 ## Extends
 
--   [`ParamObject`](ParamObject.md)
+- [`ParamObject`](ParamObject.md)
 
 ## Properties
 
 ### branches?
 
-> `optional` **branches**: `paramBranches`[]
+> `optional` **branches**: [`paramBranches`](../type-aliases/paramBranches.md)[]
 
 参数分支
 
@@ -22,7 +22,7 @@
 
 [`ParamObject`](ParamObject.md).[`branches`](ParamObject.md#branches)
 
----
+***
 
 ### default?
 
@@ -34,7 +34,7 @@
 
 [`ParamObject`](ParamObject.md).[`default`](ParamObject.md#default)
 
----
+***
 
 ### enums?
 
@@ -46,7 +46,7 @@
 
 [`ParamObject`](ParamObject.md).[`enums`](ParamObject.md#enums)
 
----
+***
 
 ### explain?
 
@@ -58,7 +58,7 @@
 
 [`ParamObject`](ParamObject.md).[`explain`](ParamObject.md#explain)
 
----
+***
 
 ### name
 
@@ -70,7 +70,7 @@
 
 [`ParamObject`](ParamObject.md).[`name`](ParamObject.md#name)
 
----
+***
 
 ### optional?
 
@@ -82,13 +82,13 @@
 
 [`ParamObject`](ParamObject.md).[`optional`](ParamObject.md#optional)
 
----
+***
 
 ### subParams?
 
 > `optional` **subParams**: [`ParamDefinition`](ParamDefinition.md)[]
 
----
+***
 
 ### type
 
@@ -100,7 +100,7 @@
 
 [`ParamObject`](ParamObject.md).[`type`](ParamObject.md#type)
 
----
+***
 
 ### validator?
 

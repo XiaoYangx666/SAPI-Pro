@@ -1,18 +1,16 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / DataBase
+[sapi-pro](../globals.md) / DataBase
 
 # Class: `abstract` DataBase\<T\>
 
-此为数据库基类，要存储请使用子类
-
 ## Extended by
 
--   [ScoreBoardDataBase](ScoreBoardDataBase.md)
--   [DPDataBase](DPDataBase.md)
--   [ScoreBoardJSONDataBase](ScoreBoardJSONDataBase.md)
+- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
+- [`DPDataBase`](DPDataBase.md)
+- [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
 
 ## Type Parameters
 
@@ -40,21 +38,19 @@
 
 > **name**: `string`
 
----
+***
 
 ### type
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
----
+***
 
 ### DBMap
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
-最大单个存储
-
----
+***
 
 ### maxChunkBytes
 
@@ -70,7 +66,7 @@
 
 `void`
 
----
+***
 
 ### get()
 
@@ -86,7 +82,7 @@
 
 `undefined` \| `T`
 
----
+***
 
 ### keys()
 
@@ -96,7 +92,7 @@
 
 `string`[]
 
----
+***
 
 ### rm()
 
@@ -112,7 +108,7 @@
 
 `void`
 
----
+***
 
 ### set()
 
@@ -132,47 +128,11 @@
 
 `void`
 
----
-
-### clearAllDP()
-
-> `static` **clearAllDP**(): `void`
-
-清空所有动态数据
-
-#### Returns
-
-`void`
-
----
-
-### getAllKeys()
-
-> `static` **getAllKeys**(): `string`[]
-
-#### Returns
-
-`string`[]
-
----
-
-### getByteCount()
-
-> `static` **getByteCount**(): `number`
-
-获取 DP 占用的总存储空间
-
-#### Returns
-
-`number`
-
----
+***
 
 ### getDB()
 
 > `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
-
-获取指定名称的数据库
 
 #### Parameters
 
@@ -184,13 +144,11 @@
 
 `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
----
+***
 
 ### getDBs()
 
 > `static` **getDBs**(): [`DataBase`](DataBase.md)\<`any`\>[]
-
-获取所有数据库
 
 #### Returns
 
