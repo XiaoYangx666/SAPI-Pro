@@ -1,12 +1,10 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
 ***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / itemBase
+[sapi-pro](../../../globals.md) / [Event](../README.md) / itemBase
 
 # Class: itemBase
-
-Defined in: [Event.ts:124](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L124)
 
 物品使用订阅
 
@@ -15,8 +13,6 @@ Defined in: [Event.ts:124](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55
 ### new itemBase()
 
 > **new itemBase**(): [`itemBase`](itemBase.md)
-
-Defined in: [Event.ts:126](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L126)
 
 #### Returns
 
@@ -27,8 +23,6 @@ Defined in: [Event.ts:126](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55
 ### bind()
 
 > **bind**(`itemid`, `func`): `void`
-
-Defined in: [Event.ts:135](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/Event.ts#L135)
 
 用来绑定物品使用事件
 

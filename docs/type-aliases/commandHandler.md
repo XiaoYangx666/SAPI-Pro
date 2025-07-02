@@ -1,12 +1,10 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / commandHandler
+[sapi-pro](../globals.md) / commandHandler
 
 # Type Alias: commandHandler()\<T\>
-
-命令处理器
 
 > **commandHandler**\<`T`\>: (`player`, `params`) => `void`
 

@@ -4,23 +4,24 @@
 
 ## 命令注册
 
+### 目录
+
+-   [通过构造函数注册](#方式-1通过构造函数注册)
+-   [通过命令对象注册](#方式-2通过-commandobject-注册)
+    -   [子命令](#subcommands-子命令数组)
+    -   [参数分支](#parambranches-参数分支)
+-   [注册游戏命令](#注册游戏内命令)
+-   [附录-命令解析流程](#附录)
+
 > 此文档纯手工编辑，未使用 AI
 
 ### 方式 1：通过构造函数注册
 
 此方式适用于参数和子命令较少的简单命令。
 
-使用 `const CommandName = new Command(参数)` 即可创建一个新命令。其中，`Command` 构造函数按顺序需要以下参数：
+使用 `const CommandName = new Command(参数)` 即可创建一个新命令。
 
--   `name: string` - 命令名
--   `explain: string` - 命令说明
--   `isAdmin: boolean` - 是否为管理员命令
--   `handler?: commandHandler` - 命令处理函数（可选）
--   `validator?: CommandValidator` - 命令验证器（可选）
--   `isHidden: boolean = false` - 是否隐藏命令(不会显示在 help 中,默认不隐藏)
--   `isClient: boolean = false` - 是否为客户端命令（系统调用，不用管）
-
-所以，首先，创建一个新的命令对象
+相关资料：[Command](../docs/classes/Command.md)类
 
 ```typescript
 import { pcommand, Command } from "SAPI-Pro/Command/main";
@@ -39,14 +40,14 @@ exampleCmd.addParam({
 pcommand.registerCommand(exampleCmd); //注册命令
 ```
 
-就这么简单，你就添加了一个简单的命令。
+就这么简单，就添加了一个简单的命令。
 
 以下是对几个重要参数的解释。
 
 #### handler?:commandHandler
 
 `(player: Player, params: Record<string,any>) => void;`
-其中，handler 是一个回调函数，包含两个参数`player,param`，player 为执行命令的玩家，param 是解析后的参数对象，如果命令解析成功，那么 param 里会有成功解析的参数，如上代码中,使用 param.Name 获取了参数值，而如果没有解析成功，则不会调用命令处理函数。
+其中，handler 是一个回调函数，包含两个参数`player,param`，player 为执行命令的玩家，param 是解析后的参数对象，如果命令解析成功，那么 param 里会有成功解析的参数，如上代码中,使用 `param.Name`获取了参数值，而如果没有解析成功，则不会调用命令处理函数。
 
 此外，如果有多个分支，命令可能进入不同分支，从而解析的参数也不同，因此建议在使用参数前先判断是否存在，再根据参数存在情况，选择不同处理方式。
 
@@ -233,7 +234,7 @@ const cmd = Command.fromObject({
 
 如果一条参数分支里只有一个参数，那么这个参数分支的大括号可以省略。
 
-而如果你需要多个参数分支，可以参考如下部分代码：(只展示了命令结构，具体处理代码已省略，完整版见[简单假人]())
+而如果你需要多个参数分支，可以参考如下部分代码：(只展示了命令结构，具体处理代码已省略，完整版见[简单假人](https://gitee.com/ykxyx666_admin/simple-sp))
 
 ##### 进阶示例
 
@@ -329,9 +330,17 @@ pcommand.registerCommand(Command.fromObject(spCommand));
 
 可以看出，在 sp 命令下实现了两条参数分支。
 
+### 注册游戏内命令
+
+新版 SAPI 中加入了注册游戏命令的接口，SAPI-Pro 对其进行了适配。
+
+只需要使用`pcommand.registerNative(command:Command)`即可注册，用法和 `pcommand.registerCommand` 完全一致。
+
+由于接口限制，无法注册多分支和含有子命令的命令。建议仅用来注册简单的无参/单参数分支命令。
+
 ### 更多示例
 
-如果要实现更多更复杂的参数分支，可以参考[tp 命令复刻]()，此例子完整的实现了基岩版的 tp 命令的结构，包含多参数分支，和参数分支的子分支。
+如果要实现更多更复杂的参数分支，可以参考[tp 命令复刻](./examples/tp.md)，此例子完整的实现了基岩版的 tp 命令的结构，包含多参数分支，和参数分支的子分支。
 
 ### 附录
 

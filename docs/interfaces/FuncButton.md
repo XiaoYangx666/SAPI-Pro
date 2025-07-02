@@ -1,8 +1,8 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / FuncButton
+[sapi-pro](../globals.md) / FuncButton
 
 # Interface: FuncButton
 
@@ -10,28 +10,24 @@
 
 ### func()
 
-> **func**: (`player`, `context`) => `undefined` \| [NavigationCommand](NavigationCommand.md) \| `Promise`\<`undefined` \| [NavigationCommand](NavigationCommand.md)\>
+> **func**: (`context`) => `void` \| `Promise`\<`void`\>
 
 按钮点击事件
 
 #### Parameters
 
-##### player
-
-`Player`
-
 ##### context
 
-[context](context.md)
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`\>
 
 #### Returns
 
-`undefined` \| [`NavigationCommand`](NavigationCommand.md) \| `Promise`\<`undefined` \| [NavigationCommand](NavigationCommand.md)\>
+`void` \| `Promise`\<`void`\>
 
----
+***
 
 ### icon?
 
 > `optional` **icon**: `string`
 
-图标路径，从 textures/后面开始输
+图标路径，从textures/后面开始输

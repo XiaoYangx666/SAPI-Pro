@@ -1,8 +1,8 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
----
+***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / chatEvents
+[sapi-pro](../../../globals.md) / [Event](../README.md) / chatEvents
 
 # Interface: chatEvents
 
@@ -21,12 +21,9 @@
 #### Returns
 
 `void` \| [`chatOpe`](../enumerations/chatOpe.md)
-不捕获聊天或返回指定操作
 
----
+***
 
 ### priority
 
 > **priority**: `number`
-
-定义事件优先级

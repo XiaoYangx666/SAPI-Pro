@@ -1,6 +1,6 @@
 import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
 import { libName } from "./Config";
-import { cmd, LibError } from "./func";
+import { LibErrorMes } from "./func";
 import { DisplaySlotId } from "@minecraft/server";
 
 type DPTypes = string | number | boolean | Vector3;
@@ -29,10 +29,12 @@ export class DPDataBase extends DataBase<DPTypes> {
     private static ListLenMark = "arrlen";
     private static ListMark = "arr";
     private keyPrefix: string; //前缀
+    private readonly re: RegExp;
     constructor(name: string) {
         super(name);
         this.type = "DP";
         this.keyPrefix = this.name;
+        this.re = new RegExp(`((?<=^${this.keyPrefix}\.)(.*)(?=_($|(${DPDataBase.ListLenMark}))))`);
     }
     private getKey(key: string, mark: string = "") {
         return `${this.keyPrefix}.${key}_${mark}`;
@@ -58,14 +60,15 @@ export class DPDataBase extends DataBase<DPTypes> {
             world.setDynamicProperty(this.getKey(key));
         }
     }
+    /**获取所有键，包括list的的键,并保留DP前缀 */
     getrealKeys() {
         return world.getDynamicPropertyIds().filter((t) => t.startsWith(this.keyPrefix));
     }
+    /**获取所有键 */
     keys() {
-        const re = new RegExp(`((?<=^${this.keyPrefix}\.)(.*)(?=_($|(${DPDataBase.ListLenMark}))))`);
         const keys = this.getrealKeys()
-            .filter((t) => re.test(t))
-            .map((t) => (t.match(re) || [""])[0]);
+            .filter((t) => this.re.test(t))
+            .map((t) => (t.match(this.re) || [""])[0]);
         return keys;
     }
     /**以json形式存储一个对象 */
@@ -73,7 +76,7 @@ export class DPDataBase extends DataBase<DPTypes> {
         const data = JSON.stringify(value);
         this.set(key, data);
     }
-    /**获取json形式存储的对象 */
+    /**获取json形式存储的对象，没有或转换错误返回undefined */
     getJSON(key: string): object | undefined {
         const data = this.get(key);
         if (data == undefined) return;
@@ -119,7 +122,7 @@ export class DPDataBase extends DataBase<DPTypes> {
         for (let i = 0; i < length; i++) {
             const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
             if (part == undefined) {
-                LibError(`Error in getting list part ${i} of ${key}`);
+                LibErrorMes(`Error in getting list part ${i} of ${key}`);
                 return undefined;
             }
             data[i] = part as string;
@@ -284,10 +287,12 @@ class scoreboardObj {
 export class ScoreBoardDataBase extends DataBase<number> {
     private scoreboardName: string;
     private sb: ScoreboardObjective | undefined;
-    constructor(name: string) {
+    private displayName?: string;
+    constructor(name: string, displayName?: string, usePrefix: boolean = true) {
         super(name);
         this.type = "cSB";
-        this.scoreboardName = this.type + "_" + name;
+        this.scoreboardName = usePrefix ? this.type + "_" + name : name;
+        this.displayName = displayName;
         world.afterEvents.worldLoad.subscribe(() => {
             this.sb = this.getScoreBoard();
         });
@@ -295,9 +300,12 @@ export class ScoreBoardDataBase extends DataBase<number> {
     getScoreBoard() {
         if (this.sb && this.sb.isValid) return this.sb;
         let sb = world.scoreboard.getObjective(this.scoreboardName);
-        if (!sb) sb = world.scoreboard.addObjective(this.scoreboardName);
+        if (!sb) sb = world.scoreboard.addObjective(this.scoreboardName, this.displayName);
         this.sb = sb;
         return this.sb;
+    }
+    getScoreBoardName() {
+        return this.scoreboardName;
     }
     set(key: string | Player, value: number | string) {
         if (typeof value != "number") value = parseInt(value);
@@ -326,9 +334,13 @@ export class ScoreBoardDataBase extends DataBase<number> {
         }
         this.getScoreBoard();
     }
-    /**重置所有积分项即reset * */
+    /**重置所有积分项*/
     resetAll() {
-        cmd("scoreboard players reset * " + this.scoreboardName);
+        const sb = this.getScoreBoard();
+        const participants = sb.getParticipants();
+        for (let par of participants) {
+            sb.removeParticipant(par);
+        }
     }
     setDisplaySlot(SlotId: DisplaySlotId) {
         world.scoreboard.setObjectiveAtDisplaySlot(SlotId, { objective: this.getScoreBoard() });

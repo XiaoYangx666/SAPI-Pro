@@ -1,26 +1,26 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / commandParser
+[sapi-pro](../globals.md) / CommandManager
 
-# Class: commandParser
-
-命令解析类，要注册命令，请使用类的实例[pcommand](../variables/pcommand.md)。
-
-## 常用函数
-
-[registerCommand](#registercommand)
+# Class: CommandManager
 
 ## Constructors
 
-### new commandParser()
+### new CommandManager()
 
-> **new commandParser**(): [`commandParser`](commandParser.md)
+> **new CommandManager**(`parser`): [`CommandManager`](CommandManager.md)
+
+#### Parameters
+
+##### parser
+
+`CommandParser`
 
 #### Returns
 
-[`commandParser`](commandParser.md)
+[`CommandManager`](CommandManager.md)
 
 ## Properties
 
@@ -28,13 +28,29 @@
 
 > **commands**: `Map`\<`string`, [`Command`](Command.md)\>
 
+***
+
+### help?
+
+> `optional` **help**: `CommandHelp`
+
+***
+
+### nativeCommands
+
+> **nativeCommands**: [`Command`](Command.md)[] = `[]`
+
+***
+
+### testMode
+
+> **testMode**: `boolean` = `false`
+
 ## Methods
 
 ### getCommandInfo()
 
 > **getCommandInfo**(`command`): `undefined` \| [`Command`](Command.md)
-
-根据命令名获取注册的命令对象
 
 #### Parameters
 
@@ -46,13 +62,11 @@
 
 `undefined` \| [`Command`](Command.md)
 
----
+***
 
 ### getCommandsList()
 
 > **getCommandsList**(`admin`): `string`[]
-
-获取已注册的命令列表(只支持获取本包的，若是主机，则可以获取全部)
 
 #### Parameters
 
@@ -64,13 +78,27 @@
 
 `string`[]
 
----
+***
+
+### init()
+
+> **init**(`help`): `void`
+
+#### Parameters
+
+##### help
+
+`CommandHelp`
+
+#### Returns
+
+`void`
+
+***
 
 ### parseCommand()
 
-> **parseCommand**(`input`, `player`): [`chatOpe`](../namespaces/Event/enumerations/chatOpe.md)
-
-直接解析一条命令
+> **parseCommand**(`input`, `player`): `void`
 
 #### Parameters
 
@@ -84,21 +112,21 @@
 
 #### Returns
 
-[`chatOpe`](../namespaces/Event/enumerations/chatOpe.md)
+`void`
 
----
+***
 
 ### regClientCommand()
 
 > **regClientCommand**(): `void`
 
-注册客户端命令(用于多包互通，不用管)
+注册客户端命令(系统调用，不用管)
 
 #### Returns
 
 `void`
 
----
+***
 
 ### registerCommand()
 
@@ -116,25 +144,43 @@
 
 `void`
 
----
+***
 
-### regToHost()
+### registerNative()
 
-> **regToHost**(): `void`
+> **registerNative**(`command`): `void`
 
-客户端注册指令
+注册原生指令
+
+#### Parameters
+
+##### command
+
+[`Command`](Command.md)
 
 #### Returns
 
 `void`
 
----
+***
+
+### regToHost()
+
+> **regToHost**(): `void`
+
+客户端注册指令，系统调用，不管
+
+#### Returns
+
+`void`
+
+***
 
 ### runCommand()
 
 > **runCommand**(`t`): `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
 
-运行命令注册回调(系统调用)
+运行命令注册回调
 
 #### Parameters
 
@@ -146,40 +192,26 @@
 
 `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
 
----
+***
 
-### ErrorMessage()
+### runNativeCommand()
 
-> `static` **ErrorMessage**(`player`, `command`, `value`, `params`, `current`, `tip`?): `void`
-
-命令错误提示
+> **runNativeCommand**(`command`, `origin`, ...`args`): `undefined` \| `CustomCommandResult`
 
 #### Parameters
-
-##### player
-
-`Player`
 
 ##### command
 
 [`Command`](Command.md)
 
-##### value
+##### origin
 
-`string`
+`CustomCommandOrigin`
 
-##### params
+##### args
 
-`string`[]
-
-##### current
-
-`number`
-
-##### tip?
-
-`string`
+...`any`[]
 
 #### Returns
 
-`void`
+`undefined` \| `CustomCommandResult`

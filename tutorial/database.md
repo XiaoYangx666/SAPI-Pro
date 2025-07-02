@@ -55,7 +55,7 @@ import { Configdb } from "SAPI-Pro/DataBase";
 ### ScoreBoardJSONDataBase JSON 计分板数据库
 
 使用 scoreboard 存储 JSON 数据，会新建一个计分板来存储。支持超大文本，读取超大文本性能较 DP 数据库略差。  
-主要用于行为包之间临时大量数据传递，少量数据请使用scriptEvent，存储配置请使用DPDataBase。
+主要用于行为包之间临时大量数据传递，少量数据请使用 scriptEvent，存储配置请使用 DPDataBase。
 
 ##### constructor
 
@@ -94,7 +94,7 @@ import { exchangedb } from "SAPI-Pro/DataBase";
 
 ##### constructor
 
-`constructor(name: string):ScoreBoardDataBase`
+`constructor(name: string, displayName?: string, usePrefix: boolean = true):ScoreBoardDataBase`
 
 ##### 函数
 

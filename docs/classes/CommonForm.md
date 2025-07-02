@@ -1,26 +1,30 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / CommonForm
+[sapi-pro](../globals.md) / CommonForm
 
 # Class: CommonForm
 
-常用模板表单
+## Constructors
+
+### new CommonForm()
+
+> **new CommonForm**(): [`CommonForm`](CommonForm.md)
+
+#### Returns
+
+[`CommonForm`](CommonForm.md)
 
 ## Methods
 
 ### BodyInfoForm()
 
-> `static` **BodyInfoForm**(`id`, `title`, `body`): `void`
+> `static` **BodyInfoForm**(`title`, `body`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
 注册一个简单的信息窗口
 
 #### Parameters
-
-##### id
-
-`string`
 
 ##### title
 
@@ -32,86 +36,62 @@
 
 内容，可以是生成器
 
-`string` | [formGenerator](../interfaces/formGenerator.md)\<`ActionFormData`\>
+`string` | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`\>
 
 #### Returns
 
-`void`
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
-#### 示例
-
-```typescript
-CommonForm.BodyInfoForm("aichat.prompt", "AIChat系统提示词", (form, player, context) => {
-    form.body(Prompts[Config.systemPrompt]);
-});
-```
-
----
+***
 
 ### ButtonForm()
 
-> `static` **ButtonForm**(`id`, `data`): `void`
+> `static` **ButtonForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
 常用的按钮表单
 
 #### Parameters
 
-##### id
-
-`string`
-
 ##### data
 
-[ButtonFormData](../interfaces/ButtonFormData.md)
+[`ButtonFormData`](../interfaces/ButtonFormData.md)
 
 #### Returns
 
-`void`
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
----
+***
 
 ### ButtonListForm()
 
-> `static` **ButtonListForm**(`id`, `data`): `void`
+> `static` **ButtonListForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
 按钮列表表单
 
 #### Parameters
 
-##### id
-
-`string`
-
 ##### data
 
-[ButtonListFormData](../interfaces/ButtonListFormData.md)
+[`ButtonListFormData`](../interfaces/ButtonListFormData.md)
 
 #### Returns
 
-`void`
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
 
----
+***
 
 ### SimpleMessageForm()
 
-> `static` **SimpleMessageForm**(`id`, `data`): `void`
+> `static` **SimpleMessageForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`\>
 
 一个简单的提示窗口，仅含有两个按钮，
 
 #### Parameters
 
-##### id
-
-`string`
-
 ##### data
 
-[SimpleMessageFormData](../interfaces/SimpleMessageFormData.md)
+[`SimpleMessageFormData`](../interfaces/SimpleMessageFormData.md)
 
 #### Returns
 
-`void`
-
-```
-
-```
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`\>

@@ -1,8 +1,8 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
----
+***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / chatOpe
+[sapi-pro](../../../globals.md) / [Event](../README.md) / chatOpe
 
 # Enumeration: chatOpe
 
@@ -14,7 +14,7 @@
 
 捕获消息取消发送
 
----
+***
 
 ### skipsend
 

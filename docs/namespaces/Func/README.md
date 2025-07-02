@@ -1,8 +1,8 @@
-[**Documentation**](../../README.md)
+[**sapi-pro**](../../README.md)
 
 ***
 
-[Documentation](../../globals.md) / Func
+[sapi-pro](../../globals.md) / Func
 
 # Func
 
@@ -25,6 +25,7 @@
 - [intloc](functions/intloc.md)
 - [isAdmin](functions/isAdmin.md)
 - [isNum](functions/isNum.md)
+- [LibErrorMes](functions/LibErrorMes.md)
 - [LibMessage](functions/LibMessage.md)
 - [rand](functions/rand.md)
 - [tointloc](functions/tointloc.md)

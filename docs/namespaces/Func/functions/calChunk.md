@@ -1,14 +1,12 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
 ***
 
-[Documentation](../../../globals.md) / [Func](../README.md) / calChunk
+[sapi-pro](../../../globals.md) / [Func](../README.md) / calChunk
 
 # Function: calChunk()
 
 > **calChunk**(`pos`): `object`
-
-Defined in: [func.ts:79](https://github.com/XiaoYangx666/SAPI-Pro/blob/f4b3a55bd14c42fce5d687eca57d1987c433a912/src/SAPI-Pro/func.ts#L79)
 
 给定坐标点，计算其所在区块
 

@@ -1,12 +1,12 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
----
+***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / chatBusClass
+[sapi-pro](../../../globals.md) / [Event](../README.md) / chatBusClass
 
 # Class: chatBusClass
 
-聊天订阅类,请使用类的实例[chatBus](../variables/chatBus.md)
+聊天订阅
 
 ## Constructors
 
@@ -40,13 +40,15 @@
 
 `void`
 
----
+***
 
 ### subscribe()
 
 > **subscribe**(`callback`, `priority`): `void`
 
 订阅聊天事件
+
+返回值:是否取消原版聊天发送
 
 #### Parameters
 
@@ -57,7 +59,6 @@
 ##### priority
 
 `number` = `0`
-优先级，高优先级的会先响应，不支持多包
 
 #### Returns
 

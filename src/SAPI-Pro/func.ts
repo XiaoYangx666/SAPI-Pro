@@ -103,6 +103,6 @@ export function LibMessage(text: string) {
     console.log(`[${libName}]${text}`);
 }
 
-export function LibError(text: string) {
+export function LibErrorMes(text: string) {
     console.error(`[${libName}.Error]${LibConfig.packInfo.name}:${text}`);
 }

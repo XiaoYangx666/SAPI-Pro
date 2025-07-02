@@ -1,16 +1,14 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / ScoreBoardJSONDataBase
+[sapi-pro](../globals.md) / ScoreBoardJSONDataBase
 
 # Class: ScoreBoardJSONDataBase
 
-JSON 计分板数据库
-
 ## Extends
 
--   [`DataBase`](DataBase.md)\<`object`\>
+- [`DataBase`](DataBase.md)\<`object`\>
 
 ## Constructors
 
@@ -28,29 +26,49 @@ JSON 计分板数据库
 
 [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
 
+#### Overrides
+
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
+
 ## Properties
 
 ### name
 
 > **name**: `string`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+
+***
 
 ### type
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`type`](DataBase.md#type)
+
+***
 
 ### DBMap
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`DBMap`](DataBase.md#dbmap)
+
+***
 
 ### maxChunkBytes
 
 > `static` **maxChunkBytes**: `number` = `32767`
+
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`maxChunkBytes`](DataBase.md#maxchunkbytes)
 
 ## Methods
 
@@ -62,7 +80,11 @@ JSON 计分板数据库
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`clear`](DataBase.md#clear)
+
+***
 
 ### edit()
 
@@ -78,7 +100,7 @@ JSON 计分板数据库
 
 `void`
 
----
+***
 
 ### get()
 
@@ -94,7 +116,11 @@ JSON 计分板数据库
 
 `any`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`get`](DataBase.md#get)
+
+***
 
 ### keys()
 
@@ -104,7 +130,11 @@ JSON 计分板数据库
 
 `string`[]
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`keys`](DataBase.md#keys)
+
+***
 
 ### rm()
 
@@ -120,7 +150,11 @@ JSON 计分板数据库
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`rm`](DataBase.md#rm)
+
+***
 
 ### set()
 
@@ -140,37 +174,11 @@ JSON 计分板数据库
 
 `void`
 
----
+#### Overrides
 
-### clearAllDP()
+[`DataBase`](DataBase.md).[`set`](DataBase.md#set)
 
-> `static` **clearAllDP**(): `void`
-
-#### Returns
-
-`void`
-
----
-
-### getAllKeys()
-
-> `static` **getAllKeys**(): `string`[]
-
-#### Returns
-
-`string`[]
-
----
-
-### getByteCount()
-
-> `static` **getByteCount**(): `number`
-
-#### Returns
-
-`number`
-
----
+***
 
 ### getDB()
 
@@ -186,7 +194,11 @@ JSON 计分板数据库
 
 `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDB`](DataBase.md#getdb)
+
+***
 
 ### getDBs()
 
@@ -195,3 +207,7 @@ JSON 计分板数据库
 #### Returns
 
 [`DataBase`](DataBase.md)\<`any`\>[]
+
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDBs`](DataBase.md#getdbs)

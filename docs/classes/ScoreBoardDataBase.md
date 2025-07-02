@@ -1,22 +1,20 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / ScoreBoardDataBase
+[sapi-pro](../globals.md) / ScoreBoardDataBase
 
 # Class: ScoreBoardDataBase
 
-计分板数据库
-
 ## Extends
 
--   [`DataBase`](DataBase.md)\<`number`\>
+- [`DataBase`](DataBase.md)\<`number`\>
 
 ## Constructors
 
 ### new ScoreBoardDataBase()
 
-> **new ScoreBoardDataBase**(`name`): [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
+> **new ScoreBoardDataBase**(`name`, `displayName`?, `usePrefix`?): [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 
 #### Parameters
 
@@ -24,9 +22,21 @@
 
 `string`
 
+##### displayName?
+
+`string`
+
+##### usePrefix?
+
+`boolean` = `true`
+
 #### Returns
 
 [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
+
+#### Overrides
+
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
 
 ## Properties
 
@@ -34,23 +44,39 @@
 
 > **name**: `string`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+
+***
 
 ### type
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`type`](DataBase.md#type)
+
+***
 
 ### DBMap
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`DBMap`](DataBase.md#dbmap)
+
+***
 
 ### maxChunkBytes
 
 > `static` **maxChunkBytes**: `number` = `32767`
+
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`maxChunkBytes`](DataBase.md#maxchunkbytes)
 
 ## Methods
 
@@ -62,7 +88,11 @@
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`clear`](DataBase.md#clear)
+
+***
 
 ### get()
 
@@ -78,7 +108,11 @@
 
 `undefined` \| `number`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`get`](DataBase.md#get)
+
+***
 
 ### getObj()
 
@@ -96,7 +130,27 @@
 
 `scoreboardObj`
 
----
+***
+
+### getScoreBoard()
+
+> **getScoreBoard**(): `ScoreboardObjective`
+
+#### Returns
+
+`ScoreboardObjective`
+
+***
+
+### getScoreBoardName()
+
+> **getScoreBoardName**(): `string`
+
+#### Returns
+
+`string`
+
+***
 
 ### keys()
 
@@ -106,7 +160,23 @@
 
 `string`[]
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`keys`](DataBase.md#keys)
+
+***
+
+### resetAll()
+
+> **resetAll**(): `void`
+
+重置所有积分项
+
+#### Returns
+
+`void`
+
+***
 
 ### rm()
 
@@ -122,7 +192,11 @@
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`rm`](DataBase.md#rm)
+
+***
 
 ### set()
 
@@ -142,27 +216,27 @@
 
 `void`
 
----
+#### Overrides
 
-### clearAllDP()
+[`DataBase`](DataBase.md).[`set`](DataBase.md#set)
 
-> `static` **clearAllDP**(): `void`
+***
+
+### setDisplaySlot()
+
+> **setDisplaySlot**(`SlotId`): `void`
+
+#### Parameters
+
+##### SlotId
+
+`DisplaySlotId`
 
 #### Returns
 
 `void`
 
----
-
-### getAllKeys()
-
-> `static` **getAllKeys**(): `string`[]
-
-#### Returns
-
-`string`[]
-
----
+***
 
 ### getDB()
 
@@ -178,7 +252,11 @@
 
 `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDB`](DataBase.md#getdb)
+
+***
 
 ### getDBs()
 
@@ -187,3 +265,7 @@
 #### Returns
 
 [`DataBase`](DataBase.md)\<`any`\>[]
+
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDBs`](DataBase.md#getdbs)

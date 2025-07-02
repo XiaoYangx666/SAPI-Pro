@@ -1,14 +1,14 @@
-[**Documentation**](../README.md)
+[**sapi-pro**](../README.md)
 
----
+***
 
-[Documentation](../globals.md) / DPDataBase
+[sapi-pro](../globals.md) / DPDataBase
 
 # Class: DPDataBase
 
 ## Extends
 
--   [`DataBase`](DataBase.md)\<`DPTypes`\>
+- [`DataBase`](DataBase.md)\<`DPTypes`\>
 
 ## Constructors
 
@@ -26,29 +26,49 @@
 
 [`DPDataBase`](DPDataBase.md)
 
+#### Overrides
+
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
+
 ## Properties
 
 ### name
 
 > **name**: `string`
 
-数据库名
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+
+***
 
 ### type
 
 > **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`type`](DataBase.md#type)
+
+***
 
 ### DBMap
 
 > `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`DBMap`](DataBase.md#dbmap)
+
+***
 
 ### maxChunkBytes
 
 > `static` **maxChunkBytes**: `number` = `32767`
+
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`maxChunkBytes`](DataBase.md#maxchunkbytes)
 
 ## Methods
 
@@ -56,19 +76,19 @@
 
 > **clear**(): `void`
 
-清空数据库键值
-
 #### Returns
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`clear`](DataBase.md#clear)
+
+***
 
 ### get()
 
 > **get**(`key`): `undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
-
-获取数据库某个键
 
 #### Parameters
 
@@ -80,13 +100,17 @@
 
 `undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`get`](DataBase.md#get)
+
+***
 
 ### getJSON()
 
 > **getJSON**(`key`): `undefined` \| `object`
 
-获取 json 形式存储的对象
+获取json形式存储的对象，没有或转换错误返回undefined
 
 #### Parameters
 
@@ -98,17 +122,19 @@
 
 `undefined` \| `object`
 
----
+***
 
 ### getrealKeys()
 
 > **getrealKeys**(): `string`[]
 
+获取所有键，包括list的的键,并保留DP前缀
+
 #### Returns
 
 `string`[]
 
----
+***
 
 ### keys()
 
@@ -120,13 +146,15 @@
 
 `string`[]
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`keys`](DataBase.md#keys)
+
+***
 
 ### rm()
 
 > **rm**(`key`): `void`
-
-删除指定键
 
 #### Parameters
 
@@ -138,13 +166,15 @@
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`rm`](DataBase.md#rm)
+
+***
 
 ### set()
 
 > **set**(`key`, `value`): `void`
-
-设置数据库键值
 
 #### Parameters
 
@@ -160,13 +190,17 @@
 
 `void`
 
----
+#### Overrides
+
+[`DataBase`](DataBase.md).[`set`](DataBase.md#set)
+
+***
 
 ### setJSON()
 
 > **setJSON**(`key`, `value`): `void`
 
-以 json 形式存储一个对象
+以json形式存储一个对象
 
 #### Parameters
 
@@ -182,7 +216,7 @@
 
 `void`
 
----
+***
 
 ### clearAllDP()
 
@@ -192,7 +226,7 @@
 
 `void`
 
----
+***
 
 ### getAllKeys()
 
@@ -202,7 +236,7 @@
 
 `string`[]
 
----
+***
 
 ### getByteCount()
 
@@ -212,7 +246,7 @@
 
 `number`
 
----
+***
 
 ### getDB()
 
@@ -228,7 +262,11 @@
 
 `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDB`](DataBase.md#getdb)
+
+***
 
 ### getDBs()
 
@@ -238,7 +276,11 @@
 
 [`DataBase`](DataBase.md)\<`any`\>[]
 
----
+#### Inherited from
+
+[`DataBase`](DataBase.md).[`getDBs`](DataBase.md#getdbs)
+
+***
 
 ### isDPDataBase()
 

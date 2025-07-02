@@ -1,17 +1,18 @@
 import { Player } from "@minecraft/server";
 import { isAdmin } from "SAPI-Pro/func";
-import { enterNodeFunc, PreOrdertraverse } from "./func";
-import { Command, commandParser, ParamDefinition } from "./main";
+import { Command } from "./commandClass";
+import { enterNodeFunc, PreOrdertraverse } from "./parser/func";
+import { ParamDefinition } from "./interface";
+import { CommandParser } from "./parser/parser";
+import { CommandManager } from "./manager";
 
 interface helpCommandParam {
     page?: number;
     commandName?: string;
 }
 export class CommandHelp {
-    private pcommand: commandParser;
-    private helpCommand: Command;
-    constructor(pcommand: commandParser) {
-        this.pcommand = pcommand;
+    private readonly helpCommand: Command;
+    constructor(private readonly pcommand: CommandManager, private readonly parser: CommandParser) {
         this.helpCommand = new Command("help", "提供.命令帮助/命令列表", false, this.commandHelp.bind(this));
         this.helpCommand.addParamBranches([
             {
@@ -31,7 +32,7 @@ export class CommandHelp {
     commandHelp(player: Player, args: helpCommandParam) {
         if (args.commandName) {
             const commandObj = this.pcommand.getCommandInfo(args.commandName);
-            if (commandObj == undefined) return commandParser.ErrorMessage(player, this.helpCommand, args.commandName, [args.commandName], 0, "命令不存在");
+            if (commandObj == undefined) return this.parser.ErrorMessage(player, this.helpCommand, args.commandName, [args.commandName], 0, true, "命令不存在");
             this.handleCommandHelp(player, commandObj);
         }
         if (args.page != undefined) this.handlePageHelp(player, args.page - 1);

@@ -1,8 +1,8 @@
-[**Documentation**](../../../README.md)
+[**sapi-pro**](../../../README.md)
 
----
+***
 
-[Documentation](../../../globals.md) / [Event](../README.md) / chatFunc
+[sapi-pro](../../../globals.md) / [Event](../README.md) / chatFunc
 
 # Type Alias: chatFunc()
 
@@ -17,4 +17,3 @@
 ## Returns
 
 `void` \| [`chatOpe`](../enumerations/chatOpe.md)
-不返回或返回指定操作
