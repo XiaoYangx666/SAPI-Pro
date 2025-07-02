@@ -20,7 +20,7 @@ export const NativeTypeMapping: Record<keyof typeof paramTypes, CustomCommandPar
     enum: CustomCommandParamType.String,
     int: CustomCommandParamType.Integer,
     float: CustomCommandParamType.Float,
-    target: CustomCommandParamType.PlayerSelector,
+    target: CustomCommandParamType.String,
     position: CustomCommandParamType.Location,
     string: CustomCommandParamType.String,
 };

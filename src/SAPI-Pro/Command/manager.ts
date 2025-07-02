@@ -1,4 +1,12 @@
-import { ChatSendBeforeEvent, CustomCommandOrigin, CustomCommandResult, CustomCommandSource, CustomCommandStatus, Player, system } from "@minecraft/server";
+import {
+    ChatSendBeforeEvent,
+    CustomCommandOrigin,
+    CustomCommandResult,
+    CustomCommandSource,
+    CustomCommandStatus,
+    Player,
+    system,
+} from "@minecraft/server";
 import { LibConfig } from "SAPI-Pro/Config";
 import { exchangedb } from "SAPI-Pro/DataBase";
 import { chatBus } from "SAPI-Pro/Event";
@@ -19,9 +27,12 @@ export class CommandManager {
         //注册原生指令
         system.beforeEvents.startup.subscribe((t) => {
             this.nativeCommands.forEach((cmd) => {
-                t.customCommandRegistry.registerCommand(cmd.toNative(LibConfig.packInfo.nameSpace), (origin: CustomCommandOrigin, ...args: any[]) => {
-                    return this.runNativeCommand(cmd, origin, args);
-                });
+                t.customCommandRegistry.registerCommand(
+                    cmd.toNative(LibConfig.packInfo.nameSpace),
+                    (origin: CustomCommandOrigin, ...args: any[]) => {
+                        return this.runNativeCommand(cmd, origin, args);
+                    }
+                );
             });
         });
     }
