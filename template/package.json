@@ -13,6 +13,6 @@
     },
     "scripts": {
         "update": "python3 tools/update.py",
-        "build": "tsc & python3 tools/build.py"
+        "build": "tsc && python3 tools/build.py"
     }
 }
