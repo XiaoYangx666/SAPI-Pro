@@ -1,5 +1,5 @@
 import { Player } from "@minecraft/server";
-import { isAdmin } from "SAPI-Pro/func";
+import { isAdmin } from "../func";
 import { Command } from "./commandClass";
 import { enterNodeFunc, PreOrdertraverse } from "./parser/func";
 import { ParamDefinition } from "./interface";
@@ -32,7 +32,16 @@ export class CommandHelp {
     commandHelp(player: Player, args: helpCommandParam) {
         if (args.commandName) {
             const commandObj = this.pcommand.getCommandInfo(args.commandName);
-            if (commandObj == undefined) return this.parser.ErrorMessage(player, this.helpCommand, args.commandName, [args.commandName], 0, true, "命令不存在");
+            if (commandObj == undefined)
+                return this.parser.ErrorMessage(
+                    player,
+                    this.helpCommand,
+                    args.commandName,
+                    [args.commandName],
+                    0,
+                    true,
+                    "命令不存在"
+                );
             this.handleCommandHelp(player, commandObj);
         }
         if (args.page != undefined) this.handlePageHelp(player, args.page - 1);
@@ -66,7 +75,9 @@ export class CommandHelp {
 const EnterParam: enterNodeFunc<ParamDefinition> = (T, ctx, stack) => {
     if (!T.subParams) {
         const priorStr = stack.map((t) => paramFormat(t[0])).join(" ");
-        ctx.usageList.push(priorStr + (priorStr ? " " : "") + paramFormat(T) + "§r" + (T.explain ? T.explain : ctx.cmdexplain));
+        ctx.usageList.push(
+            priorStr + (priorStr ? " " : "") + paramFormat(T) + "§r" + (T.explain ? T.explain : ctx.cmdexplain)
+        );
     }
 };
 
@@ -75,15 +86,33 @@ const enterCommand: enterNodeFunc<Command> = (T, ctx, stack) => {
     if (((T.isAdmin && ctx.isop) || !T.isAdmin) && !T.isHidden) {
         //(所有参数为可选∩没有子命令)∪(所有参数为可选∩有处理函数)
         //即为:所有参数为可选∩(没有子命令∪有处理函数)
-        if ((T.handler || T.subCommands.length == 0) && T.paramBranches.every((t) => (t instanceof Array ? t.every((tt) => tt.optional) : t.optional))) {
-            ctx.usageList.push(`${T.isAdmin || ctx.command.isAdmin ? "§6" : ""}${priorStr}${priorStr.length ? " " : ""}${T.name} §r${T.explain}`);
+        if (
+            (T.handler || T.subCommands.length == 0) &&
+            T.paramBranches.every((t) => (t instanceof Array ? t.every((tt) => tt.optional) : t.optional))
+        ) {
+            ctx.usageList.push(
+                `${T.isAdmin || ctx.command.isAdmin ? "§6" : ""}${priorStr}${priorStr.length ? " " : ""}${T.name} §r${
+                    T.explain
+                }`
+            );
         }
         // 若有参数
         if (T.paramBranches.length > 0) {
             for (let branch of T.paramBranches) {
                 const ctx1 = { usageList: [], cmdexplain: T.explain };
-                PreOrdertraverse<ParamDefinition>(branch, { getSubNodes: (T) => T.subParams, enter: EnterParam, ctx: ctx1 });
-                ctx.usageList.push(...ctx1.usageList.map((t) => `${T.isAdmin || ctx.command.isAdmin ? "§6" : ""}${priorStr}${priorStr.length ? " " : ""}${T!.name} ${t}`));
+                PreOrdertraverse<ParamDefinition>(branch, {
+                    getSubNodes: (T) => T.subParams,
+                    enter: EnterParam,
+                    ctx: ctx1,
+                });
+                ctx.usageList.push(
+                    ...ctx1.usageList.map(
+                        (t) =>
+                            `${T.isAdmin || ctx.command.isAdmin ? "§6" : ""}${priorStr}${priorStr.length ? " " : ""}${
+                                T!.name
+                            } ${t}`
+                    )
+                );
             }
         }
     }

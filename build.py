@@ -83,15 +83,12 @@ def main():
     result = subprocess.Popen(["tsc","--declaration",args.declaration],shell=os.name=="nt")
     result.wait()
     print("编译完成")
-    
-    main_dts = Path("./scripts/main.d.ts")
-    if main_dts.exists():
-        main_dts.unlink()
+
     
     # 打包ts和js文件
     dirs_to_zip = [
-        ("./src/SAPI-Pro", "SAPI-Pro_ts.zip"),
-        ("./scripts/SAPI-Pro", "SAPI-Pro_js.zip")
+        ("./src", "SAPI-Pro_ts.zip"),
+        ("./scripts", "SAPI-Pro_js.zip")
     ]
 
     for src_dir, zip_name in dirs_to_zip:
@@ -104,29 +101,29 @@ def main():
             print(f"警告：目录 {src_dir} 不存在，跳过压缩。")
     
     # 定义目录
-    template_dir = Path("./template")
-    temp_root_dir = build_dir / "temp_root"
-    temp_root_dir.mkdir(parents=True, exist_ok=True)
+    # template_dir = Path("./template")
+    # temp_root_dir = build_dir / "temp_root"
+    # temp_root_dir.mkdir(parents=True, exist_ok=True)
 
-    # 复制 src 和 scripts 目录内容到临时目录
-    copy_files(Path("./src"), temp_root_dir / "src")
-    copy_files(Path("./scripts"), temp_root_dir / "scripts")
+    # # 复制 src 和 scripts 目录内容到临时目录
+    # copy_files(Path("./src"), temp_root_dir / "src")
+    # copy_files(Path("./scripts"), temp_root_dir / "scripts")
     
-    # 复制template目录
-    if template_dir.exists():
-        updateDependencies(template_dir)
-        copy_files(template_dir, temp_root_dir)
-    else:
-        print(f"错误：{template_dir} 目录不存在！")
-        return
+    # # 复制template目录
+    # if template_dir.exists():
+    #     updateDependencies(template_dir)
+    #     copy_files(template_dir, temp_root_dir)
+    # else:
+    #     print(f"错误：{template_dir} 目录不存在！")
+    #     return
 
-    # 压缩临时目录为 BasePack
-    zip_filename = build_dir / "SAPI-Pro_BasePack.zip"
-    zip_directory(temp_root_dir, zip_filename)
-    print(f"已压缩: {temp_root_dir} -> {zip_filename}")
+    # # 压缩临时目录为 BasePack
+    # zip_filename = build_dir / "SAPI-Pro_BasePack.zip"
+    # zip_directory(temp_root_dir, zip_filename)
+    # print(f"已压缩: {temp_root_dir} -> {zip_filename}")
 
-    # 清理临时目录
-    shutil.rmtree(temp_root_dir)
+    # # 清理临时目录
+    # shutil.rmtree(temp_root_dir)
 
     print("打包完成！输出目录：", build_dir)
 

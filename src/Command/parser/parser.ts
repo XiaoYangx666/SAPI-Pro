@@ -1,12 +1,12 @@
 import { Player, system } from "@minecraft/server";
-import { LibConfig } from "SAPI-Pro/Config";
-import { chatOpe } from "SAPI-Pro/Event";
-import { isAdmin, LibErrorMes } from "SAPI-Pro/func";
-import { enterNodeFunc, PreOrdertraverse, traverseAct } from "./func";
-import { ParamDefinition, parsedTypes, ParseError } from "../interface";
-import { paramParser } from "./ParamTypes";
+import { LibConfig } from "../../Config";
+import { chatOpe } from "../../Event";
+import { isAdmin, LibErrorMes } from "../../func";
 import { Command } from "../commandClass";
+import { ParamDefinition, parsedTypes, ParseError } from "../interface";
 import { CommandManager } from "../manager";
+import { enterNodeFunc, PreOrdertraverse, traverseAct } from "./func";
+import { paramParser } from "./ParamTypes";
 
 interface paramParseNode {
     param: ParamDefinition;

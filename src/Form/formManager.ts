@@ -1,7 +1,7 @@
 import { Player, ScriptEventCommandMessageAfterEvent, system } from "@minecraft/server";
-import { LibConfig } from "SAPI-Pro/Config";
-import { intervalBus, ScriptEventBus } from "SAPI-Pro/Event";
-import { getPlayerById, LibErrorMes } from "SAPI-Pro/func";
+import { LibConfig } from "../Config";
+import { ScriptEventBus, intervalBus } from "../Event";
+import { LibErrorMes, getPlayerById } from "../func";
 import { SAPIProForm } from "./form";
 import { contextArgs, formDataType, openFormData } from "./interface";
 import { formStackManager } from "./stackManager";
