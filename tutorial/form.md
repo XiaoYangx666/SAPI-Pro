@@ -27,7 +27,7 @@ SAPI-Pro 表单使用类型[SAPIProForm](../docs/interfaces/SAPIProForm.md)构�
 
 ```typescript
 import { ActionFormData } from "@minecraft/server-ui";
-import { FormManager } from "SAPI-Pro/Form/main";
+import { formManager } from "sapi-pro";
 import { ActionFormResponse } from "@minecraft/server-ui";
 const testForm1: SAPIProForm<ActionFormData> = {
     builder: (player, args) => {

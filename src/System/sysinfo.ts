@@ -1,9 +1,9 @@
-import { LibConfig } from "SAPI-Pro/Config";
+import { LibConfig } from "../Config";
 import { Command, pcommand } from "../Command/main";
-import { exchangedb } from "SAPI-Pro/DataBase";
+import { exchangedb } from "../DataBase";
 import { CommonForm } from "../Form/commonForm";
 import { packComInfo } from "./ScriptCom";
-import { formManager } from "SAPI-Pro/main";
+import { formManager } from "../main";
 
 export function regSysInfo() {
     pcommand.registerCommand(sysInfoCmd);

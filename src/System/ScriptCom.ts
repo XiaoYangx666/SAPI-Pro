@@ -1,11 +1,11 @@
 import { system, world } from "@minecraft/server";
-import { pcommand } from "SAPI-Pro/main";
+import { pcommand } from "../main";
 import { LibConfig, PackInfo } from "../Config";
 import { exchangedb } from "../DataBase";
 import { LibMessage } from "../func";
 import { regSysInfo } from "./sysinfo";
 
-world.afterEvents.worldLoad.subscribe(async () => {
+export async function initCom() {
     //重置脚本信息和命令注册
     exchangedb.edit((data) => {
         const sinfo = data["scriptsInfo"] as object;
@@ -39,9 +39,9 @@ world.afterEvents.worldLoad.subscribe(async () => {
         pcommand.regClientCommand();
         regSysInfo();
     }
-});
+}
 
-export async function elect_Host() {
+async function elect_Host() {
     await system.waitTicks(5);
     const packs = exchangedb.get("scriptsInfo") as Record<string, packComInfo>;
     let max = LibConfig.version;

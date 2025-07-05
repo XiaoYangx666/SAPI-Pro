@@ -24,7 +24,7 @@
 相关资料：[Command](../docs/classes/Command.md)类
 
 ```typescript
-import { pcommand, Command } from "SAPI-Pro/Command/main";
+import { Command, pcommand } from "sapi-pro";
 const exampleCmd = new Command("test", "命令测试", false, (player, param) => {
     player.sendMessage("你输入的是" + param.Name);
 }); //创建命令对象

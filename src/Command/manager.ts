@@ -7,9 +7,9 @@ import {
     Player,
     system,
 } from "@minecraft/server";
-import { LibConfig } from "SAPI-Pro/Config";
-import { exchangedb } from "SAPI-Pro/DataBase";
-import { chatBus } from "SAPI-Pro/Event";
+import { LibConfig } from "../Config";
+import { exchangedb } from "../DataBase";
+import { chatBus } from "../Event";
 import { Command } from "./commandClass";
 import { CommandHelp } from "./help";
 import { CommandParser } from "./parser/parser";

@@ -24,53 +24,49 @@
 
 ## 📦 Installation
 
-### Method 1: Basic Template Creation (Recommended)
+### Method 1: Using sapi-kit to Create (Recommended)
 
-If you want to create a new script behavior pack based on SAPI-Pro, you can directly download the latest version of the base pack and start your new project from scratch.
+If you want to create a new script behavior pack based on SAPI-Pro, you can use sapi-kit. sapi-kit provides template packs and supports features like compilation, third-party library packaging, version updates, and more, making development easier.
 
-1. [Download from Gitee](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[Download from Github](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
-2. Modify the behavior pack configuration (manifest.json)
+1. Install sapi-kit
 
-```json
-{
-    "header": {
-        "description": "SAPI-Pro Example Behavior Pack (Please modify description)",
-        "name": "SAPI-Pro Example Behavior Pack (Please modify name)",
-        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a (Change UUID)",
-        "version": [1, 0, 0]
-    },
-    "modules": [
-        {
-            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80 (Change UUID)"
-        }
-    ]
-}
-```
+    ```bash
+    npm i -g sapi-kit
+    ```
 
-3. Modify the library configuration
+2. Initialize the project in your project directory
+
+    ```bash
+    sapi-kit init
+    ```
+
+3. Install SAPI-Pro
+    ```bash
+    npm i sapi-pro
+    ```
+4. Initialize the library in src/main.ts
 
 ```typescript
-// src/packInfo.ts
-// or scripts/packInfo.js
+//src/main.ts
+import { PackInfo, initSAPIPro } from "sapi-pro";
 const packInfo: PackInfo = {
-    name: "SAPI-Pro Behavior Pack", //Behavior pack name
-    version: "0.1", //Behavior pack version
-    author: "Unknown", //Author
+    name: "Behavior Pack Name", //Behavior pack name
+    version: "1.0.0", //Behavior pack version
+    author: "Author", //Author
     nameSpace: "sapipro", //Namespace
-    description: "This is the SAPI-Pro pack description", //Pack description
+    description: "Behavior pack description", //Pack description
 };
+// Initialize the library
+initSAPIPro(packInfo);
 ```
 
-4. Install dependencies
-   Execute `npm i` in the project directory to automatically install dependencies like @minecraft/server and @minecraft/server-ui.
-5. Write code
-   After completing the configuration, you can start writing code in `src/main.ts` and import SAPI-Pro related classes using `import`. Compile with tsc to generate js files for execution.
+For more information about sapi-kit: [ScriptApi-Kit](https://gitee.com/ykxyx666_admin/script-api-kit).
 
-> **Tip**  
-> If you are not using TypeScript, you can directly delete the src and tsconfig files and work in the `scripts/` directory.  
-> Do not delete import "./SAPI-Pro/main" and import "./packInfo"; statements, as the library requires initialization to function properly.
+> **Note**
+> If you are not using TypeScript, you can directly write JS code in the src folder.
+> The library must be initialized to function properly.
 
-### Method 2: Integrate into Existing Project
+### Method 2: Manual Integration into an Existing Project
 
 1. Download: [Latest Version](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest) Please download the ts or js version.
 
@@ -88,22 +84,17 @@ const packInfo: PackInfo = {
 
 3. Initialize the library:
     ```typescript
-    // Main entry file
-    import "./SAPI-Pro/main";
-    ```
-4. Register pack information
-   Since the base pack isn't used, you need to register pack info with this code:
-    ```typescript
-    import { LibConfig, PackInfo } from "SAPI-Pro/Config";
+    //src/main.ts
+    import { PackInfo, initSAPIPro } from "sapi-pro";
     const packInfo: PackInfo = {
-        name: "SAPI-Pro Behavior Pack", //Behavior pack name
-        version: "0.1", //Behavior pack version
-        author: "Unknown", //Author
+        name: "Behavior Pack Name", //Behavior pack name
+        version: "1.0.0", //Behavior pack version
+        author: "Author", //Author
         nameSpace: "sapipro", //Namespace
-        description: "This is the SAPI-Pro pack description", //Pack description
+        description: "Behavior pack description", //Pack description
     };
-    // Register pack information
-    LibConfig.regPackInfo(packInfo);
+    // Initialize the library
+    initSAPIPro(packInfo);
     ```
 
 ---
@@ -122,7 +113,7 @@ Here are two simple command registration examples. You can also create more comp
 
 ```typescript
 import { Player, system } from "@minecraft/server";
-import { Command, pcommand } from "SAPI-Pro/Command/main";
+import { Command, pcommand } from "sapi-pro";
 
 const ExampleCmd = new Command("test", "Command Test", false, (player, param) => {
     player.sendMessage("SAPI-Pro, activate!");
@@ -194,7 +185,7 @@ For data storage, SAPI-Pro provides three classes: `DPDataBase`, `ScoreBoardJSON
 #### Dynamic Storage Example
 
 ```typescript
-import { Configdb } from "SAPI-Pro/DataBase";
+import { Configdb } from "sapi-pro";
 // Store numbers (can also store string, Vector3, boolean)
 Configdb.set("test", 1);
 // Store objects

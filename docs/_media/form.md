@@ -27,7 +27,7 @@ SAPI-Pro 表单使用类型[SAPIProForm](../docs/interfaces/SAPIProForm.md)构�
 
 ```typescript
 import { ActionFormData } from "@minecraft/server-ui";
-import { FormManager } from "SAPI-Pro/Form/main";
+import { formManager } from "sapi-pro";
 import { ActionFormResponse } from "@minecraft/server-ui";
 const testForm1: SAPIProForm<ActionFormData> = {
     builder: (player, args) => {
@@ -39,7 +39,7 @@ const testForm1: SAPIProForm<ActionFormData> = {
 };
 ```
 
-#### builder:FormBuiler
+#### builder:[FormBuiler](../docs/type-aliases/FormBuilder.md)
 
 `FormBuilder:(player, args)=> Promise<T> | T`
 
@@ -47,13 +47,13 @@ builder 需要提供一个创建函数，每次都会使用它来创建表单。
 
 你可以为上下文参数设置属性如:`args.a=1`，这样你就可以在 handler 里拿到。
 
-#### handler:formHandler
+#### handler:[formHandler](../docs/type-aliases/formHandler.md)
 
 `formHandler:(response: formResponseType<T>, context: SAPIProFormContext<T>) => void | Promise<void>`
 
 **参数**：第一个参数是表单返回值，它和你的表单类型有关，例如:ActionFormData 将会返回 ActionFormResponse ; 第二个参数是上下文，你可以通过它进行导航，获得玩家等，具体后面介绍。
 
-#### beforeBuild?formBeforeBuild
+#### beforeBuild?[formBeforeBuild](../docs/type-aliases/formBeforeBuild.md)
 
 `formBeforeBuild:(context: SAPIProFormContext<T>) => void | Promise<void>`
 
@@ -102,12 +102,13 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 表单多数是无名的，可以直接通过对象打开，但如果需要在多行为包间打开表单，则需要为表单命名。
 
-使用一下代码来注具名表单：
-`formManager.registerNamed(name: string, form: SAPIProForm<T>)`
+使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed)来注具名表单：
 
----
+使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed)来打开具名表单
 
 ### 表单上下文 SAPIProFormContext
+
+参考:[SAPIProFormContext](../docs/classes/SAPIProFormContext.md)
 
 表单上下文包含表单构建和处理中所需要的传入参数，玩家对象，导航操作等。它由 SAPI-Pro 自动管理，进行出栈与入栈。
 

@@ -24,7 +24,7 @@
 相关资料：[Command](../docs/classes/Command.md)类
 
 ```typescript
-import { pcommand, Command } from "SAPI-Pro/Command/main";
+import { Command, pcommand } from "sapi-pro";
 const exampleCmd = new Command("test", "命令测试", false, (player, param) => {
     player.sendMessage("你输入的是" + param.Name);
 }); //创建命令对象
@@ -340,7 +340,7 @@ pcommand.registerCommand(Command.fromObject(spCommand));
 
 ### 更多示例
 
-如果要实现更多更复杂的参数分支，可以参考[tp 命令复刻](../examples/tp.ts)，此例子完整的实现了基岩版的 tp 命令的结构，包含多参数分支，和参数分支的子分支。
+如果要实现更多更复杂的参数分支，可以参考[tp 命令复刻](./examples/tp.md)，此例子完整的实现了基岩版的 tp 命令的结构，包含多参数分支，和参数分支的子分支。
 
 ### 附录
 

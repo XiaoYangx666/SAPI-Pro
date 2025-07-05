@@ -5,8 +5,8 @@
 ## 实用函数
 
 ```typescript
-import { Func } from "SAPI-Pro/main"; //从main导入
-import { xxx } from "SAPI-Pro/func"; //或直接从func导入
+import { Func } from "sapi-pro"; //从main导入
+import { xxx } from "sapi-pro/scripts/func"; //或直接从func导入
 ```
 
 #### 玩家相关
