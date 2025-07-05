@@ -22,57 +22,53 @@
 
 ## 📦 安装
 
-### 方式一：从模板创建（推荐）
+### 方式一：使用 sapi-kit 创建（推荐）
 
-如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以直接下载最新版本模板包。模板包提供了基础的配置，并提供了打包脚本，更新脚本等，更加方便。
+如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以使用 sapi-kit。sapi-kit 提供了模板包，并支持编译，第三方库打包，更新版本等功能，方便开发。
 
-1. [从 Gitee 下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从 Github 下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
-2. 修改行为包配置(manifest.json)
+1. 安装 sapi-kit
 
-```json
-{
-    "header": {
-        "description": "SAPI-Pro示例行为包(请修改描述)",
-        "name": "SAPI-Pro示例行为包(请修改名字)",
-        "uuid": "9db8c694-0dc1-4263-a2c1-2cd8c2f29a9a(改uuid)",
-        "version": [1, 0, 0]
-    },
-    "modules": [
-        {
-            "uuid": "aa930053-5c73-4e59-9c97-272c35e4eb80(改uuid)"
-        }
-    ]
-}
-```
+    ```bash
+    npm i -g sapi-kit
+    ```
 
-3. 修改包信息
+2. 进入项目目录，初始化项目
+
+    ```bash
+    sapi-kit init
+    ```
+
+3. 安装 SAPI-Pro
+    ```bash
+    npm i sapi-pro
+    ```
+4. 在 src/main.ts 中初始化库
 
 ```typescript
-// src/packInfo.ts
-// 或scripts/packInfo.js
+//src/main.ts
+import { PackInfo, initSAPIPro } from "sapi-pro";
 const packInfo: PackInfo = {
-    name: "SAPI-Pro行为包", //行为包名
-    version: "0.1", //行为包版本
-    author: "不到啊", //作者
+    name: "行为包名", //行为包名
+    version: "1.0.0", //行为包版本
+    author: "作者", //作者
     nameSpace: "sapipro", //命名空间
-    description: "这是SAPI-Pro包描述", //包描述
+    description: "行为包描述", //包描述
 };
+// 初始化库
+initSAPIPro(packInfo);
 ```
 
-4. 安装依赖
-   在项目目录中执行`npm i`即可自动安装@minecraft/server 和@minecraft/server-ui 等依赖
-5. 编写代码
-   完成配置后，你可以开始在`src/main.ts`中编写代码，通过`import`引入 SAPI-Pro 相关类。使用 tsc 编译为 js 即可以运行。
+有关 sapi-kit 的更多信息:[ScriptApi-Kit](https://gitee.com/ykxyx666_admin/script-api-kit)
 
 > **提示**  
-> 如果你不使用 TypeScript，可以直接删除 src 和 tsconfig 等文件。并在`scripts/`目录下编写代码。
-> 不要删除`import "./SAPI-Pro/main"`及`import "./packInfo";`语句,库需要初始化才能正常使用
+> 如果你不使用 TypeScript，可以直接在 src 中编写 js 代码。
+> 库必须初始化才能正常使用
 
-### 方式二：现有项目集成
+### 方式二：现有项目手动集成
 
-1. 下载：[从 Gitee 下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从 Github 下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
+1.  下载：[从 Gitee 下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从 Github 下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
 
-2. 将库文件解压至项目目录：(JS 版本同理)
+2.  将库文件解压至项目目录：(JS 版本同理)
 
     ```bash
     📂 your_project/
@@ -84,28 +80,20 @@ const packInfo: PackInfo = {
             └── main.ts
     ```
 
-3. 初始化库：
+3.  初始化库：
 
     ```typescript
-    // 主入口文件
-    import "./SAPI-Pro/main";
-    ```
-
-4. 注册包信息
-
-    由于未使用基础包，你需要使用以下代码注册包信息
-
-    ```typescript
-    import { LibConfig, PackInfo } from "SAPI-Pro/Config";
+    //src/main.ts
+    import { PackInfo, initSAPIPro } from "sapi-pro";
     const packInfo: PackInfo = {
-        name: "SAPI-Pro 行为包", //行为包名
-        version: "0.1", //行为包版本
-        author: "不到啊", //作者
+        name: "行为包名", //行为包名
+        version: "1.0.0", //行为包版本
+        author: "作者", //作者
         nameSpace: "sapipro", //命名空间
-        description: "这是 SAPI-Pro 包描述", //包描述
+        description: "行为包描述", //包描述
     };
-    // 注册包信息
-    LibConfig.regPackInfo(packInfo);
+    // 初始化库
+    initSAPIPro(packInfo);
     ```
 
 ---
@@ -124,7 +112,7 @@ const packInfo: PackInfo = {
 
 ```typescript
 import { Player, system } from "@minecraft/server";
-import { Command, pcommand } from "SAPI-Pro/Command/main";
+import { Command, pcommand } from "sapi-pro";
 
 const ExampleCmd = new Command("test", "命令测试", false, (player, param) => {
     player.sendMessage("SAPI-Pro，启动！");
@@ -196,7 +184,7 @@ pcommand.registerCommand(
 #### 动态存储示例
 
 ```typescript
-import { Configdb } from "SAPI-Pro/DataBase";
+import { Configdb } from "sapi-pro";
 //存储数值(还可以存string,Vector3,boolean)
 Configdb.set("test", 1);
 //存储对象

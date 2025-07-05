@@ -47,7 +47,7 @@ myDPDataBase.set("SAPI-Pro", "nb");
 系统内置了一个动态数据数据库 Configdb 用于存储行为包数据。
 
 ```typescript
-import { Configdb } from "SAPI-Pro/DataBase";
+import { Configdb } from "sapi-pro";
 ```
 
 ---
@@ -83,7 +83,7 @@ const mySBDataBase = new ScoreBoardJSONDataBase("data");
 系统内置了一个 JSON 计分板数据库 exchangedb 用于交换行为包数据。
 
 ```typescript
-import { exchangedb } from "SAPI-Pro/DataBase";
+import { exchangedb } from "sapi-pro";
 ```
 
 ---
@@ -118,7 +118,7 @@ const mySB = new ScoreBoardDataBase("record");
 系统内置了一个计分板数据库 sysdb ，但现在好像没啥用了，你可以拿来用。拿来多包传传数据啥的。
 
 ```typescript
-import { sysdb } from "SAPI-Pro/DataBase";
+import { sysdb } from "sapi-pro";
 ```
 
 ### scoreboardObj

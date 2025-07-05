@@ -7,7 +7,7 @@
 首先引入
 
 ```typescript
-import { Event } from "SAPI-Pro/main";
+import { Event } from "sapi-pro";
 ```
 
 ### Event.chatBus

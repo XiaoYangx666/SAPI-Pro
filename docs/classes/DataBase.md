@@ -8,8 +8,8 @@
 
 ## Extended by
 
-- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 - [`DPDataBase`](DPDataBase.md)
+- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 - [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
 
 ## Type Parameters

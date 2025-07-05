@@ -25,7 +25,8 @@
     },
     "scripts": {
         "build:nodeclare": "python3 build.py --declaration false",
-        "build": "python3 build.py --declaration true"
+        "build": "python3 build.py --declaration true",
+        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
     },
     "overrides": {
         "@minecraft/server-ui": {
@@ -34,5 +35,12 @@
     },
     "files": [
         "scripts"
+    ],
+    "keywords": [
+        "minecraft",
+        "bedrock",
+        "bedrock-edition",
+        "ScriptApi",
+        "library"
     ]
 }
