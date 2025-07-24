@@ -12,7 +12,7 @@ import { xxx } from "sapi-pro/scripts/func"; //或直接从func导入
 #### 玩家相关
 
 -   [isAdmin](../docs/namespaces/Func/functions/isAdmin.md)
-    **重要**:判断是否管理员，默认通过是否有 tag:op 来判断，你可以自己改逻辑
+    **重要**:判断是否管理员，默认通过自身权限等级是否≥1来判断
 -   [getAllPlayers](../docs/namespaces/Func/functions/getAllPlayers.md)
     获取所有玩家，(命令系统通过这个获取玩家)这个可以自定义，例如你想排除哪些玩家，可以自己改
 -   [getPlayerById](../docs/namespaces/Func/functions/getPlayerById.md) 根据实体 id 获取玩家
