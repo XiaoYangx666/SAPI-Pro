@@ -34,7 +34,7 @@ export function isNum(value: any): boolean {
  * 默认使用权限等级判断
  * */
 export function isAdmin(player: Player) {
-    return player.commandPermissionLevel >= 3;
+    return player.commandPermissionLevel >= 1;
 }
 
 export function getAllPlayers() {
