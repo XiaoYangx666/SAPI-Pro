@@ -31,11 +31,10 @@ export function isNum(value: any): boolean {
 
 /**
  * 返回玩家是否管理员
- * 默认使用tag区分
- * 你可以自己改
+ * 默认使用权限等级判断
  * */
 export function isAdmin(player: Player) {
-    return player.hasTag("op");
+    return player.commandPermissionLevel >= 3;
 }
 
 export function getAllPlayers() {

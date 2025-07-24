@@ -63,8 +63,8 @@ export class CommandHelp {
         player.sendMessage(text);
     }
     handleCommandHelp(player: Player, command: Command) {
-        const isop = isAdmin(player);
-        const usageList = getCommandUsage(command, isop);
+        const isOp = isAdmin(player);
+        const usageList = getCommandUsage(command, isOp);
         player.sendMessage(`§e.${command.name}:\n${command.explain}\n§f使用:\n`);
         for (const usage of usageList) {
             player.sendMessage("- ." + usage);
@@ -83,7 +83,7 @@ const EnterParam: enterNodeFunc<ParamDefinition> = (T, ctx, stack) => {
 
 const enterCommand: enterNodeFunc<Command> = (T, ctx, stack) => {
     const priorStr = stack.map((t) => t[0].name).join(" ");
-    if (((T.isAdmin && ctx.isop) || !T.isAdmin) && !T.isHidden) {
+    if (((T.isAdmin && ctx.isOp) || !T.isAdmin) && !T.isHidden) {
         //(所有参数为可选∩没有子命令)∪(所有参数为可选∩有处理函数)
         //即为:所有参数为可选∩(没有子命令∪有处理函数)
         if (
@@ -117,8 +117,8 @@ const enterCommand: enterNodeFunc<Command> = (T, ctx, stack) => {
         }
     }
 };
-function getCommandUsage(command: Command, isop: boolean) {
-    const ctx = { isop: isop, usageList: [], command: command };
+function getCommandUsage(command: Command, isOp: boolean) {
+    const ctx = { isOp: isOp, usageList: [], command: command };
     PreOrdertraverse(command, { getSubNodes: (T) => T.subCommands, enter: enterCommand, ctx: ctx });
     return ctx.usageList;
 }
