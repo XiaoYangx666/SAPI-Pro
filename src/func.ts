@@ -1,4 +1,4 @@
-import { Player, system, Vector3, world } from "@minecraft/server";
+import { CommandPermissionLevel, Player, system, Vector3, world } from "@minecraft/server";
 import { LibConfig, libName } from "./Config";
 /**执行命令 */
 export function cmd(text: string, async = false): void {
@@ -34,7 +34,7 @@ export function isNum(value: any): boolean {
  * 默认使用权限等级判断
  * */
 export function isAdmin(player: Player) {
-    return player.commandPermissionLevel >= 1;
+    return player.commandPermissionLevel >= CommandPermissionLevel.GameDirectors;
 }
 
 export function getAllPlayers() {

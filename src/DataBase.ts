@@ -277,6 +277,9 @@ class scoreboardObj {
     set(value: number) {
         this.sbObj.set(this.name, value);
     }
+    add(value: number) {
+        this.sbObj.add(this.name, value);
+    }
     rm() {
         this.sbObj.rm(this.name);
     }
@@ -315,6 +318,10 @@ export class ScoreBoardDataBase extends DataBase<number> {
         if (this.getScoreBoard().hasParticipant(key)) {
             return this.getScoreBoard().getScore(key);
         }
+    }
+    add(key: string | Player, value: number | string) {
+        if (typeof value != "number") value = parseInt(value);
+        this.getScoreBoard().addScore(key, value);
     }
     /**获取一个虚拟计分项对象 */
     getObj(key: string | Player) {
