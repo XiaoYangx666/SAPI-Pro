@@ -1,4 +1,4 @@
-import { Player, system, Vector3, world } from "@minecraft/server";
+import { CommandPermissionLevel, Player, system, Vector3, world } from "@minecraft/server";
 import { LibConfig, libName } from "./Config";
 /**执行命令 */
 export function cmd(text: string, async = false): void {
@@ -31,11 +31,10 @@ export function isNum(value: any): boolean {
 
 /**
  * 返回玩家是否管理员
- * 默认使用tag区分
- * 你可以自己改
+ * 默认使用权限等级判断
  * */
 export function isAdmin(player: Player) {
-    return player.hasTag("op");
+    return player.commandPermissionLevel >= CommandPermissionLevel.GameDirectors;
 }
 
 export function getAllPlayers() {

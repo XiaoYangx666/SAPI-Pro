@@ -15,6 +15,6 @@
         "rootDir": "src",
         "allowJs": true
     },
-    "include": ["./src", "SAPI-Pro"],
+    "include": ["./src"],
     "compileOnSave": false
 }

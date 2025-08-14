@@ -14,7 +14,7 @@ class LibConfigClass {
     forceHost = false;
     /**如果不想随机生成，可以自己改 */
     UUID = generateUUID();
-    version = 0.3; //不要修改
+    version = 0.32; //不要修改
     isHost = false; //不要修改
     packInfo: PackInfo; //在上面改
 

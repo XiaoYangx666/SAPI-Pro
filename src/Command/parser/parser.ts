@@ -74,7 +74,7 @@ export class CommandParser {
                 paramStrings,
                 current,
                 showError,
-                "无权限执行此命令"
+                "权限不足，无法执行此命令"
             );
         }
         //执行命令验证器

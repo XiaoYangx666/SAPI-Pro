@@ -9,8 +9,7 @@
 > **isAdmin**(`player`): `boolean`
 
 返回玩家是否管理员
-默认使用tag区分
-你可以自己改
+默认使用权限等级判断
 
 ## Parameters
 
