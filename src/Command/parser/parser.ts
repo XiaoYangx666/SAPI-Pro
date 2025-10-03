@@ -1,6 +1,4 @@
 import { Player, system } from "@minecraft/server";
-import { LibConfig } from "../../Config";
-import { chatOpe } from "../../Event";
 import { isAdmin, LibErrorMes } from "../../func";
 import { Command } from "../commandClass";
 import { ParamDefinition, parsedTypes, ParseError } from "../interface";
@@ -26,26 +24,6 @@ export class CommandParser {
 
     init(manager: CommandManager) {
         this.manager = manager;
-    }
-
-    /**直接解析一条命令 */
-    parseCommand(input: string, player: Player) {
-        //使用正则分割字符串
-        const paramStrings: string[] = [...input.matchAll(/@?(?:"(?:[^"]*)"|(?:[^\s]+))/g)].map((t) => t[0]);
-        const [name, ...params] = paramStrings;
-        const command = this.manager?.commands.get(name);
-
-        if (!LibConfig.isHost && (!command || command.name == "help")) return chatOpe.skipsend; //不是主机，就不能操作命令
-        //如果是客户端命令，则让客户端自己处理
-        if (command && command.isClientCommand) return chatOpe.skipsend;
-        if (!command || (command.isAdmin && !isAdmin(player))) {
-            if (!this.manager?.testMode)
-                player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
-            return chatOpe.cancel;
-        }
-        //命中，解析命令
-        this.parseSubCommand(command, params, player);
-        return chatOpe.cancel;
     }
 
     /**寻找最深的命令 */

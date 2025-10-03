@@ -1,5 +1,7 @@
 import { CommandPermissionLevel, Player, system, Vector3, world } from "@minecraft/server";
 import { LibConfig, libName } from "./Config";
+import { RandomUtils } from "./utils/random";
+import { VectorUtils } from "./utils/vector";
 /**执行命令 */
 export function cmd(text: string, async = false): void {
     if (async) {
@@ -10,19 +12,20 @@ export function cmd(text: string, async = false): void {
 }
 
 export function tointloc(loc: Vector3): [number, number, number] {
-    return [Math.floor(loc.x), Math.floor(loc.y), Math.floor(loc.z)];
+    return VectorUtils.toArray(VectorUtils.intLoc(loc));
 }
+
 /** 将坐标转为整数 */
 export function intloc(loc: Vector3): Vector3 {
-    return { x: Math.floor(loc.x), y: Math.floor(loc.y), z: Math.floor(loc.z) };
+    return VectorUtils.intLoc(loc);
 }
 /**数组转Vector3 */
 export function ArraytoVector3(locArray: [number, number, number]) {
-    return { x: locArray[0], y: locArray[1], z: locArray[2] };
+    return VectorUtils.fromArray(locArray);
 }
 
 export function Vector3toArray(vec: Vector3) {
-    return [vec.x, vec.y, vec.z];
+    return VectorUtils.toArray(vec);
 }
 
 export function isNum(value: any): boolean {
@@ -49,26 +52,15 @@ export function getPlayerByName(name: string) {
 
 /**生成随机数∈[min,max] */
 export function rand(min: number = 0, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return RandomUtils.intRange(min, max);
 }
+
 export function distance(pos1: Vector3, pos2: Vector3) {
-    const dx = pos1.x - pos2.x;
-    const dy = pos1.y - pos2.y;
-    const dz = pos1.z - pos2.z;
-    return dx * dx + dy * dy + dz * dz;
+    return VectorUtils.squaredDistance(pos1, pos2);
 }
+
 export function distance_sqrt(pos1: Vector3, pos2: Vector3) {
-    return Math.sqrt(distance(pos1, pos2));
-}
-
-export const dimName: Record<string, string> = {
-    "minecraft:overworld": "§q主世界",
-    "minecraft:nether": "§m下界",
-    "minecraft:the_end": "§n末地",
-};
-
-export function getScoreboardObj(scoreboardName: string) {
-    return world.scoreboard.getObjective(scoreboardName) ?? world.scoreboard.addObjective(scoreboardName);
+    return VectorUtils.distance(pos1, pos2);
 }
 
 /**
@@ -86,8 +78,9 @@ export function calChunk(pos: Vector3): { min: Vector3; max: Vector3 } {
     return { min: { x: xstart, y: pos.y, z: zstart }, max: { x: xend, y: pos.y, z: zend } };
 }
 export function Vector3Add(vec1: Vector3, vec2: Vector3) {
-    return { x: vec1.x + vec2.x, y: vec1.y + vec2.y, z: vec1.z + vec2.z };
+    return VectorUtils.add(vec1, vec2);
 }
+
 export function generateUUID() {
     var d = new Date().getTime();
     var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {

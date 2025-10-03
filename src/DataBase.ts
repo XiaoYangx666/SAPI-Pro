@@ -336,9 +336,7 @@ export class ScoreBoardDataBase extends DataBase<number> {
             .map((t) => t.displayName);
     }
     clear() {
-        if (this.sb && this.sb.isValid) {
-            world.scoreboard.removeObjective(this.sb);
-        }
+        this.dispose();
         this.getScoreBoard();
     }
     /**重置所有积分项*/
@@ -351,6 +349,13 @@ export class ScoreBoardDataBase extends DataBase<number> {
     }
     setDisplaySlot(SlotId: DisplaySlotId) {
         world.scoreboard.setObjectiveAtDisplaySlot(SlotId, { objective: this.getScoreBoard() });
+    }
+
+    /**删除这个scoreboard(下次用到会重建) */
+    dispose() {
+        if (this.sb && this.sb.isValid) {
+            world.scoreboard.removeObjective(this.sb);
+        }
     }
 }
 /**判断是否超过字节限制 */

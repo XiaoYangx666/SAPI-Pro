@@ -1,63 +1,5 @@
-import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
-import { LibErrorMes, LibMessage } from "./func";
-
-//先不搞优先队列了，能用就行，反正只有注册的时候排序
-export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
-export interface chatEvents {
-    priority: number;
-    callback: (t: ChatSendBeforeEvent) => void | chatOpe;
-}
-/**
- * 聊天订阅
- */
-export class chatBusClass {
-    private eventList: chatEvents[];
-    private send: (t: ChatSendBeforeEvent) => boolean;
-    constructor() {
-        this.eventList = [];
-        this.send = (t) => {
-            return false;
-        };
-        world.beforeEvents.chatSend.subscribe((t) => {
-            t.cancel = chatBus.publish(t);
-        });
-    }
-    /**
-     * 订阅聊天事件
-     *
-     * 返回值:是否取消原版聊天发送
-     */
-    subscribe(callback: chatFunc, priority: number = 0) {
-        this.eventList.push({ callback: callback, priority: priority });
-        this.eventList.sort((a, b) => b.priority - a.priority);
-    }
-    /**
-     * 发布聊天事件
-     * @param {ChatSendBeforeEvent} t 聊天事件
-     */
-    private publish(t: ChatSendBeforeEvent) {
-        let Ope = undefined;
-        if (this.eventList) {
-            for (let event of this.eventList) {
-                Ope = event.callback(t);
-                if (Ope != undefined) break;
-            }
-        }
-        if (Ope === chatOpe.cancel) return true;
-        if (Ope === chatOpe.skipsend) return false;
-        return this.send(t);
-    }
-    /**
-     * 设置聊天处理函数(唯一)
-     *
-     * 当聊天没有被任一函数取消时，将会调用此函数发送聊天
-     *
-     * 返回值:是否取消原版聊天发送
-     */
-    regsend(callback: (t: ChatSendBeforeEvent) => boolean) {
-        this.send = callback;
-    }
-}
+import { ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
+import { LibErrorMes } from "./func";
 
 export enum chatOpe {
     /**捕获消息取消发送 */
@@ -174,6 +116,5 @@ export class ScriptEventBusClass {
 }
 
 export const intervalBus = new intervalBusClass();
-export const chatBus = new chatBusClass();
 export const itemBus = new itemBase();
 export const ScriptEventBus = new ScriptEventBusClass();

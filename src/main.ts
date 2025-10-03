@@ -5,11 +5,19 @@ import { initCom } from "./System/ScriptCom";
 
 //引用此文件
 export * from "./Command/main";
-export { Configdb, DataBase, DPDataBase, exchangedb, ScoreBoardDataBase, ScoreBoardJSONDataBase } from "./DataBase";
+export {
+    Configdb,
+    DataBase,
+    DPDataBase,
+    exchangedb,
+    ScoreBoardDataBase,
+    ScoreBoardJSONDataBase,
+} from "./DataBase";
 export * as Event from "./Event";
 export * from "./Form/main";
 export * as Func from "./func";
 export { PackInfo } from "./Config";
+export * as Utils from "./utils/main";
 
 /**库初始化 */
 export function initSAPIPro(packInfo: PackInfo) {

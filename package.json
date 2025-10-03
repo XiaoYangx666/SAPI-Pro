@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.3.2",
+    "version": "0.3.3-stable",
     "description": "A practical library for MCBE ScriptAPI",
     "main": "scripts/main.js",
     "types": "scripts/main.d.ts",
@@ -14,9 +14,11 @@
         "type": "git",
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
+    "dependencies": {
+        "@minecraft/server": "2.1.0",
+        "@minecraft/server-ui": "2.0.0"
+    },
     "devDependencies": {
-        "@minecraft/server": "2.2.0-beta.1.21.100-stable",
-        "@minecraft/server-ui": "2.1.0-beta.1.21.100-stable",
         "typedoc": "^0.28.7",
         "typedoc-plugin-markdown": "^4.4.2"
     },
@@ -27,7 +29,7 @@
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "2.2.0-beta.1.21.100-stable"
+            "@minecraft/server": "2.1.0"
         }
     },
     "files": [
