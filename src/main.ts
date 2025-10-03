@@ -10,6 +10,7 @@ export * as Event from "./Event";
 export * from "./Form/main";
 export * as Func from "./func";
 export { PackInfo } from "./Config";
+export * from "./utils/main";
 
 /**库初始化 */
 export function initSAPIPro(packInfo: PackInfo) {

@@ -6,4 +6,4 @@
 
 # Type Alias: formDataType
 
-> **formDataType**: `ActionFormData` \| `ModalFormData` \| `MessageFormData`
+> **formDataType** = `ActionFormData` \| `ModalFormData` \| `MessageFormData`

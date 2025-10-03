@@ -6,11 +6,13 @@
 
 # Type Alias: formHandler()\<T\>
 
-> **formHandler**\<`T`\>: (`response`, `context`) => `void` \| `Promise`\<`void`\>
+> **formHandler**\<`T`\> = (`response`, `context`) => `void` \| `Promise`\<`void`\>
 
 ## Type Parameters
 
-• **T** *extends* [`formDataType`](formDataType.md)
+### T
+
+`T` *extends* [`formDataType`](formDataType.md)
 
 ## Parameters
 

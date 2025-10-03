@@ -6,8 +6,8 @@
 
 ## Namespaces
 
-- [Event](namespaces/Event/README.md)
-- [Func](namespaces/Func/README.md)
+- [Event](sapi-pro/namespaces/Event/README.md)
+- [Func](sapi-pro/namespaces/Func/README.md)
 
 ## Classes
 
@@ -19,9 +19,11 @@
 - [FormManagerClass](classes/FormManagerClass.md)
 - [ParseError](classes/ParseError.md)
 - [ParseInfo](classes/ParseInfo.md)
+- [RandomUtils](classes/RandomUtils.md)
 - [SAPIProFormContext](classes/SAPIProFormContext.md)
 - [ScoreBoardDataBase](classes/ScoreBoardDataBase.md)
 - [ScoreBoardJSONDataBase](classes/ScoreBoardJSONDataBase.md)
+- [VectorUtils](classes/VectorUtils.md)
 
 ## Interfaces
 

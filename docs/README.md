@@ -4,9 +4,9 @@
 
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.1.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.9x-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.2.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.100-green)
 
-[简体中文](_media/README.md)|[English](_media/README_EN.md)
+[简体中文](globals.md)|[English](_media/README_EN.md)
 
 ## 目录
 
@@ -148,7 +148,7 @@ pcommand.registerNative(ExampleCmd);
 
 通过 SAPI-Pro，你可以方便的创建表单，并进行表单的导航操作。
 
-以下是一个简单的让用户不断输入的表单的示例，表单还有更多用法，请查阅[表单系统](_media/form.md#%E8%A1%A8%E5%8D%95%E7%B3%BB%E7%BB%9F)。
+以下是一个简单的让用户不断输入的表单的示例，表单还有更多用法，请查阅[表单系统](_media/form.md#表单系统)。
 
 #### 表单示例
 
@@ -227,7 +227,7 @@ world.sendMessage(info.author);
 
 ## 参考文档
 
-[SAPI-Pro 参考文档](_media/README-1.md)
+[SAPI-Pro 参考文档](_media/README.md)
 
 ## 支持与贡献
 

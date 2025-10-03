@@ -12,9 +12,9 @@
 
 ## Constructors
 
-### new ScoreBoardDataBase()
+### Constructor
 
-> **new ScoreBoardDataBase**(`name`, `displayName`?, `usePrefix`?): [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
+> **new ScoreBoardDataBase**(`name`, `displayName?`, `usePrefix?`): `ScoreBoardDataBase`
 
 #### Parameters
 
@@ -32,11 +32,11 @@
 
 #### Returns
 
-[`ScoreBoardDataBase`](ScoreBoardDataBase.md)
+`ScoreBoardDataBase`
 
 #### Overrides
 
-[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructor)
 
 ## Properties
 
@@ -46,7 +46,7 @@
 
 #### Inherited from
 
-[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name)
 
 ***
 
@@ -79,6 +79,26 @@
 [`DataBase`](DataBase.md).[`maxChunkBytes`](DataBase.md#maxchunkbytes)
 
 ## Methods
+
+### add()
+
+> **add**(`key`, `value`): `void`
+
+#### Parameters
+
+##### key
+
+`string` | `Player`
+
+##### value
+
+`string` | `number`
+
+#### Returns
+
+`void`
+
+***
 
 ### clear()
 
