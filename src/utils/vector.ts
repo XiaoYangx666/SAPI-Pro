@@ -53,6 +53,41 @@ export class VectorUtils {
         return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
     }
 
+    /**v1与v2在误差eps范围内相等? */
+    static isApproxEqual(v1: Vector3, v2: Vector3, eps: number = 1e-6): boolean {
+        return (
+            Math.abs(v1.x - v2.x) < eps &&
+            Math.abs(v1.y - v2.y) < eps &&
+            Math.abs(v1.z - v2.z) < eps
+        );
+    }
+
+    /**向量长度 */
+    static length(v: Vector3) {
+        return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    }
+
+    /**点积 */
+    static dot(v1: Vector3, v2: Vector3) {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
+    /**叉积 */
+    static cross(v1: Vector3, v2: Vector3) {
+        return {
+            x: v1.y * v2.z - v1.z * v2.y,
+            y: v1.z * v2.x - v1.x * v2.z,
+            z: v1.x * v2.y - v1.y * v2.x,
+        };
+    }
+
+    /**归一化向量 */
+    static normalize(v: Vector3) {
+        const len = this.length(v);
+        if (len === 0) return { x: 0, y: 0, z: 0 };
+        return { x: v.x / len, y: v.y / len, z: v.z / len };
+    }
+
     /**返回上方指定距离(默认1)的Vector */
     static above(v: Vector3, step: number = 1) {
         return this.add(v, { x: 0, y: step, z: 0 });
