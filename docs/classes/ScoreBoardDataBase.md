@@ -114,6 +114,18 @@
 
 ***
 
+### dispose()
+
+> **dispose**(): `void`
+
+删除这个scoreboard(下次用到会重建)
+
+#### Returns
+
+`void`
+
+***
+
 ### get()
 
 > **get**(`key`): `undefined` \| `number`
