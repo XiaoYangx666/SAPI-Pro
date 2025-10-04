@@ -6,11 +6,13 @@
 
 # Type Alias: commandHandler()\<T\>
 
-> **commandHandler**\<`T`\>: (`player`, `params`) => `void`
+> **commandHandler**\<`T`\> = (`player`, `params`) => `void`
 
 ## Type Parameters
 
-• **T** = [`ParsedParam`](../interfaces/ParsedParam.md)
+### T
+
+`T` = [`ParsedParam`](../interfaces/ParsedParam.md)
 
 ## Parameters
 

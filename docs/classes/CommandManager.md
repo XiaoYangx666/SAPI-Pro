@@ -8,9 +8,9 @@
 
 ## Constructors
 
-### new CommandManager()
+### Constructor
 
-> **new CommandManager**(`parser`): [`CommandManager`](CommandManager.md)
+> **new CommandManager**(`parser`): `CommandManager`
 
 #### Parameters
 
@@ -20,7 +20,7 @@
 
 #### Returns
 
-[`CommandManager`](CommandManager.md)
+`CommandManager`
 
 ## Properties
 
@@ -178,7 +178,7 @@
 
 ### runCommand()
 
-> **runCommand**(`t`): `undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
+> **runCommand**(`t`): `undefined` \| [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend)
 
 运行命令注册回调
 
@@ -190,7 +190,7 @@
 
 #### Returns
 
-`undefined` \| [`cancel`](../namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../namespaces/Event/enumerations/chatOpe.md#skipsend)
+`undefined` \| [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend)
 
 ***
 

@@ -6,4 +6,4 @@
 
 # Type Alias: parsedTypes
 
-> **parsedTypes**: `number` \| `boolean` \| `string` \| `Player` \| `Vector3`
+> **parsedTypes** = `number` \| `boolean` \| `string` \| `Player` \| `Vector3`

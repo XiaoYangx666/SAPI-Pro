@@ -12,9 +12,9 @@
 
 ## Constructors
 
-### new ScoreBoardJSONDataBase()
+### Constructor
 
-> **new ScoreBoardJSONDataBase**(`name`): [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
+> **new ScoreBoardJSONDataBase**(`name`): `ScoreBoardJSONDataBase`
 
 #### Parameters
 
@@ -24,11 +24,11 @@
 
 #### Returns
 
-[`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
+`ScoreBoardJSONDataBase`
 
 #### Overrides
 
-[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructor)
 
 ## Properties
 
@@ -38,7 +38,7 @@
 
 #### Inherited from
 
-[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name)
 
 ***
 

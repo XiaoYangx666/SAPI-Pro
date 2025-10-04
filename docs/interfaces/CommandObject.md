@@ -64,7 +64,7 @@
 
 ### subCommands?
 
-> `optional` **subCommands**: [`CommandObject`](CommandObject.md)[]
+> `optional` **subCommands**: `CommandObject`[]
 
 子命令列表
 

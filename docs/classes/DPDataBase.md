@@ -12,9 +12,9 @@
 
 ## Constructors
 
-### new DPDataBase()
+### Constructor
 
-> **new DPDataBase**(`name`): [`DPDataBase`](DPDataBase.md)
+> **new DPDataBase**(`name`): `DPDataBase`
 
 #### Parameters
 
@@ -24,11 +24,11 @@
 
 #### Returns
 
-[`DPDataBase`](DPDataBase.md)
+`DPDataBase`
 
 #### Overrides
 
-[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructors)
+[`DataBase`](DataBase.md).[`constructor`](DataBase.md#constructor)
 
 ## Properties
 
@@ -38,7 +38,7 @@
 
 #### Inherited from
 
-[`DataBase`](DataBase.md).[`name`](DataBase.md#name-1)
+[`DataBase`](DataBase.md).[`name`](DataBase.md#name)
 
 ***
 

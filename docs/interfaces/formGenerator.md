@@ -8,7 +8,9 @@
 
 ## Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 > **formGenerator**(`form`, `player`, `args`): `void` \| `Promise`\<`void`\>
 

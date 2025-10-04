@@ -6,4 +6,4 @@
 
 # Type Alias: paramBranches
 
-> **paramBranches**: [`ParamObject`](../interfaces/ParamObject.md)[] \| [`ParamObject`](../interfaces/ParamObject.md)
+> **paramBranches** = [`ParamObject`](../interfaces/ParamObject.md)[] \| [`ParamObject`](../interfaces/ParamObject.md)
