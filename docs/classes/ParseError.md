@@ -8,9 +8,9 @@
 
 ## Constructors
 
-### new ParseError()
+### Constructor
 
-> **new ParseError**(`msg`?, `onlymsg`?, `index`?, `canReplace`?): [`ParseError`](ParseError.md)
+> **new ParseError**(`msg?`, `onlymsg?`, `index?`, `canReplace?`): `ParseError`
 
 #### Parameters
 
@@ -32,7 +32,7 @@
 
 #### Returns
 
-[`ParseError`](ParseError.md)
+`ParseError`
 
 ## Properties
 

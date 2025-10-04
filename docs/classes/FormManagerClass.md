@@ -8,13 +8,13 @@
 
 ## Constructors
 
-### new FormManagerClass()
+### Constructor
 
-> **new FormManagerClass**(): [`FormManagerClass`](FormManagerClass.md)
+> **new FormManagerClass**(): `FormManagerClass`
 
 #### Returns
 
-[`FormManagerClass`](FormManagerClass.md)
+`FormManagerClass`
 
 ## Methods
 
@@ -110,13 +110,15 @@
 
 ### open()
 
-> **open**\<`T`\>(`player`, `form`, `args`?, `delay`?): `void`
+> **open**\<`T`\>(`player`, `form`, `args?`, `delay?`): `void`
 
 为玩家打开表单
 
 #### Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 #### Parameters
 
@@ -152,7 +154,7 @@
 
 ### openExternal()
 
-> **openExternal**(`player`, `nameSpace`, `name`, `args`?, `delay`?): `void`
+> **openExternal**(`player`, `nameSpace`, `name`, `args?`, `delay?`): `void`
 
 打开外部表单
 
@@ -196,7 +198,7 @@
 
 ### openNamed()
 
-> **openNamed**(`player`, `name`, `args`?, `delay`?): `void`
+> **openNamed**(`player`, `name`, `args?`, `delay?`): `void`
 
 打开指定名字的表单，需要先注册
 
@@ -258,7 +260,9 @@
 
 #### Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 #### Parameters
 

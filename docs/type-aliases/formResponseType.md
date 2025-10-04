@@ -6,8 +6,10 @@
 
 # Type Alias: formResponseType\<T\>
 
-> **formResponseType**\<`T`\>: `T` *extends* `MessageFormData` ? `MessageFormResponse` : `T` *extends* `ModalFormData` ? `ModalFormResponse` : `T` *extends* `ActionFormData` ? `ActionFormResponse` : `never`
+> **formResponseType**\<`T`\> = `T` *extends* `MessageFormData` ? `MessageFormResponse` : `T` *extends* `ModalFormData` ? `ModalFormResponse` : `T` *extends* `ActionFormData` ? `ActionFormResponse` : `never`
 
 ## Type Parameters
 
-• **T** *extends* [`formDataType`](formDataType.md)
+### T
+
+`T` *extends* [`formDataType`](formDataType.md)

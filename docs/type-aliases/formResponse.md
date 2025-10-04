@@ -6,4 +6,4 @@
 
 # Type Alias: formResponse
 
-> **formResponse**: `MessageFormResponse` \| `ModalFormResponse` \| `ActionFormResponse`
+> **formResponse** = `MessageFormResponse` \| `ModalFormResponse` \| `ActionFormResponse`

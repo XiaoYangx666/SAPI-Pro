@@ -8,9 +8,9 @@
 
 ## Constructors
 
-### new ParseInfo()
+### Constructor
 
-> **new ParseInfo**(`value`, `cnt`): [`ParseInfo`](ParseInfo.md)
+> **new ParseInfo**(`value`, `cnt`): `ParseInfo`
 
 #### Parameters
 
@@ -24,7 +24,7 @@
 
 #### Returns
 
-[`ParseInfo`](ParseInfo.md)
+`ParseInfo`
 
 ## Properties
 

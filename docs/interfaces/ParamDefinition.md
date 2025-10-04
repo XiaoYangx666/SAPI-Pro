@@ -86,7 +86,7 @@
 
 ### subParams?
 
-> `optional` **subParams**: [`ParamDefinition`](ParamDefinition.md)[]
+> `optional` **subParams**: `ParamDefinition`[]
 
 ***
 

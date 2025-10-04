@@ -8,9 +8,9 @@
 
 ## Constructors
 
-### new Command()
+### Constructor
 
-> **new Command**(`name`, `explain`, `isAdmin`, `handler`?, `validator`?, `isHidden`?, `isClient`?): [`Command`](Command.md)
+> **new Command**(`name`, `explain`, `isAdmin`, `handler?`, `validator?`, `isHidden?`, `isClient?`): `Command`
 
 构造新命令(复杂的推荐用Command.fromObject)
 
@@ -60,7 +60,7 @@
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ## Properties
 
@@ -108,7 +108,7 @@
 
 ### subCommands
 
-> **subCommands**: [`Command`](Command.md)[] = `[]`
+> **subCommands**: `Command`[] = `[]`
 
 ***
 
@@ -120,7 +120,7 @@
 
 ### addParam()
 
-> **addParam**(`param`): [`Command`](Command.md)
+> **addParam**(`param`): `Command`
 
 添加一条分支并在其中添加一条参数
 
@@ -132,13 +132,13 @@
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ***
 
 ### addParamBranches()
 
-> **addParamBranches**(`param`): [`Command`](Command.md)
+> **addParamBranches**(`param`): `Command`
 
 添加多个命令参数分支
 
@@ -150,13 +150,13 @@
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ***
 
 ### addParams()
 
-> **addParams**(`params`): [`Command`](Command.md)
+> **addParams**(`params`): `Command`
 
 添加一条参数分支的多个参数
 
@@ -168,13 +168,13 @@
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ***
 
 ### addSubCommand()
 
-> **addSubCommand**(`subCommand`): [`Command`](Command.md)
+> **addSubCommand**(`subCommand`): `Command`
 
 添加子命令
 
@@ -182,17 +182,17 @@
 
 ##### subCommand
 
-[`Command`](Command.md)
+`Command`
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ***
 
 ### addSubCommands()
 
-> **addSubCommands**(`subCommands`): [`Command`](Command.md)
+> **addSubCommands**(`subCommands`): `Command`
 
 添加一堆子命令
 
@@ -200,11 +200,11 @@
 
 ##### subCommands
 
-[`Command`](Command.md)[]
+`Command`[]
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`
 
 ***
 
@@ -246,7 +246,7 @@
 
 ### fromObject()
 
-> `static` **fromObject**(`obj`): [`Command`](Command.md)
+> `static` **fromObject**(`obj`): `Command`
 
 从Object创建命令
 
@@ -258,4 +258,4 @@
 
 #### Returns
 
-[`Command`](Command.md)
+`Command`

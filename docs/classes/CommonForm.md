@@ -8,13 +8,13 @@
 
 ## Constructors
 
-### new CommonForm()
+### Constructor
 
-> **new CommonForm**(): [`CommonForm`](CommonForm.md)
+> **new CommonForm**(): `CommonForm`
 
 #### Returns
 
-[`CommonForm`](CommonForm.md)
+`CommonForm`
 
 ## Methods
 

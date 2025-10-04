@@ -1,4 +1,6 @@
-# SAPI-Pro
+# SAPI-Pro Stable
+
+> stable 分支是专供稳定版 api 使用的，去掉了部分功能
 
 ![Requires](https://img.shields.io/badge/依赖-SAPI%202.1.0-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.100+-green)
 
@@ -127,11 +129,9 @@ const killCmd = Command.fromObject({
         });
     },
 });
-//注册
-pcommand.registerCommand(ExampleCmd);
-pcommand.registerCommand(killCmd);
 //注册游戏命令
 pcommand.registerNative(ExampleCmd);
+pcommand.registerNative(killCmd);
 ```
 
 #### 性能
@@ -204,8 +204,6 @@ world.sendMessage(info.author);
 ---
 
 ### 多包通信
-
-当多个包使用 SAPI-Pro 时，会选举一个主行为包，命令注册由主行为包管理，而命令执行仍由各行为包自己处理，避免冲突。
 
 表单系统支持使用`formManager.openExternal`打开由其它行为包注册的表单。
 

@@ -16,6 +16,8 @@
 
 -   [实用函数](func.md)
 
+-   [工具类](utils.md)
+
 ### 参考
 
 -   [pcommand](../docs/variables/pcommand.md)

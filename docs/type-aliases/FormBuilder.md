@@ -6,11 +6,13 @@
 
 # Type Alias: FormBuilder()\<T\>
 
-> **FormBuilder**\<`T`\>: (`player`, `args`) => `Promise`\<`T`\> \| `T`
+> **FormBuilder**\<`T`\> = (`player`, `args`) => `Promise`\<`T`\> \| `T`
 
 ## Type Parameters
 
-• **T** *extends* [`formDataType`](formDataType.md)
+### T
+
+`T` *extends* [`formDataType`](formDataType.md)
 
 ## Parameters
 

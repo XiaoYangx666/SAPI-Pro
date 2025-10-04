@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / DataBase
 
-# Class: `abstract` DataBase\<T\>
+# Abstract Class: DataBase\<T\>
 
 ## Extended by
 
@@ -14,13 +14,15 @@
 
 ## Type Parameters
 
-• **T**
+### T
+
+`T`
 
 ## Constructors
 
-### new DataBase()
+### Constructor
 
-> **new DataBase**\<`T`\>(`name`): [`DataBase`](DataBase.md)\<`T`\>
+> **new DataBase**\<`T`\>(`name`): `DataBase`\<`T`\>
 
 #### Parameters
 
@@ -30,7 +32,7 @@
 
 #### Returns
 
-[`DataBase`](DataBase.md)\<`T`\>
+`DataBase`\<`T`\>
 
 ## Properties
 
@@ -48,7 +50,7 @@
 
 ### DBMap
 
-> `static` **DBMap**: `Record`\<`string`, [`DataBase`](DataBase.md)\<`any`\>\> = `{}`
+> `static` **DBMap**: `Record`\<`string`, `DataBase`\<`any`\>\> = `{}`
 
 ***
 
@@ -132,7 +134,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): `undefined` \| `DataBase`\<`any`\>
 
 #### Parameters
 
@@ -142,14 +144,14 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+`undefined` \| `DataBase`\<`any`\>
 
 ***
 
 ### getDBs()
 
-> `static` **getDBs**(): [`DataBase`](DataBase.md)\<`any`\>[]
+> `static` **getDBs**(): `DataBase`\<`any`\>[]
 
 #### Returns
 
-[`DataBase`](DataBase.md)\<`any`\>[]
+`DataBase`\<`any`\>[]

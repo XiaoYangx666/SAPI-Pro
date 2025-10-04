@@ -8,13 +8,15 @@
 
 ## Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 ## Constructors
 
-### new SAPIProFormContext()
+### Constructor
 
-> **new SAPIProFormContext**\<`T`\>(`args`, `stack`, `form`?): [`SAPIProFormContext`](SAPIProFormContext.md)\<`T`\>
+> **new SAPIProFormContext**\<`T`\>(`args`, `stack`, `form?`): `SAPIProFormContext`\<`T`\>
 
 #### Parameters
 
@@ -32,7 +34,7 @@
 
 #### Returns
 
-[`SAPIProFormContext`](SAPIProFormContext.md)\<`T`\>
+`SAPIProFormContext`\<`T`\>
 
 ## Properties
 
@@ -106,13 +108,15 @@
 
 ### offAll()
 
-> **offAll**\<`T`\>(`form`, `args`?, `delay`?): `void`
+> **offAll**\<`T`\>(`form`, `args?`, `delay?`): `void`
 
 清空堆栈，并打开表单
 
 #### Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 #### Parameters
 
@@ -136,7 +140,7 @@
 
 ### offAllNamed()
 
-> **offAllNamed**(`name`, `args`?, `delay`?): `void`
+> **offAllNamed**(`name`, `args?`, `delay?`): `void`
 
 清空堆栈，并打开命名表单
 
@@ -162,13 +166,15 @@
 
 ### push()
 
-> **push**\<`T`\>(`form`, `args`?, `delay`?): `void`
+> **push**\<`T`\>(`form`, `args?`, `delay?`): `void`
 
 打开表单
 
 #### Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 #### Parameters
 
@@ -192,7 +198,7 @@
 
 ### pushNamed()
 
-> **pushNamed**(`name`, `args`?, `delay`?): `void`
+> **pushNamed**(`name`, `args?`, `delay?`): `void`
 
 打开命名表单
 
@@ -236,13 +242,15 @@
 
 ### replace()
 
-> **replace**\<`T`\>(`form`, `args`?, `delay`?): `void`
+> **replace**\<`T`\>(`form`, `args?`, `delay?`): `void`
 
 替换当前表单为新的命名表单
 
 #### Type Parameters
 
-• **T** *extends* [`formDataType`](../type-aliases/formDataType.md)
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
 #### Parameters
 
@@ -266,7 +274,7 @@
 
 ### replaceNamed()
 
-> **replaceNamed**(`name`, `args`?, `delay`?): `void`
+> **replaceNamed**(`name`, `args?`, `delay?`): `void`
 
 替换当前表单为新的命名表单
 

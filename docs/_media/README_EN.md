@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Dependency-SAPI%202.1.0%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.9x-green)
+![Requires](https://img.shields.io/badge/Dependency-SAPI%202.2.0%20Beta-red) ![Support](https://img.shields.io/badge/Supported%20Version-MCBE1.21.100-green)
 
 > Translated by deepseek
 
