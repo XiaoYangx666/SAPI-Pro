@@ -6,7 +6,7 @@
 
 > stable 分支是专供稳定版 api 使用的，去掉了部分功能
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.1.0-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.100+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.3.0-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.120+-green)
 
 [简体中文](globals.md)|[English](_media/README_EN.md)
 

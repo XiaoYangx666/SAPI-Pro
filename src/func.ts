@@ -1,31 +1,34 @@
 import { CommandPermissionLevel, Player, system, Vector3, world } from "@minecraft/server";
 import { LibConfig, libName } from "./Config";
+import { Dimensions } from "./constants";
+import { ChunkUtils } from "./utils/chunkUtils";
 import { RandomUtils } from "./utils/random";
-import { VectorUtils } from "./utils/vector";
+import { Vector3Utils } from "./utils/vector";
+
 /**执行命令 */
 export function cmd(text: string, async = false): void {
     if (async) {
-        system.run(() => world.getDimension("overworld").runCommand(text));
+        system.run(() => Dimensions.Overworld.runCommand(text));
         return;
     }
-    world.getDimension("overworld").runCommand(text);
+    Dimensions.Overworld.runCommand(text);
 }
 
 export function tointloc(loc: Vector3): [number, number, number] {
-    return VectorUtils.toArray(VectorUtils.intLoc(loc));
+    return Vector3Utils.toArray(Vector3Utils.intLoc(loc));
 }
 
 /** 将坐标转为整数 */
 export function intloc(loc: Vector3): Vector3 {
-    return VectorUtils.intLoc(loc);
+    return Vector3Utils.intLoc(loc);
 }
 /**数组转Vector3 */
 export function ArraytoVector3(locArray: [number, number, number]) {
-    return VectorUtils.fromArray(locArray);
+    return Vector3Utils.fromArray(locArray);
 }
 
 export function Vector3toArray(vec: Vector3) {
-    return VectorUtils.toArray(vec);
+    return Vector3Utils.toArray(vec);
 }
 
 export function isNum(value: any): boolean {
@@ -56,11 +59,11 @@ export function rand(min: number = 0, max: number) {
 }
 
 export function distance(pos1: Vector3, pos2: Vector3) {
-    return VectorUtils.squaredDistance(pos1, pos2);
+    return Vector3Utils.squaredDistance(pos1, pos2);
 }
 
 export function distance_sqrt(pos1: Vector3, pos2: Vector3) {
-    return VectorUtils.distance(pos1, pos2);
+    return Vector3Utils.distance(pos1, pos2);
 }
 
 /**
@@ -69,16 +72,12 @@ export function distance_sqrt(pos1: Vector3, pos2: Vector3) {
  * 返回所在区块的最小点与最大点,y坐标不变
  */
 export function calChunk(pos: Vector3): { min: Vector3; max: Vector3 } {
-    const cx = Math.floor(pos.x / 16);
-    const cz = Math.floor(pos.z / 16);
-    const xstart = cx * 16;
-    const xend = (cx + 1) * 16 - 1;
-    const zstart = cz * 16;
-    const zend = (cz + 1) * 16 - 1;
-    return { min: { x: xstart, y: pos.y, z: zstart }, max: { x: xend, y: pos.y, z: zend } };
+    const max = ChunkUtils.getChunkMaxPos(pos);
+    const min = ChunkUtils.getChunkMinPos(pos);
+    return { min: { x: min.x, y: pos.y, z: min.z }, max: { x: max.x, y: pos.y, z: max.z } };
 }
 export function Vector3Add(vec1: Vector3, vec2: Vector3) {
-    return VectorUtils.add(vec1, vec2);
+    return Vector3Utils.add(vec1, vec2);
 }
 
 export function generateUUID() {

@@ -6,7 +6,12 @@
 
 # Utils
 
+## Enumerations
+
+- [DimensionIds](enumerations/DimensionIds.md)
+
 ## Classes
 
+- [ChunkUtils](classes/ChunkUtils.md)
 - [RandomUtils](classes/RandomUtils.md)
-- [VectorUtils](classes/VectorUtils.md)
+- [Vector3Utils](classes/Vector3Utils.md)

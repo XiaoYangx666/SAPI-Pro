@@ -104,6 +104,8 @@
 
 > **clear**(): `void`
 
+清空计分板(删除并重建)
+
 #### Returns
 
 `void`
@@ -184,9 +186,29 @@
 
 ***
 
+### isDisplayAtSlot()
+
+> **isDisplayAtSlot**(`DisplaySlotId`): `boolean`
+
+判断是否在正在指定Slot显示
+
+#### Parameters
+
+##### DisplaySlotId
+
+`DisplaySlotId`
+
+#### Returns
+
+`boolean`
+
+***
+
 ### keys()
 
 > **keys**(): `string`[]
+
+获取所有计分项
 
 #### Returns
 
@@ -202,7 +224,7 @@
 
 > **resetAll**(): `void`
 
-重置所有积分项
+重置所有计分项(调用命令)
 
 #### Returns
 
@@ -213,6 +235,8 @@
 ### rm()
 
 > **rm**(`key`): `void`
+
+删除指定计分项
 
 #### Parameters
 
@@ -257,6 +281,8 @@
 ### setDisplaySlot()
 
 > **setDisplaySlot**(`SlotId`): `void`
+
+设置显示位置
 
 #### Parameters
 

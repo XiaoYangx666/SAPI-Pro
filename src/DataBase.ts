@@ -1,7 +1,13 @@
-import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
+import {
+    DisplaySlotId,
+    Player,
+    ScoreboardObjective,
+    system,
+    Vector3,
+    world,
+} from "@minecraft/server";
 import { libName } from "./Config";
-import { LibErrorMes } from "./func";
-import { DisplaySlotId } from "@minecraft/server";
+import { cmd, LibErrorMes } from "./func";
 
 type DPTypes = string | number | boolean | Vector3;
 export abstract class DataBase<T> {
@@ -72,12 +78,12 @@ export class DPDataBase extends DataBase<DPTypes> {
         return keys;
     }
     /**以json形式存储一个对象 */
-    setJSON(key: string, value: object) {
+    setJSON<T extends object>(key: string, value: T) {
         const data = JSON.stringify(value);
         this.set(key, data);
     }
     /**获取json形式存储的对象，没有或转换错误返回undefined */
-    getJSON(key: string): object | undefined {
+    getJSON<T extends object>(key: string): T | undefined {
         const data = this.get(key);
         if (data == undefined) return;
         if (typeof data != "string") return;
@@ -236,32 +242,6 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
         const write = callback(this.data);
         if (write ?? true) this.setJSON(true);
     }
-    /*
-    getLock() {
-        return sysdb.getObj(this.name + "_lock");
-    }
-    async withLock(callback: (data: Record<string, any>) => Promise<boolean | void> | boolean | undefined | void, maxTrys: number = 10) {
-        const lock = this.getLock();
-        for (let trys = 0; trys < maxTrys; trys++) {
-            if (!lock.get()) {
-                lock.set(1); // 获取锁
-                try {
-                    this.getJSON();
-                    const write = await callback(this.data); // 执行回调函数
-                    if (write ?? true) await this.setJSON(true);
-                    return true; // 操作成功
-                } catch (e) {
-                    console.error("Error during locked operation:", e);
-                    return false; // 操作失败
-                } finally {
-                    lock.set(0); // 释放锁
-                }
-            }
-            await new Promise((resolve) => system.runTimeout(() => resolve(1), trys > 5 ? 1 : 0)); // 等待一段时间后重试
-        }
-        return false; // 锁获取失败
-    }
-    */
 }
 /**虚拟计分项，不一定存在计分板上 */
 class scoreboardObj {
@@ -327,26 +307,35 @@ export class ScoreBoardDataBase extends DataBase<number> {
     getObj(key: string | Player) {
         return new scoreboardObj(this, key);
     }
+    /**删除指定计分项 */
     rm(key: string | Player) {
         this.getScoreBoard().removeParticipant(key);
     }
+    /**获取所有计分项 */
     keys() {
         return this.getScoreBoard()
             .getParticipants()
             .map((t) => t.displayName);
     }
+    /**清空计分板(删除并重建) */
     clear() {
         this.dispose();
         this.getScoreBoard();
     }
-    /**重置所有积分项*/
+
+    /**重置所有计分项(调用命令)*/
     resetAll() {
-        const sb = this.getScoreBoard();
-        const participants = sb.getParticipants();
-        for (let par of participants) {
-            sb.removeParticipant(par);
-        }
+        if (!this.sb) return;
+        cmd(`scoreboard players reset * "${this.sb.displayName}"`);
     }
+
+    /**判断是否在正在指定Slot显示 */
+    isDisplayAtSlot(DisplaySlotId: DisplaySlotId) {
+        const curDisplay = world.scoreboard.getObjectiveAtDisplaySlot(DisplaySlotId);
+        return curDisplay != undefined && curDisplay?.objective.id === this.sb?.id;
+    }
+
+    /**设置显示位置 */
     setDisplaySlot(SlotId: DisplaySlotId) {
         world.scoreboard.setObjectiveAtDisplaySlot(SlotId, { objective: this.getScoreBoard() });
     }
@@ -358,6 +347,7 @@ export class ScoreBoardDataBase extends DataBase<number> {
         }
     }
 }
+
 /**判断是否超过字节限制 */
 function checkBytes(input: string) {
     let totalBytes = 0;

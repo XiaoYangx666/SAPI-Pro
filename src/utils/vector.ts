@@ -1,7 +1,7 @@
 import { Vector3 } from "@minecraft/server";
 
 /**向量工具类，提供向量相关的操作方法 */
-export class VectorUtils {
+export class Vector3Utils {
     /**距离 */
     static distance(v1: Vector3, v2: Vector3): number {
         return Math.sqrt(this.squaredDistance(v1, v2));

@@ -108,9 +108,15 @@
 
 ### getJSON()
 
-> **getJSON**(`key`): `undefined` \| `object`
+> **getJSON**\<`T`\>(`key`): `undefined` \| `T`
 
 获取json形式存储的对象，没有或转换错误返回undefined
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `object`
 
 #### Parameters
 
@@ -120,7 +126,7 @@
 
 #### Returns
 
-`undefined` \| `object`
+`undefined` \| `T`
 
 ***
 
@@ -198,9 +204,15 @@
 
 ### setJSON()
 
-> **setJSON**(`key`, `value`): `void`
+> **setJSON**\<`T`\>(`key`, `value`): `void`
 
 以json形式存储一个对象
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `object`
 
 #### Parameters
 
@@ -210,7 +222,7 @@
 
 ##### value
 
-`object`
+`T`
 
 #### Returns
 
