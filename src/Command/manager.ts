@@ -8,7 +8,7 @@ import {
     system,
 } from "@minecraft/server";
 import { LibConfig } from "../Config";
-import { exchangedb } from "../DataBase";
+import { exchangedb } from "../DataBase/DataBase";
 import { chatBus } from "../Event";
 import { Command } from "./commandClass";
 import { CommandHelp } from "./help";

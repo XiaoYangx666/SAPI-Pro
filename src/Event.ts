@@ -1,5 +1,12 @@
-import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
-import { LibErrorMes, LibMessage } from "./func";
+import {
+    ChatSendBeforeEvent,
+    ItemUseAfterEvent,
+    Player,
+    ScriptEventCommandMessageAfterEvent,
+    system,
+    world,
+} from "@minecraft/server";
+import { LibErrorMes } from "./func";
 
 //先不搞优先队列了，能用就行，反正只有注册的时候排序
 export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
@@ -83,13 +90,14 @@ export class intervalBusClass {
         system.runInterval(this.interval.bind(this));
     }
     private interval() {
-        if (Date.now() - this.lasttime >= 60000) {
+        const now = Date.now();
+        if (now - this.lasttime >= 60000) {
             this.publishmin();
-            this.lasttime = Date.now();
+            this.lasttime = now;
         }
-        if (Date.now() - this.lastsec >= 1000) {
+        if (now - this.lastsec >= 1000) {
             this.publishsec(this.lastsec);
-            this.lastsec = Date.now();
+            this.lastsec = now;
         }
         this.publishtick();
     }
@@ -107,7 +115,7 @@ export class intervalBusClass {
             try {
                 callback(lastsec);
             } catch (e) {
-                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }
@@ -116,7 +124,7 @@ export class intervalBusClass {
             try {
                 callback();
             } catch (e) {
-                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }

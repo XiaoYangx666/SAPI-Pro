@@ -1,7 +1,6 @@
-import { Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
-import { libName } from "./Config";
-import { LibErrorMes } from "./func";
-import { DisplaySlotId } from "@minecraft/server";
+import { DisplaySlotId, Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
+import { libName } from "../Config";
+import { cmd, LibErrorMes } from "../func";
 
 type DPTypes = string | number | boolean | Vector3;
 export abstract class DataBase<T> {
@@ -30,11 +29,12 @@ export class DPDataBase extends DataBase<DPTypes> {
     private static ListMark = "arr";
     private keyPrefix: string; //前缀
     private readonly re: RegExp;
+
     constructor(name: string) {
         super(name);
         this.type = "DP";
         this.keyPrefix = this.name;
-        this.re = new RegExp(`((?<=^${this.keyPrefix}\.)(.*)(?=_($|(${DPDataBase.ListLenMark}))))`);
+        this.re = new RegExp(`(?<=^${this.keyPrefix}\.)(.+?)(?=_$|(${DPDataBase.ListLenMark}))`);
     }
     private getKey(key: string, mark: string = "") {
         return `${this.keyPrefix}.${key}_${mark}`;
@@ -70,6 +70,11 @@ export class DPDataBase extends DataBase<DPTypes> {
             .filter((t) => this.re.test(t))
             .map((t) => (t.match(this.re) || [""])[0]);
         return keys;
+    }
+    entries(): [string, DPTypes | undefined][] {
+        const keys = this.keys();
+        const entires: [string, DPTypes | undefined][] = keys.map((key) => [key, this.get(key)]);
+        return entires;
     }
     /**以json形式存储一个对象 */
     setJSON(key: string, value: object) {
@@ -122,7 +127,7 @@ export class DPDataBase extends DataBase<DPTypes> {
         for (let i = 0; i < length; i++) {
             const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
             if (part == undefined) {
-                LibErrorMes(`Error in getting list part ${i} of ${key}`);
+                LibErrorMes(`[DPDataBase]获取数组${key}的第${i}项出错`);
                 return undefined;
             }
             data[i] = part as string;
@@ -264,7 +269,7 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
     */
 }
 /**虚拟计分项，不一定存在计分板上 */
-class scoreboardObj {
+export class scoreboardObj {
     private sbObj: ScoreBoardDataBase;
     private name: string | Player;
     constructor(sbObj: ScoreBoardDataBase, name: string | Player) {
@@ -287,6 +292,7 @@ class scoreboardObj {
         return this.get() != undefined;
     }
 }
+
 export class ScoreBoardDataBase extends DataBase<number> {
     private scoreboardName: string;
     private sb: ScoreboardObjective | undefined;
@@ -323,30 +329,43 @@ export class ScoreBoardDataBase extends DataBase<number> {
         if (typeof value != "number") value = parseInt(value);
         this.getScoreBoard().addScore(key, value);
     }
+
     /**获取一个虚拟计分项对象 */
     getObj(key: string | Player) {
         return new scoreboardObj(this, key);
     }
+
+    /**删除指定计分项 */
     rm(key: string | Player) {
         this.getScoreBoard().removeParticipant(key);
     }
+
+    /**获取所有计分项 */
     keys() {
         return this.getScoreBoard()
             .getParticipants()
             .map((t) => t.displayName);
     }
+
+    /**清空计分板(删除并重建) */
     clear() {
         this.dispose();
         this.getScoreBoard();
     }
+
     /**重置所有积分项*/
     resetAll() {
-        const sb = this.getScoreBoard();
-        const participants = sb.getParticipants();
-        for (let par of participants) {
-            sb.removeParticipant(par);
-        }
+        if (!this.sb) return;
+        cmd(`scoreboard players reset * "${this.sb.id}"`);
     }
+
+    /**判断是否在正在指定Slot显示 */
+    isDisplayAtSlot(DisplaySlotId: DisplaySlotId) {
+        const curDisplay = world.scoreboard.getObjectiveAtDisplaySlot(DisplaySlotId);
+        return curDisplay != undefined && curDisplay?.objective.id === this.sb?.id;
+    }
+
+    /**设置显示位置 */
     setDisplaySlot(SlotId: DisplaySlotId) {
         world.scoreboard.setObjectiveAtDisplaySlot(SlotId, { objective: this.getScoreBoard() });
     }

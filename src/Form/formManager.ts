@@ -83,7 +83,7 @@ export class FormManagerClass {
             context._form = form as any;
             this._show(player, delay);
         } catch (err) {
-            if (err instanceof Error) LibErrorMes(err.message);
+            LibErrorMes("展示具名表单错误", err);
         }
     }
     /**
@@ -110,9 +110,7 @@ export class FormManagerClass {
             const form = this.getForm(name);
             this.open(player, form, args, delay);
         } catch (err) {
-            if (err instanceof Error) {
-                LibErrorMes(err.message);
-            }
+            LibErrorMes("打开指定名字的表单错误", err);
         }
     }
 
@@ -137,9 +135,7 @@ export class FormManagerClass {
                 this.openNamed(player, data.name, data.args, data.delay);
             }
         } catch (e) {
-            if (e instanceof Error) {
-                LibErrorMes(e.message + e.stack);
-            }
+            LibErrorMes("外部打开表单失败", e);
         }
     }
 }

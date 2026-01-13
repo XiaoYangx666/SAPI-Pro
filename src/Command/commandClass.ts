@@ -1,12 +1,5 @@
 import { CommandPermissionLevel, CustomCommand, CustomCommandParameter } from "@minecraft/server";
-import {
-    commandHandler,
-    CommandValidator,
-    ParamDefinition,
-    paramBranches,
-    CommandObject,
-    parsedTypes,
-} from "./interface";
+import { commandHandler, CommandObject, CommandValidator, paramBranches, ParamDefinition } from "./interface";
 import { NativeTypeMapping, paramTypes } from "./parser/ParamTypes";
 
 export class Command {

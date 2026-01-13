@@ -2,7 +2,7 @@ import { generateUUID } from "./func";
 
 export const libName = "SAPI-Pro";
 
-export const packInfo: PackInfo = {
+export const defaultPackInfo: PackInfo = {
     name: "SAPI-Pro行为包", //行为包名
     version: "1.0", //行为包版本
     author: "不到啊", //作者
@@ -14,12 +14,12 @@ class LibConfigClass {
     forceHost = false;
     /**如果不想随机生成，可以自己改 */
     UUID = generateUUID();
-    version = 0.33; //不要修改
+    version = 0.35; //不要修改
     isHost = false; //不要修改
     packInfo: PackInfo; //在上面改
 
     constructor() {
-        this.packInfo = packInfo;
+        this.packInfo = defaultPackInfo;
     }
 
     regPackInfo(info: PackInfo) {

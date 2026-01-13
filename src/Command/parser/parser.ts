@@ -109,7 +109,7 @@ export class CommandParser {
 
                 return true;
             } catch (e) {
-                LibErrorMes("Command Run Error:" + e + "at" + command.name);
+                LibErrorMes("Command Run Error at" + command.name, e);
             }
         }
     }

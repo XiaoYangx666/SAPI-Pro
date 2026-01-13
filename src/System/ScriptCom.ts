@@ -1,7 +1,7 @@
-import { system, world } from "@minecraft/server";
-import { pcommand } from "../main";
+import { system } from "@minecraft/server";
+import { pcommand } from "../Command/main";
 import { LibConfig, PackInfo } from "../Config";
-import { exchangedb } from "../DataBase";
+import { exchangedb } from "../DataBase/DataBase";
 import { LibMessage } from "../func";
 import { regSysInfo } from "./sysinfo";
 
@@ -27,7 +27,7 @@ export async function initCom() {
     const pack = LibConfig.packInfo;
     LibMessage(`已加载模块${pack.name},lib版本:${LibConfig.version}`);
     if (LibConfig.packInfo.greeting) {
-        LibMessage(`[${pack.name}]${pack.greeting}`);
+        LibMessage(`${pack.greeting}`);
     }
 
     //选举主机
