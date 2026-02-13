@@ -4,15 +4,19 @@
 
 [sapi-pro](../globals.md) / formHandler
 
-# Type Alias: formHandler()\<T\>
+# Type Alias: formHandler()\<T, TArgs\>
 
-> **formHandler**\<`T`\> = (`response`, `context`) => `void` \| `Promise`\<`void`\>
+> **formHandler**\<`T`, `TArgs`\> = (`response`, `context`) => `void` \| `Promise`\<`void`\>
 
 ## Type Parameters
 
 ### T
 
 `T` *extends* [`formDataType`](formDataType.md)
+
+### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
 
 ## Parameters
 
@@ -22,7 +26,7 @@
 
 ### context
 
-[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`T`\>
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`T`, `TArgs`\>
 
 ## Returns
 

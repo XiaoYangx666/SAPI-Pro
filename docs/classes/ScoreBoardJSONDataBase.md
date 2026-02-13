@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
 
 #### Inherited from
 
@@ -94,7 +94,7 @@
 
 ##### callback
 
-(`data`) => `undefined` \| `boolean` \| `void`
+(`data`) => `boolean` \| `void` \| `undefined`
 
 #### Returns
 
@@ -182,7 +182,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -192,7 +192,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 

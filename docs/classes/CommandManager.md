@@ -50,7 +50,7 @@
 
 ### getCommandInfo()
 
-> **getCommandInfo**(`command`): `undefined` \| [`Command`](Command.md)
+> **getCommandInfo**(`command`): [`Command`](Command.md) \| `undefined`
 
 #### Parameters
 
@@ -60,7 +60,7 @@
 
 #### Returns
 
-`undefined` \| [`Command`](Command.md)
+[`Command`](Command.md) \| `undefined`
 
 ***
 
@@ -178,7 +178,7 @@
 
 ### runCommand()
 
-> **runCommand**(`t`): `undefined` \| [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend)
+> **runCommand**(`t`): [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend) \| `undefined`
 
 运行命令注册回调
 
@@ -190,13 +190,13 @@
 
 #### Returns
 
-`undefined` \| [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend)
+[`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend) \| `undefined`
 
 ***
 
 ### runNativeCommand()
 
-> **runNativeCommand**(`command`, `origin`, ...`args`): `undefined` \| `CustomCommandResult`
+> **runNativeCommand**(`command`, `origin`, ...`args`): `CustomCommandResult` \| `undefined`
 
 #### Parameters
 
@@ -214,4 +214,4 @@
 
 #### Returns
 
-`undefined` \| `CustomCommandResult`
+`CustomCommandResult` \| `undefined`

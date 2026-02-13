@@ -4,7 +4,13 @@
 
 [sapi-pro](../globals.md) / FuncButton
 
-# Interface: FuncButton
+# Interface: FuncButton\<U\>
+
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md)
 
 ## Properties
 
@@ -18,7 +24,7 @@
 
 ##### context
 
-[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`\>
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`, `U`\>
 
 #### Returns
 
@@ -31,3 +37,9 @@
 > `optional` **icon**: `string`
 
 图标路径，从textures/后面开始输
+
+***
+
+### translation?
+
+> `optional` **translation**: [`LangText`](../type-aliases/LangText.md)

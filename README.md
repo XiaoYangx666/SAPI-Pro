@@ -1,22 +1,23 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.3.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE1.21.111-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.6.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.0+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
 ## 目录
 
--   [安装](#安装)
-    -   [从模板创建(推荐)](#方式一从模板创建推荐)
-    -   [现有项目集成](#方式二现有项目集成)
--   [核心功能](#核心功能)
-    -   [命令系统](#命令系统)
-    -   [表单导航](#表单导航)
-    -   [数据存储](#-数据存储)
-    -   [多包通信](#多包通信)
--   [示例行为包](#示例行为包)
--   [参考文档](#参考文档)
--   [支持与贡献](#支持与贡献)
+- [安装](#安装)
+    - [使用sapi-kit创建(推荐)](#方式一使用-sapi-kit-创建推荐)
+    - [现有项目手动安装](#方式二现有项目手动安装)
+- [核心功能](#核心功能)
+    - [命令系统](#命令系统)
+    - [表单导航](#表单导航)
+    - [数据存储](#-数据存储)
+    - [多包通信](#多包通信)
+    - [多语言](#多语言)
+- [示例行为包](#示例行为包)
+- [参考文档](#参考文档)
+- [支持与贡献](#支持与贡献)
 
 ---
 
@@ -32,31 +33,27 @@
     npm i -g sapi-kit
     ```
 
-2. 进入项目目录，初始化项目
+2. 进入项目目录，初始化项目，在预装时选择sapi-pro
 
     ```bash
     sapi-kit init
     ```
 
-3. 安装 SAPI-Pro
-    ```bash
-    npm i sapi-pro
-    ```
-4. 在 src/main.ts 中初始化库
+3. 在 src/main.ts 中初始化库
 
-```typescript
-//src/main.ts
-import { PackInfo, initSAPIPro } from "sapi-pro";
-const packInfo: PackInfo = {
-    name: "行为包名", //行为包名
-    version: "1.0.0", //行为包版本
-    author: "作者", //作者
-    nameSpace: "sapipro", //命名空间
-    description: "行为包描述", //包描述
-};
-// 初始化库
-initSAPIPro(packInfo);
-```
+    ```typescript
+    //src/main.ts
+    import { PackInfo, initSAPIPro } from "sapi-pro";
+    const packInfo: PackInfo = {
+        name: "行为包名", //行为包名
+        version: "1.0.0", //行为包版本
+        author: "作者", //作者
+        nameSpace: "sapipro", //命名空间
+        description: "行为包描述", //包描述
+    };
+    // 初始化库
+    initSAPIPro(packInfo);
+    ```
 
 有关 sapi-kit 的更多信息:[ScriptApi-Kit](https://gitee.com/ykxyx666_admin/script-api-kit)
 
@@ -64,23 +61,15 @@ initSAPIPro(packInfo);
 > 如果你不使用 TypeScript，可以直接在 src 中编写 js 代码。
 > 库必须初始化才能正常使用
 
-### 方式二：现有项目手动集成
+### 方式二：现有项目手动安装
 
-1.  下载：[从 Gitee 下载](https://gitee.com/ykxyx666_admin/SAPI-Pro/releases/latest)|[从 Github 下载](https://github.com/XiaoYangx666/SAPI-Pro/releases/latest)
-
-2.  将库文件解压至项目目录：(JS 版本同理)
+1.  使用npm安装库
 
     ```bash
-    📂 your_project/
-    └── 📂 src/
-        └── 📂 SAPI-Pro/
-            ├── Command/
-            ├── Form/
-            ├── DataBase.ts
-            └── main.ts
+    npm i sapi-pro
     ```
 
-3.  初始化库：
+2.  初始化库：
 
     ```typescript
     //src/main.ts
@@ -213,6 +202,28 @@ world.sendMessage(info.author);
 
 ---
 
+### 多语言
+
+sapi-pro 支持多语言，不使用传统的字符串键进行翻译，而是通过对象结构定义语言包，配合翻译函数直接使用：
+
+```ts
+import { defineLangTree, translator } from "sapi-pro";
+// 定义语言文本对象
+export const LangUI = defineLangTree({
+    title: {
+        zh_CN: "设置",
+        en_US: "Settings",
+        ja_JP: "設定",
+    },
+});
+
+// 在代码中使用翻译
+const t = translator.createFor(player);
+const form = new ModalFormData().title(t("设置", LangUI.title));
+```
+
+---
+
 ## 示例行为包
 
 [自动整理](https://gitee.com/ykxyx666_admin/sorter-be)
@@ -237,6 +248,6 @@ Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](https://gitee.com/ykxyx666_adm
 
 > 🛠️ 推荐开发环境：
 >
-> -   VSCode
-> -   TypeScript 5.7+
-> -   Node.js 20+
+> - VSCode
+> - TypeScript 5.7+
+> - Node.js 20+

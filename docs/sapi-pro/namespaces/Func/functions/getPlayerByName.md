@@ -6,7 +6,7 @@
 
 # Function: getPlayerByName()
 
-> **getPlayerByName**(`name`): `undefined` \| `Player`
+> **getPlayerByName**(`name`): `Player` \| `undefined`
 
 ## Parameters
 
@@ -16,4 +16,4 @@
 
 ## Returns
 
-`undefined` \| `Player`
+`Player` \| `undefined`

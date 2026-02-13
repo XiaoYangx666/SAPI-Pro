@@ -1,5 +1,11 @@
-import { DisplaySlotId, Player, ScoreboardObjective, system, Vector3, world } from "@minecraft/server";
-import { libName } from "../Config";
+import {
+    DisplaySlotId,
+    Player,
+    ScoreboardObjective,
+    system,
+    Vector3,
+    world,
+} from "@minecraft/server";
 import { cmd, LibErrorMes } from "../func";
 
 type DPTypes = string | number | boolean | Vector3;
@@ -387,9 +393,9 @@ function checkBytes(input: string) {
     return false;
 }
 
-export function splitString(input: String, sync?: false): Promise<string[]>;
-export function splitString(input: String, sync: true): string[];
-export function splitString(input: String, sync = false) {
+function splitString(input: String, sync?: false): Promise<string[]>;
+function splitString(input: String, sync: true): string[];
+function splitString(input: String, sync = false) {
     const maxBytes = 32767; // 每个块的最大字节数
     const result: string[] = [];
     let startIndex = 0;
@@ -427,6 +433,5 @@ export function splitString(input: String, sync = false) {
     }
 }
 
-export const sysdb = new ScoreBoardDataBase(libName); //系统计分板
 export const exchangedb = new ScoreBoardJSONDataBase("exchange"); //脚本通信计分板
 export const Configdb = new DPDataBase("Config");

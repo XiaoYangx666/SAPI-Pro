@@ -88,7 +88,7 @@
 
 ### getForm()
 
-> **getForm**(`name`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`\>
+> **getForm**(`name`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`, [`contextArgs`](../interfaces/contextArgs.md)\>
 
 获取指定名字的form
 
@@ -100,7 +100,7 @@
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`, [`contextArgs`](../interfaces/contextArgs.md)\>
 
 #### Throws
 

@@ -2,9 +2,9 @@
 
 ***
 
-[sapi-pro](../globals.md) / VectorUtils
+[sapi-pro](../globals.md) / Vector3Utils
 
-# Class: VectorUtils
+# Class: Vector3Utils
 
 向量工具类，提供向量相关的操作方法
 
@@ -12,11 +12,11 @@
 
 ### Constructor
 
-> **new VectorUtils**(): `VectorUtils`
+> **new Vector3Utils**(): `Vector3Utils`
 
 #### Returns
 
-`VectorUtils`
+`Vector3Utils`
 
 ## Methods
 
@@ -401,6 +401,26 @@ v1-v2
 #### Returns
 
 \[`number`, `number`, `number`\]
+
+***
+
+### toFixed()
+
+> `static` **toFixed**(`v`, `digits`): `Vector3`
+
+#### Parameters
+
+##### v
+
+`Vector3`
+
+##### digits
+
+`number` = `2`
+
+#### Returns
+
+`Vector3`
 
 ***
 

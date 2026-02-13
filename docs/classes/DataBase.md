@@ -9,8 +9,8 @@
 ## Extended by
 
 - [`DPDataBase`](DPDataBase.md)
-- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 - [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
+- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 
 ## Type Parameters
 
@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
 
 ***
 
@@ -72,7 +72,7 @@
 
 ### get()
 
-> `abstract` **get**(`key`): `undefined` \| `T`
+> `abstract` **get**(`key`): `T` \| `undefined`
 
 #### Parameters
 
@@ -82,7 +82,7 @@
 
 #### Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
 
 ***
 
@@ -134,7 +134,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| `DataBase`\<`any`\>
+> `static` **getDB**(`name`): `DataBase`\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -144,7 +144,7 @@
 
 #### Returns
 
-`undefined` \| `DataBase`\<`any`\>
+`DataBase`\<`any`\> \| `undefined`
 
 ***
 

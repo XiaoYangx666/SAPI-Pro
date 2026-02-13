@@ -4,13 +4,17 @@
 
 [sapi-pro](../globals.md) / formGenerator
 
-# Interface: formGenerator()\<T\>
+# Interface: formGenerator()\<T, U\>
 
 ## Type Parameters
 
 ### T
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md)
 
 > **formGenerator**(`form`, `player`, `args`): `void` \| `Promise`\<`void`\>
 
@@ -28,7 +32,7 @@
 
 ### args
 
-[`contextArgs`](contextArgs.md)
+`U`
 
 ## Returns
 

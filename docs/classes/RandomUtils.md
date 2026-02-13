@@ -32,7 +32,7 @@
 
 ### choice()
 
-> `static` **choice**\<`T`\>(`arr`): `undefined` \| `T`
+> `static` **choice**\<`T`\>(`arr`): `T` \| `undefined`
 
 从数组中随机取一个元素
 
@@ -50,7 +50,7 @@
 
 #### Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
 
 ***
 

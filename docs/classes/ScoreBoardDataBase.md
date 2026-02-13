@@ -52,7 +52,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
 
 #### Inherited from
 
@@ -104,6 +104,8 @@
 
 > **clear**(): `void`
 
+清空计分板(删除并重建)
+
 #### Returns
 
 `void`
@@ -128,7 +130,7 @@
 
 ### get()
 
-> **get**(`key`): `undefined` \| `number`
+> **get**(`key`): `number` \| `undefined`
 
 #### Parameters
 
@@ -138,7 +140,7 @@
 
 #### Returns
 
-`undefined` \| `number`
+`number` \| `undefined`
 
 #### Overrides
 
@@ -148,7 +150,7 @@
 
 ### getObj()
 
-> **getObj**(`key`): `scoreboardObj`
+> **getObj**(`key`): [`scoreboardObj`](scoreboardObj.md)
 
 获取一个虚拟计分项对象
 
@@ -160,7 +162,7 @@
 
 #### Returns
 
-`scoreboardObj`
+[`scoreboardObj`](scoreboardObj.md)
 
 ***
 
@@ -184,9 +186,29 @@
 
 ***
 
+### isDisplayAtSlot()
+
+> **isDisplayAtSlot**(`DisplaySlotId`): `boolean`
+
+判断是否在正在指定Slot显示
+
+#### Parameters
+
+##### DisplaySlotId
+
+`DisplaySlotId`
+
+#### Returns
+
+`boolean`
+
+***
+
 ### keys()
 
 > **keys**(): `string`[]
+
+获取所有计分项
 
 #### Returns
 
@@ -213,6 +235,8 @@
 ### rm()
 
 > **rm**(`key`): `void`
+
+删除指定计分项
 
 #### Parameters
 
@@ -258,6 +282,8 @@
 
 > **setDisplaySlot**(`SlotId`): `void`
 
+设置显示位置
+
 #### Parameters
 
 ##### SlotId
@@ -272,7 +298,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -282,7 +308,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 

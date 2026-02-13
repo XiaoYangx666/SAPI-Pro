@@ -4,15 +4,19 @@
 
 [sapi-pro](../globals.md) / FormBuilder
 
-# Type Alias: FormBuilder()\<T\>
+# Type Alias: FormBuilder()\<T, U\>
 
-> **FormBuilder**\<`T`\> = (`player`, `args`) => `Promise`\<`T`\> \| `T`
+> **FormBuilder**\<`T`, `U`\> = (`player`, `args`) => `Promise`\<`T`\> \| `T`
 
 ## Type Parameters
 
 ### T
 
 `T` *extends* [`formDataType`](formDataType.md)
+
+### U
+
+`U` *extends* [`contextArgs`](../interfaces/contextArgs.md)
 
 ## Parameters
 
@@ -22,7 +26,7 @@
 
 ### args
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`U`
 
 ## Returns
 

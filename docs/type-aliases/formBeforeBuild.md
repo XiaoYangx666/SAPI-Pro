@@ -4,9 +4,9 @@
 
 [sapi-pro](../globals.md) / formBeforeBuild
 
-# Type Alias: formBeforeBuild()\<T\>
+# Type Alias: formBeforeBuild()\<T, U\>
 
-> **formBeforeBuild**\<`T`\> = (`context`) => `void` \| `Promise`\<`void`\>
+> **formBeforeBuild**\<`T`, `U`\> = (`context`) => `void` \| `Promise`\<`void`\>
 
 ## Type Parameters
 
@@ -14,11 +14,15 @@
 
 `T` *extends* [`formDataType`](formDataType.md)
 
+### U
+
+`U` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
 ## Parameters
 
 ### context
 
-[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`T`\>
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`T`, `U`\>
 
 ## Returns
 

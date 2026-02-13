@@ -4,13 +4,19 @@
 
 [sapi-pro](../globals.md) / SimpleMessageFormData
 
-# Interface: SimpleMessageFormData
+# Interface: SimpleMessageFormData\<U\>
+
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md) = [`contextArgs`](contextArgs.md)
 
 ## Properties
 
 ### body?
 
-> `optional` **body**: `string`
+> `optional` **body**: `string` \| [`LangText`](../type-aliases/LangText.md)
 
 ***
 
@@ -52,10 +58,10 @@
 
 ### handler
 
-> **handler**: [`formHandler`](../type-aliases/formHandler.md)\<`MessageFormData`\>
+> **handler**: [`formHandler`](../type-aliases/formHandler.md)\<`MessageFormData`, `U`\>
 
 ***
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title**: `string` \| [`LangText`](../type-aliases/LangText.md)

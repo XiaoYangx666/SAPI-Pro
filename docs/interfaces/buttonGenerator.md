@@ -4,9 +4,15 @@
 
 [sapi-pro](../globals.md) / buttonGenerator
 
-# Interface: buttonGenerator()
+# Interface: buttonGenerator()\<U\>
 
-> **buttonGenerator**(`player`, `args`): `undefined` \| `Record`\<`string`, [`FuncButton`](FuncButton.md)\>
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md)
+
+> **buttonGenerator**(`player`, `args`): `Record`\<`string`, [`FuncButton`](FuncButton.md)\<`U`\>\> \| `undefined`
 
 按钮生成器，用于自定义按钮
 
@@ -18,8 +24,8 @@
 
 ### args
 
-[`contextArgs`](contextArgs.md)
+`U`
 
 ## Returns
 
-`undefined` \| `Record`\<`string`, [`FuncButton`](FuncButton.md)\>
+`Record`\<`string`, [`FuncButton`](FuncButton.md)\<`U`\>\> \| `undefined`

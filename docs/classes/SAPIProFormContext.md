@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / SAPIProFormContext
 
-# Class: SAPIProFormContext\<T\>
+# Class: SAPIProFormContext\<T, U\>
 
 ## Type Parameters
 
@@ -12,17 +12,21 @@
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
+### U
+
+`U` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
 ## Constructors
 
 ### Constructor
 
-> **new SAPIProFormContext**\<`T`\>(`args`, `stack`, `form?`): `SAPIProFormContext`\<`T`\>
+> **new SAPIProFormContext**\<`T`, `U`\>(`args`, `stack`, `form?`): `SAPIProFormContext`\<`T`, `U`\>
 
 #### Parameters
 
 ##### args
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`U`
 
 ##### stack
 
@@ -30,17 +34,17 @@
 
 ##### form?
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `U`\>
 
 #### Returns
 
-`SAPIProFormContext`\<`T`\>
+`SAPIProFormContext`\<`T`, `U`\>
 
 ## Properties
 
 ### \_form?
 
-> `optional` **\_form**: [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+> `optional` **\_form**: [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `U`\>
 
 **`Internal`**
 
@@ -50,7 +54,7 @@
 
 ### args
 
-> `readonly` **args**: [`contextArgs`](../interfaces/contextArgs.md)
+> `readonly` **args**: `U`
 
 ***
 
@@ -108,7 +112,7 @@
 
 ### offAll()
 
-> **offAll**\<`T`\>(`form`, `args?`, `delay?`): `void`
+> **offAll**\<`T`, `TArgs`\>(`form`, `args?`, `delay?`): `void`
 
 清空堆栈，并打开表单
 
@@ -118,15 +122,19 @@
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
 #### Parameters
 
 ##### form
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 ##### args?
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`TArgs`
 
 ##### delay?
 
@@ -166,7 +174,7 @@
 
 ### push()
 
-> **push**\<`T`\>(`form`, `args?`, `delay?`): `void`
+> **push**\<`T`, `TArgs`\>(`form`, `args?`, `delay?`): `void`
 
 打开表单
 
@@ -176,15 +184,19 @@
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
 #### Parameters
 
 ##### form
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 ##### args?
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`TArgs`
 
 ##### delay?
 
@@ -242,7 +254,7 @@
 
 ### replace()
 
-> **replace**\<`T`\>(`form`, `args?`, `delay?`): `void`
+> **replace**\<`T`, `TArgs`\>(`form`, `args?`, `delay?`): `void`
 
 替换当前表单为新的命名表单
 
@@ -252,15 +264,19 @@
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
 #### Parameters
 
 ##### form
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 ##### args?
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`TArgs`
 
 ##### delay?
 

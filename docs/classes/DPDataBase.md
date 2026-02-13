@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
 
 #### Inherited from
 
@@ -86,9 +86,19 @@
 
 ***
 
+### entries()
+
+> **entries**(): \[`string`, `DPTypes` \| `undefined`\][]
+
+#### Returns
+
+\[`string`, `DPTypes` \| `undefined`\][]
+
+***
+
 ### get()
 
-> **get**(`key`): `undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
+> **get**(`key`): `string` \| `number` \| `boolean` \| `Vector3` \| `undefined`
 
 #### Parameters
 
@@ -98,7 +108,7 @@
 
 #### Returns
 
-`undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
+`string` \| `number` \| `boolean` \| `Vector3` \| `undefined`
 
 #### Overrides
 
@@ -108,7 +118,7 @@
 
 ### getJSON()
 
-> **getJSON**(`key`): `undefined` \| `object`
+> **getJSON**(`key`): `object` \| `undefined`
 
 获取json形式存储的对象，没有或转换错误返回undefined
 
@@ -120,7 +130,7 @@
 
 #### Returns
 
-`undefined` \| `object`
+`object` \| `undefined`
 
 ***
 
@@ -250,7 +260,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -260,7 +270,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 

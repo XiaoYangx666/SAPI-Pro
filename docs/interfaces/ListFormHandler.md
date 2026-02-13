@@ -4,7 +4,13 @@
 
 [sapi-pro](../globals.md) / ListFormHandler
 
-# Interface: ListFormHandler()
+# Interface: ListFormHandler()\<U\>
+
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md)
 
 > **ListFormHandler**(`selection`, `context`): `void` \| `Promise`\<`void`\>
 
@@ -16,7 +22,7 @@
 
 ### context
 
-[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`\>
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`, `U`\>
 
 ## Returns
 
