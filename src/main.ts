@@ -12,6 +12,7 @@ export * from "./Form/main";
 export * as Func from "./func";
 export { PackInfo } from "./Config";
 export * from "./utils/main";
+export * from "./Translate/index";
 
 /**库初始化 */
 export function initSAPIPro(packInfo: PackInfo) {
