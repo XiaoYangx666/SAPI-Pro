@@ -3,7 +3,7 @@ import { SAPIProForm, SAPIProFormContext } from "./form";
 import { contextArgs, formDataType } from "./interface";
 
 export class PlayerFormStack {
-    private stack: SAPIProFormContext<formDataType>[] = [];
+    private stack: SAPIProFormContext<formDataType, any>[] = [];
     constructor(private readonly player: Player) {}
 
     push(args: contextArgs, form?: SAPIProForm<formDataType>) {

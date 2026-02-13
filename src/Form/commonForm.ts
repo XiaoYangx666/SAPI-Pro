@@ -1,5 +1,7 @@
 import { ActionFormData, ActionFormResponse, MessageFormData } from "@minecraft/server-ui";
+import { translator } from "../Translate/translator";
 import {
+    ButtonFormArgs,
     ButtonFormData,
     ButtonListFormData,
     FuncButton,
@@ -9,26 +11,32 @@ import {
 import { SAPIProForm } from "./form";
 export class CommonForm {
     /**常用的按钮表单 */
-    static ButtonForm(data: ButtonFormData) {
-        const form: SAPIProForm<ActionFormData> = {
+    static ButtonForm<U extends ButtonFormArgs>(data: ButtonFormData<U>) {
+        const form: SAPIProForm<ActionFormData, U> = {
             builder: async (p, args) => {
                 const form = new ActionFormData();
-                if (data.title) form.title(data.title);
-                if (data.body) form.body(data.body);
+                const t = translator.createFor(p);
+                if (data.title)
+                    form.title(typeof data.title == "string" ? data.title : t("title", data.title));
+                if (data.body)
+                    form.body(typeof data.body == "string" ? data.body : t("body", data.body));
+
+                //执行自定义generator
                 if (data.generator) await data.generator(form, p, args);
+                //使用buttonGenerator生成按钮
                 const generatedButtons = data.buttonGenerator ? data.buttonGenerator(p, args) : {};
                 let buttons = Object.assign({}, data.buttons ?? {});
                 Object.assign(buttons, generatedButtons);
+                //构建表单
                 Object.entries(buttons).forEach(([label, button]) => {
                     const iconPath = button.icon ? `textures/${button.icon}` : undefined;
-                    form.button(label, iconPath);
+                    form.button(t(label, button.translation), iconPath);
                 });
                 args.buttons = buttons;
                 return form;
             },
             handler: (res, context) => {
-                const p = context.player;
-                const buttons = context.args.buttons as Record<string, FuncButton>;
+                const buttons = context.args.buttons as Record<string, FuncButton<U>>;
                 if (res.selection != undefined) {
                     return Object.values(buttons ?? {})[res.selection].func(context);
                 } else {
@@ -40,12 +48,14 @@ export class CommonForm {
         return form;
     }
     /** 按钮列表表单*/
-    static ButtonListForm(data: ButtonListFormData) {
-        const form: SAPIProForm<ActionFormData> = {
+    static ButtonListForm<U extends ButtonFormArgs>(data: ButtonListFormData<U>) {
+        const form: SAPIProForm<ActionFormData, U> = {
             builder: async (p, args) => {
                 const form = new ActionFormData();
-                if (data.title) form.title(data.title);
-                if (data.body) form.body(data.body);
+                const t = translator.createPureFor(p);
+                if (data.title)
+                    form.title(typeof data.title == "string" ? data.title : t(data.title));
+                if (data.body) form.body(typeof data.body == "string" ? data.body : t(data.body));
                 if (data.generator) {
                     await data.generator(form, p, args);
                 }
@@ -65,12 +75,15 @@ export class CommonForm {
     /**
      * 一个简单的提示窗口，仅含有两个按钮，
      */
-    static SimpleMessageForm(data: SimpleMessageFormData) {
-        const form: SAPIProForm<MessageFormData> = {
+    static SimpleMessageForm<U extends ButtonFormArgs>(data: SimpleMessageFormData<U>) {
+        const form: SAPIProForm<MessageFormData, U> = {
             builder: async (p, args) => {
                 const form = new MessageFormData();
-                if (data.title) form.title(data.title);
-                if (data.body) form.body(data.body);
+                const t = translator.createPureFor(p);
+                if (data.title)
+                    form.title(typeof data.title == "string" ? data.title : t(data.title));
+                if (data.body) form.body(typeof data.body == "string" ? data.body : t(data.body));
+
                 if (data.button1) form.button1(data.button1);
                 if (data.button2) form.button2(data.button2);
                 if (data.generator) await data.generator(form, p, args);
@@ -85,8 +98,11 @@ export class CommonForm {
      * @param title 标题
      * @param body 内容，可以是生成器
      */
-    static BodyInfoForm(title: string, body: formGenerator<ActionFormData> | string) {
-        const form: SAPIProForm<ActionFormData> = {
+    static BodyInfoForm<U extends ButtonFormArgs>(
+        title: string,
+        body: formGenerator<ActionFormData, U> | string
+    ) {
+        const form: SAPIProForm<ActionFormData, U> = {
             builder: async (p, args) => {
                 const form = new ActionFormData().title(title).button("确定");
                 if (typeof body == "string") {

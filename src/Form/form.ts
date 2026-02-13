@@ -2,22 +2,26 @@ import { formManager } from "./formManager";
 import { contextArgs, formBeforeBuild, FormBuilder, formDataType, formHandler } from "./interface";
 import { formStackManager, PlayerFormStack } from "./stackManager";
 
-export interface SAPIProForm<T extends formDataType> {
+export interface SAPIProForm<T extends formDataType, U extends contextArgs = contextArgs> {
     /**构建函数 */
-    builder: FormBuilder<T>;
+    builder: FormBuilder<T, U>;
     /**在展示前运行，可用来处理验证或跳转 */
-    beforeBuild?: formBeforeBuild<T>;
+    beforeBuild?: formBeforeBuild<T, U>;
     /**处理函数 */
-    handler: formHandler<T>;
+    handler: formHandler<T, U>;
 }
 
-export class SAPIProFormContext<T extends formDataType> {
+export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**@internal 内部属性，勿改*/
-    _form?: SAPIProForm<T>;
+    _form?: SAPIProForm<T, U>;
     /**@internal 内部属性，勿改 */
     willBuild: boolean;
 
-    constructor(readonly args: contextArgs, private readonly stack: PlayerFormStack, form?: SAPIProForm<T>) {
+    constructor(
+        readonly args: U,
+        private readonly stack: PlayerFormStack,
+        form?: SAPIProForm<T, U>
+    ) {
         this._form = form;
         this.willBuild = true;
     }
@@ -27,7 +31,11 @@ export class SAPIProFormContext<T extends formDataType> {
     }
 
     /**打开表单 */
-    push<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
+    push<T extends formDataType, TArgs extends contextArgs>(
+        form: SAPIProForm<T, TArgs>,
+        args?: TArgs,
+        delay = 0
+    ) {
         this.willBuild = false;
         this.stack.push(args ?? {}, form as any);
         formManager._show(this.player, delay);
@@ -55,7 +63,11 @@ export class SAPIProFormContext<T extends formDataType> {
         formStackManager.resetStack(this.player);
     }
     /**替换当前表单为新的命名表单 */
-    replace<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
+    replace<T extends formDataType, TArgs extends contextArgs>(
+        form: SAPIProForm<T, TArgs>,
+        args?: TArgs,
+        delay = 0
+    ) {
         this.willBuild = false;
         this.stack.pop();
         this.stack.push(args ?? {}, form as any);
@@ -69,7 +81,11 @@ export class SAPIProFormContext<T extends formDataType> {
         formManager._showNamed(this.player, name, delay);
     }
     /**清空堆栈，并打开表单 */
-    offAll<T extends formDataType>(form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
+    offAll<T extends formDataType, TArgs extends contextArgs>(
+        form: SAPIProForm<T, TArgs>,
+        args?: TArgs,
+        delay = 0
+    ) {
         this.willBuild = false;
         this.stack.clear();
         this.push(form, args, delay);

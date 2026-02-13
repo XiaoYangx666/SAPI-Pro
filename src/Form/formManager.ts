@@ -93,7 +93,12 @@ export class FormManagerClass {
      * @param args 初始参数
      * @param delay 延迟(游戏刻)
      */
-    open<T extends formDataType>(player: Player, form: SAPIProForm<T>, args?: contextArgs, delay = 0) {
+    open<T extends formDataType>(
+        player: Player,
+        form: SAPIProForm<T>,
+        args?: contextArgs,
+        delay = 0
+    ) {
         const stack = formStackManager.resetStack(player);
         stack.push(args ?? {}, form as any);
         this._show(player, delay);
@@ -122,7 +127,13 @@ export class FormManagerClass {
      * @param delay 延迟(游戏刻)
      */
     openExternal(player: Player, nameSpace: string, name: string, args?: contextArgs, delay = 0) {
-        const data: openFormData = { name: name, nameSpace: nameSpace, playerid: player.id, args: args, delay: delay };
+        const data: openFormData = {
+            name: name,
+            nameSpace: nameSpace,
+            playerid: player.id,
+            args: args,
+            delay: delay,
+        };
         system.sendScriptEvent("form:open", JSON.stringify(data));
     }
 
