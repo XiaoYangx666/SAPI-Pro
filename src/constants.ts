@@ -1,17 +1,16 @@
 import { Dimension, world } from "@minecraft/server";
-import { createDeferredObject } from "./utils/deferedValue";
+import { worldDeferredObject } from "./Deferred/createDeferredObject";
 import { DimensionIds } from "./utils/vanila-data";
 
 //维度常量
 type Dimensions = {
     [K in keyof typeof DimensionIds]: Dimension;
 };
-const { proxy: dims, setTarget } = createDeferredObject<Dimensions>();
-world.afterEvents.worldLoad.subscribe(() => {
-    setTarget({
+const dims = worldDeferredObject<Dimensions>(() => {
+    return {
         Overworld: world.getDimension(DimensionIds.Overworld),
         Nether: world.getDimension(DimensionIds.Nether),
         End: world.getDimension(DimensionIds.End),
-    });
+    };
 });
 export const Dimensions = dims;
