@@ -67,7 +67,7 @@ export class FormManagerClass {
             //如果不build了就返回
             if (!context.willBuild) return;
             const buildForm = await form.builder(context.player, context.args);
-            buildForm.show(player).then(async (response) => {
+            buildForm.show(player).then((response) => {
                 form.handler(response, context);
             });
         }, delay);
@@ -93,10 +93,10 @@ export class FormManagerClass {
      * @param args 初始参数
      * @param delay 延迟(游戏刻)
      */
-    open<T extends formDataType>(
+    open<T extends formDataType, TArgs extends contextArgs>(
         player: Player,
-        form: SAPIProForm<T>,
-        args?: contextArgs,
+        form: SAPIProForm<T, TArgs>,
+        args?: TArgs,
         delay = 0
     ) {
         const stack = formStackManager.resetStack(player);
