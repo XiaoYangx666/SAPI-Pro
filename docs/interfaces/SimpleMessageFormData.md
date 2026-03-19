@@ -6,6 +6,10 @@
 
 # Interface: SimpleMessageFormData\<U\>
 
+## Extends
+
+- [`CommonFormData`](CommonFormData.md)\<`MessageFormData`, `U`\>
+
 ## Type Parameters
 
 ### U
@@ -16,52 +20,42 @@
 
 ### body?
 
-> `optional` **body**: `string` \| [`LangText`](../type-aliases/LangText.md)
+> `optional` **body**: [`TextType`](../type-aliases/TextType.md)
+
+body
 
 ***
 
 ### button1?
 
-> `optional` **button1**: `string`
+> `optional` **button1**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
 ### button2?
 
-> `optional` **button2**: `string`
+> `optional` **button2**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
-### generator()?
+### generator?
 
-> `optional` **generator**: (`form`, `player`, `args`) => `void` \| `Promise`\<`void`\>
+> `optional` **generator**: [`formGenerator`](formGenerator.md)\<`MessageFormData`, `U`\>
 
-#### Parameters
+自定义生成器
 
-##### form
+#### Inherited from
 
-`MessageFormData`
-
-##### player
-
-`Player`
-
-##### args
-
-[`contextArgs`](contextArgs.md)
-
-#### Returns
-
-`void` \| `Promise`\<`void`\>
-
-***
-
-### handler
-
-> **handler**: [`formHandler`](../type-aliases/formHandler.md)\<`MessageFormData`, `U`\>
+[`CommonFormData`](CommonFormData.md).[`generator`](CommonFormData.md#generator)
 
 ***
 
 ### title?
 
-> `optional` **title**: `string` \| [`LangText`](../type-aliases/LangText.md)
+> `optional` **title**: [`TextType`](../type-aliases/TextType.md)
+
+标题
+
+#### Inherited from
+
+[`CommonFormData`](CommonFormData.md).[`title`](CommonFormData.md#title)

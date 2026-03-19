@@ -8,7 +8,7 @@
 
 > **cmd**(`text`, `async`): `void`
 
-执行命令
+执行命令 (维度:主世界)
 
 ## Parameters
 

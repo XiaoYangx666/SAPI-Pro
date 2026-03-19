@@ -6,21 +6,11 @@
 
 # Class: CommonForm
 
-## Constructors
-
-### Constructor
-
-> **new CommonForm**(): `CommonForm`
-
-#### Returns
-
-`CommonForm`
-
 ## Methods
 
 ### BodyInfoForm()
 
-> `static` **BodyInfoForm**\<`U`\>(`title`, `body`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+> `static` **BodyInfoForm**\<`U`\>(`title`, `body`, `onSubmit?`): `BodyInfoForm`\<`U`\>
 
 注册一个简单的信息窗口
 
@@ -34,7 +24,7 @@
 
 ##### title
 
-`string`
+[`TextType`](../type-aliases/TextType.md)
 
 标题
 
@@ -42,17 +32,23 @@
 
 内容，可以是生成器
 
-`string` | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
+[`TextType`](../type-aliases/TextType.md) | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
+
+##### onSubmit?
+
+(`ctx`) => `void`
+
+提交后执行
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+`BodyInfoForm`\<`U`\>
 
 ***
 
 ### ButtonForm()
 
-> `static` **ButtonForm**\<`U`\>(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+> `static` **ButtonForm**\<`U`\>(`data`): `ButtonForm`\<`U`\>
 
 常用的按钮表单
 
@@ -70,37 +66,41 @@
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+`ButtonForm`\<`U`\>
 
 ***
 
-### ButtonListForm()
+### InputForm()
 
-> `static` **ButtonListForm**\<`U`\>(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+> `static` **InputForm**\<`TResult`, `U`\>(`data`): `InputForm`\<`U`, `TResult`\>
 
-按钮列表表单
+输入表单
 
 #### Type Parameters
 
+##### TResult
+
+`TResult` *extends* `unknown`
+
 ##### U
 
-`U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
+`U` *extends* `InputFormArgs`
 
 #### Parameters
 
 ##### data
 
-[`ButtonListFormData`](../interfaces/ButtonListFormData.md)\<`U`\>
+`InputFormData`\<`U`, `TResult`\>
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
+`InputForm`\<`U`, `TResult`\>
 
 ***
 
 ### SimpleMessageForm()
 
-> `static` **SimpleMessageForm**\<`U`\>(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`, `U`\>
+> `static` **SimpleMessageForm**\<`U`\>(`data`): `SimpleMessageForm`\<`U`\>
 
 一个简单的提示窗口，仅含有两个按钮，
 
@@ -118,4 +118,4 @@
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`, `U`\>
+`SimpleMessageForm`\<`U`\>

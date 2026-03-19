@@ -8,6 +8,8 @@
 
 > **getAllPlayers**(): `Player`[]
 
+安全获取所有玩家
+
 ## Returns
 
 `Player`[]

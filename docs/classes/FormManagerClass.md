@@ -110,7 +110,7 @@
 
 ### open()
 
-> **open**\<`T`\>(`player`, `form`, `args?`, `delay?`): `void`
+> **open**\<`T`, `TArgs`\>(`player`, `form`, `args?`, `delay?`): `void`
 
 为玩家打开表单
 
@@ -119,6 +119,10 @@
 ##### T
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
+
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
 
 #### Parameters
 
@@ -130,13 +134,13 @@
 
 ##### form
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 表单实例
 
 ##### args?
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`TArgs`
 
 初始参数
 

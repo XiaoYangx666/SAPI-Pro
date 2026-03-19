@@ -8,7 +8,7 @@
 
 ## Extends
 
-- [`DataBase`](DataBase.md)\<`DPTypes`\>
+- [`DataBase`](DataBase.md)\<`DPValueTypes`\>
 
 ## Constructors
 
@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
+> **type**: `DBTypes`
 
 #### Inherited from
 
@@ -88,17 +88,23 @@
 
 ### entries()
 
-> **entries**(): \[`string`, `DPTypes` \| `undefined`\][]
+> **entries**(): \[`string`, `DPValueTypes` \| `undefined`\][]
 
 #### Returns
 
-\[`string`, `DPTypes` \| `undefined`\][]
+\[`string`, `DPValueTypes` \| `undefined`\][]
 
 ***
 
 ### get()
 
-> **get**(`key`): `string` \| `number` \| `boolean` \| `Vector3` \| `undefined`
+> **get**\<`T`\>(`key`): `T` \| `undefined`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `DPValueTypes` = `DPValueTypes`
 
 #### Parameters
 
@@ -108,7 +114,7 @@
 
 #### Returns
 
-`string` \| `number` \| `boolean` \| `Vector3` \| `undefined`
+`T` \| `undefined`
 
 #### Overrides
 
@@ -118,9 +124,15 @@
 
 ### getJSON()
 
-> **getJSON**(`key`): `object` \| `undefined`
+> **getJSON**\<`T`\>(`key`, `guard?`): `T` \| `undefined`
 
-获取json形式存储的对象，没有或转换错误返回undefined
+获取JSON形式存储的对象，可选使用类型守卫进行校验
+
+#### Type Parameters
+
+##### T
+
+`T` = `unknown`
 
 #### Parameters
 
@@ -128,9 +140,19 @@
 
 `string`
 
+键名
+
+##### guard?
+
+(`val`) => `val is T`
+
+可选类型守卫函数
+
 #### Returns
 
-`object` \| `undefined`
+`T` \| `undefined`
+
+解析后的数据，失败或校验不通过返回 undefined
 
 ***
 
@@ -194,7 +216,7 @@
 
 ##### value
 
-`DPTypes`
+`DPValueTypes`
 
 #### Returns
 
@@ -289,19 +311,3 @@
 #### Inherited from
 
 [`DataBase`](DataBase.md).[`getDBs`](DataBase.md#getdbs)
-
-***
-
-### isDPDataBase()
-
-> `static` **isDPDataBase**(`db`): `db is DPDataBase`
-
-#### Parameters
-
-##### db
-
-[`DataBase`](DataBase.md)\<`any`\>
-
-#### Returns
-
-`db is DPDataBase`

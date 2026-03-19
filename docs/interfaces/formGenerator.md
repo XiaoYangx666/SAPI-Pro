@@ -6,6 +6,8 @@
 
 # Interface: formGenerator()\<T, U\>
 
+自定义表单生成器
+
 ## Type Parameters
 
 ### T
@@ -16,9 +18,9 @@
 
 `U` *extends* [`contextArgs`](contextArgs.md)
 
-> **formGenerator**(`form`, `player`, `args`): `void` \| `Promise`\<`void`\>
+> **formGenerator**(`form`, `player`, `args`, `t`): `void` \| `Promise`\<`void`\>
 
-自定义表单生成器，不要和原本的冲突了
+自定义表单生成器
 
 ## Parameters
 
@@ -33,6 +35,10 @@
 ### args
 
 `U`
+
+### t
+
+[`UniversalTranslator`](../type-aliases/UniversalTranslator.md)
 
 ## Returns
 

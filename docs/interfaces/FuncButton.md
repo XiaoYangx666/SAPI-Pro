@@ -14,9 +14,9 @@
 
 ## Properties
 
-### func()
+### func()?
 
-> **func**: (`context`) => `void` \| `Promise`\<`void`\>
+> `optional` **func**: (`context`) => `void` \| `Promise`\<`void`\>
 
 按钮点击事件
 
@@ -40,6 +40,38 @@
 
 ***
 
-### translation?
+### label
 
-> `optional` **translation**: [`LangText`](../type-aliases/LangText.md)
+> **label**: [`TextType`](../type-aliases/TextType.md)
+
+按钮文本(支持翻译)
+
+***
+
+### permission?
+
+> `optional` **permission**: `PlayerPermissionLevel`
+
+玩家权限，具有对应权限才会显示按钮
+
+***
+
+### shouldShow()?
+
+> `optional` **shouldShow**: (`player`, `args`) => `boolean`
+
+按钮是否应该显示(默认显示)
+
+#### Parameters
+
+##### player
+
+`Player`
+
+##### args
+
+`U`
+
+#### Returns
+
+`boolean`

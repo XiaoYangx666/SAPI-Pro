@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
+> **type**: `DBTypes`
 
 #### Inherited from
 

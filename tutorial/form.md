@@ -8,20 +8,20 @@
 
 ### 目录
 
--   [SAPI-Pro 表单](#sapi-pro-表单)
-    -   [示例](#实际示例)
-    -   [注册具名表单](#注册具名表单)
--   [表单上下文](#表单上下文-sapiproformcontext)
--   [模板表单](#模板表单)
-    -   [ButtonForm](#commonformbuttonform-通用按钮表单)
-    -   [ButtonListForm](#commonformbuttonlistform-按钮列表表单)
-    -   [BodyInfoForm](#commonformbodyinfoform)
-    -   [SimpleMessageForm](#commonformsimplemessageform)
--   [多层表单处理](#使用上下文处理多层表单)
+- [SAPI-Pro 表单](#sapi-pro-表单)
+    - [示例](#实际示例)
+    - [注册具名表单](#注册具名表单)
+- [表单上下文](#表单上下文-sapiproformcontext)
+- [常用表单](#常用表单)
+    - [ButtonForm](#commonformbuttonform-通用按钮表单)
+    - [BodyInfoForm](#commonformbodyinfoform)
+    - [SimpleMessageForm](#commonformsimplemessageform)
+    - [InputForm](#)
+- [多层表单处理](#使用上下文处理多层表单)
 
 ### SAPI-Pro 表单
 
-SAPI-Pro 表单使用类型[SAPIProForm](../docs/interfaces/SAPIProForm.md)构建，指定表单类型，即可构建表单。
+SAPI-Pro 表单使用接口[SAPIProForm](../docs/interfaces/SAPIProForm.md)构建，指定表单类型，即可构建表单。
 
 ##### 示例
 
@@ -78,7 +78,9 @@ delay:打开延迟(单位tick)
 ```typescript
 const spCreate: SAPIProForm<ModalFormData> = {
     builder: async (player, context) => {
-        const form = new ModalFormData().title("创建假人").textField("假人名字", "输入假人名字，不能有特殊字符");
+        const form = new ModalFormData()
+            .title("创建假人")
+            .textField("假人名字", "输入假人名字，不能有特殊字符");
         return form;
     },
     handler: (res: ModalFormResponse, ctx) => {
@@ -102,9 +104,9 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 表单多数是无名的，可以直接通过对象打开，但如果需要在多行为包间打开表单，则需要为表单命名。
 
-使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed)来注具名表单：
+使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed) 来注册具名表单
 
-使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed)来打开具名表单
+使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed) 来打开具名表单
 
 ### 表单上下文 SAPIProFormContext
 
@@ -141,17 +143,46 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 ---
 
-### 模板表单
+### [常用表单 CommonForm](../docs/classes/CommonForm.md)
 
-模板表单是一种内置好的表单，因为这类表单有着相似的结构和处理，所以把它作为模板。接下来我们介绍三种模板表单。
+我们经常会用到一些相似结构的表单，常用表单可以轻松帮助你实现。它们返回常用表单类的实例，这些类都实现了SAPIProForm接口。
+
+###
 
 ### CommonForm.ButtonForm 通用按钮表单
 
-语法是`CommonForm.ButtonForm(data:ButtonFormData)`，返回`SAPIProForm<ActionFormData>`。
+使用CommonForm类中的静态方法即可创建。
+
+```ts
+ButtonForm<U>(data: ButtonFormData<U>):ButtonForm<U>;
+```
 
 参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
 
-title 和 body 就不讲了，就是标题和内容，你可以选填。
+```ts
+//此处已展开继承的接口
+interface ButtonFormData<U extends contextArgs = contextArgs> {
+    /**标题 */
+    title?: TextType;
+    /**自定义生成器 */
+    generator?: formGenerator<T, U>;
+
+    /**body */
+    body?: TextType;
+    /**按钮列表 */
+    buttons?: FuncButton<U>[];
+    /**按钮生成器 */
+    buttonGenerator?: (player: Player, args: U, t: UniversalTranslator) => Iterable<FuncButton<U>>;
+    /**列表处理 */
+    handler?: (ctx: SAPIProFormContext<ActionFormData, U>, index: number) => Promise<void> | void;
+    /**取消事件 */
+    oncancel?: formHandler<ActionFormData, U>;
+    /**表单验证器，验证失败则不打开表单 */
+    validator?: formBeforeBuild<ActionFormData, U>;
+}
+```
+
+title 和 body 是表单的标题和内容，是静态的，并支持字符串和翻译对象，如果要动态生成，可以使用generator(参见后文)。
 
 #### buttons 静态按钮
 
@@ -161,42 +192,46 @@ buttons 看这个例子就懂了:
 
 ```typescript
 const clockMenu: ButtonFormData = {
-    title: "菜单",
-    body: "请选择你要打开的功能",
-    buttons: {
-        自动整理: {
-            icon: "blocks/chest_front",
-            func: (ctx) => {
-                formManager.openExternal(ctx.player, "sorter", "sorter.main");
-            },
-        },
-        玩家互传: {
+    title: clockMenuText.title, //"菜单"
+    body: clockMenuText.body,
+    buttons: [
+        {
             icon: "ui/FriendsIcon",
+            label: clockMenuText.tpa, //"玩家传送"
             func: (ctx) => {
                 ctx.pushNamed("tpa.main");
             },
         },
-        音乐播放器: {
+        {
             icon: "blocks/jukebox_top",
+            label: clockMenuText.musicPlayer, //"音乐播放器"
             func: (ctx) => {
                 system.sendScriptEvent("music:open", ctx.player.id);
             },
         },
-        领地: {
-            icon: "blocks/grass_side_carried",
+        {
+            icon: "ui/recipe_book_icon.png",
+            label: clockMenuText.statistics, //"统计信息"
             func: (ctx) => {
-                ctx.pushNamed("res.main");
+                ctx.push(statisticsForm);
             },
         },
-    },
+        {
+            icon: "gui/newgui/Language18.png",
+            label: clockMenuText.langSetting, //"语言设置"
+            func: (ctx) => {
+                ctx.push(LangSettingForm);
+            },
+        },
+    ],
 };
 ```
 
-懂的都懂好吧，buttons 怎么用应该很明显了吧。其中 icon 可以不写。
+通过以上例子，buttons的使用方法已经清晰。其中 icon 和 func 可以不写。
 func 的参数是[SAPIProFormContext](#表单上下文-sapiproformcontext)
 
 ```typescript
-func: (context: SAPIProFormContext<ActionFormData>) => void | Promise<void>
+func?: (context: SAPIProFormContext<ActionFormData>) => void | Promise<void>
 ```
 
 #### buttonGenerator 动态生成按钮
@@ -269,66 +304,21 @@ generator: (form, player, ctx) => {
 
 最后还有个 validator,就是[beforeBuild](#beforebuildformbeforebuild)。
 
-### CommonForm.ButtonListForm 按钮列表表单
-
-按钮列表表单适用于一堆按钮，最后根据玩家选择的序号来执行相应的操作的场景。当然，你也可以用前面的`ButtonForm`来实现，只需要用`buttonGenerator`就行了。
-
-仍然先上语法
-`CommonForm.ButtonListForm(data: ButtonListFormData)`
-
-参考:[ButtonListFormData](../docs/interfaces/ButtonListFormData.md)
-
-#### generator
-
-在这里，我们使用 generator 来生成列表，generator 和上面 ButtonForm 的是一样的。
-
-##### 示例
-
-```typescript
-const spList = CommonForm.ButtonListForm({
-    title: "假人列表",
-    generator: (form, player, args) => {
-        const spList = spManager.getSPList();
-        form.button("返回");
-        for (let spdata of spList) {
-            form.button(spdata.sp.name);
-        }
-        args.list = spList;
-    },
-    handler: (selection, ctx) => {
-        if (selection == 0) return ctx.back();
-        ctx.push(spInfo, { spdata: ctx.args.list[selection - 1] });
-    },
-    validator: (ctx) => {
-        if (spManager.getSPList().length == 0) {
-            spManager.mes(ctx.player, "没有假人，请先创建");
-            ctx.back();
-        }
-    },
-});
-```
-
-上面这个例子使用 generator 来生成假人列表，并且将假人列表设置到 context 的 args 中，这样 handler 就可以拿到 generator 里假人列表，进而方便处理。
-
-#### handler:ListFormHandler
-
-```typescript
-handler: (selection: number, context: SAPIProFormContext<ActionFormData>) =>
-    Promise<void > | void;
-```
-
-看了上面的例子，其实这个也很简单。  
-这个函数会传入一个 selection，selection 就是玩家选择的按钮序号，从 0 开始。而 context 是上下文。可以根据玩家选择项的不同进行不同的逻辑。
-
 ### CommonForm.BodyInfoForm
 
-这个会创建一个只有标题，body 和一个确认按钮的表单。3,2,1,上语法
+一个只有标题，body 和一个确认按钮的表单,用于显示简单的文本信息。
 
 ```typescript
-CommonForm.BodyInfoForm(title: string, body: formGenerator<ActionFormData> | string)
+BodyInfoForm<U extends ButtonFormArgs>(
+    title: TextType,
+    body: formGenerator<ActionFormData, U> | TextType,
+    onSubmit?: (ctx: SAPIProFormContext<ActionFormData, U>) => void
+)
 ```
 
-可以看到，只需要传入 title,body。其中 body 可以传 string 或 formGenerator。如果你是静态的表单。那么直接传字符串就行了，如果内容动态生成，那么传 formGenerator 就对了。
+传入title,body。其中 body 可以传TextType 或 formGenerator。对于静态表单，直接传文本即可。如果需要内容动态生成，那么可以使用formGenerator。
+
+点击确认后默认返回上一级，可以通过传入onSubmit参数自定义处理。
 
 ##### 示例
 
@@ -338,39 +328,42 @@ const promptPage = CommonForm.BodyInfoForm("AIChat系统提示词", (form, playe
 });
 ```
 
-这个太简单了好吧，不多说了。
-
 ### CommonForm.SimpleMessageForm
 
-这个可以创建一个简单的对话框，用户只需要选择是或不是。
+一个简单的对话框，用户只需要选择是或不是。
 
 `CommonForm.SimpleMessageForm(data: SimpleMessageFormData)`
 
-其中 data:SimpleMessageFormData 是这个:
+其中 [SimpleMessageFormData](../docs/interfaces/SimpleMessageFormData.md) 定义如下:
 
-参考:[SimpleMessageFormData](../docs/interfaces/SimpleMessageFormData.md)
+```ts
+interface SimpleMessageFormData<U extends contextArgs = contextArgs> extends CommonFormData<
+    MessageFormData,
+    U
+> {
+    /**body */
+    body?: TextType;
+    button1?: MessageFormButton<U>;
+    button2?: MessageFormButton<U>;
+}
+```
 
-button1，button2 就是对话框的俩按钮，你静态的话就直接写上。如果动态的话你也可以用 generator 来生成，自由度很高。  
-handler 就是处理函数([formHandler](#handlerformhandler))，你自己根据结果处理就行。没有 oncancel，但是 handler 也可以处理，问题不大。
+button1，button2 就是对话框的俩按钮，每个都有独立的处理函数和文本，会在点击后执行。默认情况下不会执行任何操作(表单直接关闭)。
+
+```ts
+interface MessageFormButton<U extends contextArgs> {
+    text: TextType;
+    /**按钮点击事件 */
+    func: (context: SAPIProFormContext<MessageFormData, U>) => void | Promise<void>;
+}
+```
+
+body和title等可以静态也可以通过 generator 来生成。
 
 ##### 示例
 
 ```typescript
-const deleteFriendConfirmForm = CommonForm.SimpleMessageForm({
-    title: "删除好友",
-    button1: "取消",
-    button2: "确定",
-    generator: (form, p, args) => {
-        form.body(`你确定要删除领地§3${args.item.rname}§r的好友:§e${args.fname}§r吗？`);
-    },
-    handler: (res: MessageFormResponse, context) => {
-        if (res.selection == undefined) return undefined;
-        if (res.selection == 1) {
-            resgame.removeFriend(context.args.item.id, context.player, context.args.fname);
-        }
-        context.back();
-    },
-});
+
 ```
 
 ---

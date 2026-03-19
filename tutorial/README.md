@@ -22,11 +22,11 @@
 
 ### 参考
 
-- [pcommand](../docs/variables/pcommand.md)
-- [FormManager](../docs/classes/FormManager.md)
-- [CommonForm](../docs/classes/CommonForm.md)
-- [DataBase](../docs/classes/DataBase.md)
-- [Event](../docs/namespaces/Event/README.md)
+- [pcommand](../docs/variables/pcommand.md) "点"命令管理器
+- [FormManager](../docs/classes/FormManager.md) 表单管理器
+- [CommonForm](../docs/classes/CommonForm.md) 常用表单
+- [DataBase](../docs/classes/DataBase.md) 游戏内数据存储
+- [Event](../docs/namespaces/Event/README.md) 游戏事件订阅
 - [全部参考文档](../docs/globals.md)
 
 ---

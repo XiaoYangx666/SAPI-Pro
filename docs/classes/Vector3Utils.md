@@ -8,16 +8,6 @@
 
 向量工具类，提供向量相关的操作方法
 
-## Constructors
-
-### Constructor
-
-> **new Vector3Utils**(): `Vector3Utils`
-
-#### Returns
-
-`Vector3Utils`
-
 ## Methods
 
 ### above()

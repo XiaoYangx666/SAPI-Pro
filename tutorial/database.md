@@ -10,7 +10,7 @@
 import { ScoreBoardDataBase, DPDataBase, ScoreBoardJSONDataBase } from "SAPI-Pro/DataBase";
 ```
 
-### DPDataBase 动态数据数据库
+### [DPDataBase](../docs/classes/DPDataBase.md) 动态数据数据库
 
 存储在游戏 DynamicProperty 中，每个行为包是分开的。可以存储超大文本，最大不限，但超过 10mb 会报警告，而且可能导致游戏变卡。
 
@@ -20,21 +20,21 @@ import { ScoreBoardDataBase, DPDataBase, ScoreBoardJSONDataBase } from "SAPI-Pro
 
 ##### types
 
-`type DPTypes = string | number | boolean | Vector3;`
+`type DPValueTypes = string | number | boolean | Vector3;`
 这是 DP 数据库可以存储的所有数据类型
 
 ##### 函数
 
 常规:
-`set(key: string, value: DPTypes): void` 设置键值
-`get(key: string): DPTypes|undefined `获取
+`set(key: string, value: DPValueTypes): void` 设置键值
+`get(key: string): DPValueTypes|undefined `获取
 `rm(key: string): void` 删除
 `keys(): string[]` 获取该数据库所有键
 `clear(): void` 清空所有键
 特殊:
 `setJSON(key: string, value: object): void`
 将对象按 JSON 字符串形式在数据库存储
-`getJSON(key: string): object | undefined`
+`getJSON<T = unknown>(key: string, guard?:valguard): T | undefined `
 获取按 JSON 格式存储的对象
 
 要使用需要先 new 一个数据库，例如：
@@ -52,7 +52,7 @@ import { Configdb } from "sapi-pro";
 
 ---
 
-### ScoreBoardJSONDataBase JSON 计分板数据库
+### [ScoreBoardJSONDataBase](../docs/classes/ScoreBoardJSONDataBase.md) JSON 计分板数据库
 
 使用 scoreboard 存储 JSON 数据，会新建一个计分板来存储。支持超大文本，读取超大文本性能较 DP 数据库略差。  
 主要用于行为包之间临时大量数据传递，少量数据请使用 scriptEvent，存储配置请使用 DPDataBase。
@@ -88,7 +88,7 @@ import { exchangedb } from "sapi-pro";
 
 ---
 
-### ScoreBoardDataBase 计分板数据库
+### [ScoreBoardDataBase](../docs/classes/ScoreBoardDataBase.md) 计分板数据库
 
 只是对原版的简单封装
 
@@ -115,13 +115,7 @@ const mySB = new ScoreBoardDataBase("record");
 //没有骂人
 ```
 
-系统内置了一个计分板数据库 sysdb ，但现在好像没啥用了，你可以拿来用。拿来多包传传数据啥的。
-
-```typescript
-import { sysdb } from "sapi-pro";
-```
-
-### scoreboardObj
+### [scoreboardObj](../docs/classes/scoreboardObj.md)
 
 一个虚拟计分板对象，可以方便管理某个玩家或某个特定计分项
 

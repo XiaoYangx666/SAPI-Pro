@@ -22,13 +22,17 @@
 
 ### Constructor
 
-> **new DataBase**\<`T`\>(`name`): `DataBase`\<`T`\>
+> **new DataBase**\<`T`\>(`name`, `type`): `DataBase`\<`T`\>
 
 #### Parameters
 
 ##### name
 
 `string`
+
+##### type
+
+`DBTypes`
 
 #### Returns
 
@@ -44,7 +48,7 @@
 
 ### type
 
-> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
+> **type**: `DBTypes`
 
 ***
 

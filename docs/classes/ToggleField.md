@@ -1,0 +1,267 @@
+[**sapi-pro**](../README.md)
+
+***
+
+[sapi-pro](../globals.md) / ToggleField
+
+# Class: ToggleField
+
+开关
+
+## Extends
+
+- [`ValueField`](ValueField.md)\<`boolean`\>
+
+## Constructors
+
+### Constructor
+
+> **new ToggleField**(`label`, `defaultValue`, `tooltip?`): `ToggleField`
+
+#### Parameters
+
+##### label
+
+`TextType`
+
+##### defaultValue
+
+`boolean` = `false`
+
+##### tooltip?
+
+`TextType`
+
+#### Returns
+
+`ToggleField`
+
+#### Overrides
+
+[`ValueField`](ValueField.md).[`constructor`](ValueField.md#constructor)
+
+## Properties
+
+### \_\_optional
+
+> `protected` **\_\_optional**: `boolean` = `false`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`__optional`](ValueField.md#__optional)
+
+***
+
+### \_key?
+
+> `protected` `optional` **\_key**: `string`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`_key`](ValueField.md#_key)
+
+***
+
+### isValueField
+
+> `readonly` **isValueField**: `true` = `true`
+
+是否是值字段
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`isValueField`](ValueField.md#isvaluefield)
+
+***
+
+### validators
+
+> `protected` **validators**: [`FieldValidator`](../type-aliases/FieldValidator.md)\<`boolean`\>[] = `[]`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`validators`](ValueField.md#validators)
+
+## Accessors
+
+### isOptional
+
+#### Get Signature
+
+> **get** **isOptional**(): `boolean`
+
+##### Returns
+
+`boolean`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`isOptional`](ValueField.md#isoptional)
+
+***
+
+### key
+
+#### Get Signature
+
+> **get** **key**(): `string` \| `undefined`
+
+##### Returns
+
+`string` \| `undefined`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`key`](ValueField.md#key)
+
+## Methods
+
+### baseValidate()
+
+> `protected` **baseValidate**(`value`): \{ `de_DE`: `string`; `en_US`: `string`; `es_ES`: `string`; `fr_FR`: `string`; `ja_JP`: `string`; `ko_KR`: `string`; `zh_CN`: `string`; `zh_TW`: `string`; \} \| `undefined`
+
+基础类型校验（类型层面）
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+#### Returns
+
+\{ `de_DE`: `string`; `en_US`: `string`; `es_ES`: `string`; `fr_FR`: `string`; `ja_JP`: `string`; `ko_KR`: `string`; `zh_CN`: `string`; `zh_TW`: `string`; \} \| `undefined`
+
+#### Overrides
+
+[`ValueField`](ValueField.md).[`baseValidate`](ValueField.md#basevalidate)
+
+***
+
+### build()
+
+> **build**(`form`, `t`): `void`
+
+UI 构建
+
+#### Parameters
+
+##### form
+
+`ModalFormData`
+
+##### t
+
+[`UniversalTranslator`](../type-aliases/UniversalTranslator.md)
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[`ValueField`](ValueField.md).[`build`](ValueField.md#build)
+
+***
+
+### optional()
+
+> **optional**(): `ToggleField` & `object`
+
+标记为可选字段
+
+#### Returns
+
+`ToggleField` & `object`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`optional`](ValueField.md#optional)
+
+***
+
+### parse()
+
+> **parse**(`raw`): `boolean`
+
+类型判断与转换，若类型不正确则抛出错误
+
+#### Parameters
+
+##### raw
+
+`ValueType`
+
+#### Returns
+
+`boolean`
+
+#### Overrides
+
+[`ValueField`](ValueField.md).[`parse`](ValueField.md#parse)
+
+***
+
+### setKey()
+
+> **setKey**(`key`): `ToggleField`
+
+设置字段键名，用于最终推导为对象属性
+
+#### Parameters
+
+##### key
+
+`string`
+
+#### Returns
+
+`ToggleField`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`setKey`](ValueField.md#setkey)
+
+***
+
+### validate()
+
+> **validate**(`value`): `string` \| [`LangText`](../type-aliases/LangText.md) \| `undefined`
+
+执行完整校验链
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+#### Returns
+
+`string` \| [`LangText`](../type-aliases/LangText.md) \| `undefined`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`validate`](ValueField.md#validate)
+
+***
+
+### validator()
+
+> **validator**(...`v`): `ToggleField`
+
+添加自定义验证器
+
+#### Parameters
+
+##### v
+
+...[`FieldValidator`](../type-aliases/FieldValidator.md)\<`boolean`\>[]
+
+#### Returns
+
+`ToggleField`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`validator`](ValueField.md#validator)

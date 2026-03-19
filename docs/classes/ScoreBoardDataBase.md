@@ -52,7 +52,7 @@
 
 ### type
 
-> **type**: `"DP"` \| `"jSB"` \| `"cSB"` \| `undefined`
+> **type**: `DBTypes`
 
 #### Inherited from
 
@@ -224,7 +224,7 @@
 
 > **resetAll**(): `void`
 
-重置所有积分项
+重置所有积分项(调用命令)
 
 #### Returns
 

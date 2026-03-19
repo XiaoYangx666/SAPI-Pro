@@ -6,16 +6,6 @@
 
 # Class: RandomUtils
 
-## Constructors
-
-### Constructor
-
-> **new RandomUtils**(): `RandomUtils`
-
-#### Returns
-
-`RandomUtils`
-
 ## Methods
 
 ### bool()

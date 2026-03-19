@@ -8,16 +8,6 @@
 
 有关区块的工具
 
-## Constructors
-
-### Constructor
-
-> **new ChunkUtils**(): `ChunkUtils`
-
-#### Returns
-
-`ChunkUtils`
-
 ## Methods
 
 ### getChunkEntities()
@@ -66,7 +56,7 @@
 
 `Vector3`
 
-该区块最大点的坐标
+该区块最大点的坐标(y为319)
 
 ***
 
@@ -74,11 +64,15 @@
 
 > `static` **getChunkMinMaxPos**(`pos`): `object`
 
+根据坐标获取区块的最小点与最大点，y不变
+
 #### Parameters
 
 ##### pos
 
 `Vector3`
+
+指定位置坐标
 
 #### Returns
 
@@ -86,11 +80,51 @@
 
 ##### max
 
-> **max**: `Vector3`
+> **max**: `object`
+
+###### max.x
+
+> **x**: `number`
+
+###### Remarks
+
+X component of this vector.
+
+###### max.y
+
+> **y**: `number` = `pos.y`
+
+###### max.z
+
+> **z**: `number`
+
+###### Remarks
+
+Z component of this vector.
 
 ##### min
 
-> **min**: `Vector3`
+> **min**: `object`
+
+###### min.x
+
+> **x**: `number`
+
+###### Remarks
+
+X component of this vector.
+
+###### min.y
+
+> **y**: `number` = `pos.y`
+
+###### min.z
+
+> **z**: `number`
+
+###### Remarks
+
+Z component of this vector.
 
 ***
 
@@ -112,7 +146,7 @@
 
 `Vector3`
 
-该区块最小点的坐标
+该区块最小点的坐标(y为-64)
 
 ***
 

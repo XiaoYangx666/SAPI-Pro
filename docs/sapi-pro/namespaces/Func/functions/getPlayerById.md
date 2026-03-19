@@ -8,6 +8,8 @@
 
 > **getPlayerById**(`id`): `Player` \| `undefined`
 
+根据玩家id获取玩家
+
 ## Parameters
 
 ### id

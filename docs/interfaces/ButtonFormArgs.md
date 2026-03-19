@@ -18,4 +18,4 @@
 
 ### buttons?
 
-> `optional` **buttons**: `Record`\<`string`, [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`\>\>
+> `optional` **buttons**: [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`\>[]
