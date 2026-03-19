@@ -2,6 +2,7 @@ import { Vector3 } from "@minecraft/server";
 
 /**向量工具类，提供向量相关的操作方法 */
 export class Vector3Utils {
+    private constructor() {}
     /**距离 */
     static distance(v1: Vector3, v2: Vector3): number {
         return Math.sqrt(this.squaredDistance(v1, v2));
@@ -55,7 +56,11 @@ export class Vector3Utils {
 
     /**v1与v2在误差eps范围内相等? */
     static isApproxEqual(v1: Vector3, v2: Vector3, eps: number = 1e-6): boolean {
-        return Math.abs(v1.x - v2.x) < eps && Math.abs(v1.y - v2.y) < eps && Math.abs(v1.z - v2.z) < eps;
+        return (
+            Math.abs(v1.x - v2.x) < eps &&
+            Math.abs(v1.y - v2.y) < eps &&
+            Math.abs(v1.z - v2.z) < eps
+        );
     }
 
     /**向量长度 */

@@ -1,5 +1,6 @@
 import { CustomCommandParamType, Player } from "@minecraft/server";
-import { ArraytoVector3, getAllPlayers, rand, Vector3toArray } from "../../func";
+import { getAllPlayers } from "../../func";
+import { RandomUtils, Vector3Utils } from "../../main";
 import { ParamDefinition, ParseError, ParseInfo } from "../interface";
 
 export enum paramTypes {
@@ -42,7 +43,9 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
     enum: {
         parser(value, ctx) {
             const param = ctx.param!;
-            return param.enums?.includes(value[0]) ? new ParseInfo(value[0]) : new ParseError("不在枚举中");
+            return param.enums?.includes(value[0])
+                ? new ParseInfo(value[0])
+                : new ParseError("不在枚举中");
         },
         regex: new RegExp(/^[^\x20]+$/),
     },
@@ -57,7 +60,9 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
     float: {
         parser(value) {
             const parsedFloat = parseFloat(value[0]);
-            return isNaN(parsedFloat) ? new ParseError("参数不是浮点类型") : new ParseInfo(parsedFloat);
+            return isNaN(parsedFloat)
+                ? new ParseError("参数不是浮点类型")
+                : new ParseInfo(parsedFloat);
         },
         regex: new RegExp(/^-?( [1-9]\d*\.?\d*)|(0\.\d*[1-9])$/),
     },
@@ -79,12 +84,14 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
                     break;
                 case "r":
                     const players = getAllPlayers();
-                    target = players[rand(0, players.length - 1)];
+                    target = RandomUtils.choice(players);
                     break;
                 default:
                     target = getAllPlayers().find((t) => t.name === name1);
             }
-            return target ? new ParseInfo(target) : new ParseError("没有与选择器匹配的目标", true, 0, false);
+            return target
+                ? new ParseInfo(target)
+                : new ParseError("没有与选择器匹配的目标", true, 0, false);
         },
         regex: new RegExp(/^@?(?:"([^"]*)"|((?![\d]+$)[^\s]+))$/),
         regexError: "目标格式错误",
@@ -115,7 +122,7 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
             if (i != 3) {
                 return new ParseError("缺少坐标", false, j + 1, false);
             }
-            const playerPosition = Vector3toArray(context.player.location);
+            const playerPosition = Vector3Utils.toArray(context.player.location);
             const parsedCoordinates = [];
             for (let i = 0; i < 3; i++) {
                 const coordinate = matchResults[i * 3];
@@ -130,7 +137,7 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
                 }
                 parsedCoordinates[i] = coordinateValue;
             }
-            return new ParseInfo(ArraytoVector3(parsedCoordinates as any), j);
+            return new ParseInfo(Vector3Utils.fromArray(parsedCoordinates as any), j);
         },
         regex: new RegExp(/^(?:-?\d+|~)\S*$/),
         regexError: "不是坐标格式",
@@ -138,7 +145,9 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
     flag: {
         parser(value, ctx) {
             const param = ctx.param;
-            return param.name == value[0] ? new ParseInfo(param.name) : new ParseError("符号不匹配", false, 0, true);
+            return param.name == value[0]
+                ? new ParseInfo(param.name)
+                : new ParseError("符号不匹配", false, 0, true);
         },
     },
 };

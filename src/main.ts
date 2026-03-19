@@ -3,6 +3,7 @@ import { LibConfig, PackInfo } from "./Config";
 import "./System/ScriptCom";
 import { initCom } from "./System/ScriptCom";
 import { setLoggerNamespace } from "./utils/logger";
+import "./Deferred/index";
 
 //引用此文件
 export * from "./Command/main";
