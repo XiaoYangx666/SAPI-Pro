@@ -1,7 +1,7 @@
 import { Player, world } from "@minecraft/server";
 import { intervalBus } from "../Event";
 import { getAllPlayers } from "../func";
-import { Logger } from "../main";
+import { Logger } from "../utils/logger";
 import { DPDataBase } from "./DataBase";
 
 export interface NameDBOptions {

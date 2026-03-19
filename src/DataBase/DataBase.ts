@@ -6,18 +6,24 @@ import {
     Vector3,
     world,
 } from "@minecraft/server";
-import { cmd, LibErrorMes } from "../func";
+import { cmd } from "../func";
+import { Logger } from "../main";
 
-type DPTypes = string | number | boolean | Vector3;
+type DPValueTypes = string | number | boolean | Vector3;
+type DBTypes = "DP" | "jSB" | "cSB";
 export abstract class DataBase<T> {
     static maxChunkBytes = 32767;
     static DBMap: Record<string, DataBase<any>> = {}; //存储所有注册过的数据库
     public name: string; //数据库名
-    public type: "DP" | "jSB" | "cSB" | undefined; //数据库类型(SB不是骂人)
-    constructor(name: string) {
+    public type: DBTypes; //数据库类型(SB不是骂人)
+
+    constructor(name: string, type: DBTypes) {
         this.name = name;
+        this.type = type;
+        //注册数据库
         DataBase.DBMap[name] = this;
     }
+
     abstract set(key: string, value: T): void;
     abstract get(key: string): T | undefined;
     abstract rm(key: string): void;
@@ -30,35 +36,40 @@ export abstract class DataBase<T> {
         return Object.values(this.DBMap);
     }
 }
-export class DPDataBase extends DataBase<DPTypes> {
+export class DPDataBase extends DataBase<DPValueTypes> {
     private static ListLenMark = "arrlen";
     private static ListMark = "arr";
+
     private keyPrefix: string; //前缀
     private readonly re: RegExp;
+    private readonly logger: Logger;
 
     constructor(name: string) {
-        super(name);
-        this.type = "DP";
+        super(name, "DP");
         this.keyPrefix = this.name;
-        this.re = new RegExp(`(?<=^${this.keyPrefix}\.)(.+?)(?=_$|(${DPDataBase.ListLenMark}))`);
+        this.logger = new Logger(`${DPDataBase.name}_${name}`);
+        this.re = new RegExp(`^${this.keyPrefix}\.([^_]+)_(?:$|${DPDataBase.ListLenMark})`);
     }
-    private getKey(key: string, mark: string = "") {
-        return `${this.keyPrefix}.${key}_${mark}`;
+    private getKey(key: string, mark: string = "", index?: number) {
+        return `${this.keyPrefix}.${key}_${mark}${index ?? ""}`;
     }
-    set(key: string, value: DPTypes) {
+    set(key: string, value: DPValueTypes) {
         if (typeof value == "string" && checkBytes(value)) {
             this.setLargeString(key, value);
         } else {
             world.setDynamicProperty(this.getKey(key), value);
         }
     }
-    get(key: string) {
+    get<T extends DPValueTypes = DPValueTypes>(key: string): T | undefined {
+        let value: DPValueTypes | undefined;
         if (this.getListLen(key) != undefined) {
-            return this.getLargeString(key);
+            value = this.getLargeString(key);
         } else {
-            return world.getDynamicProperty(this.getKey(key));
+            value = world.getDynamicProperty(this.getKey(key));
         }
+        return value as T;
     }
+
     rm(key: string) {
         if (this.getListLen(key) != undefined) {
             this.rmList(key);
@@ -74,12 +85,16 @@ export class DPDataBase extends DataBase<DPTypes> {
     keys() {
         const keys = this.getrealKeys()
             .filter((t) => this.re.test(t))
-            .map((t) => (t.match(this.re) || [""])[0]);
+            .map((t) => t.match(this.re)?.[1] ?? "");
         return keys;
     }
-    entries(): [string, DPTypes | undefined][] {
+
+    entries(): [string, DPValueTypes | undefined][] {
         const keys = this.keys();
-        const entires: [string, DPTypes | undefined][] = keys.map((key) => [key, this.get(key)]);
+        const entires: [string, DPValueTypes | undefined][] = keys.map((key) => [
+            key,
+            this.get(key),
+        ]);
         return entires;
     }
     /**以json形式存储一个对象 */
@@ -87,14 +102,23 @@ export class DPDataBase extends DataBase<DPTypes> {
         const data = JSON.stringify(value);
         this.set(key, data);
     }
-    /**获取json形式存储的对象，没有或转换错误返回undefined */
-    getJSON(key: string): object | undefined {
+    /**
+     * 获取JSON形式存储的对象，可选使用类型守卫进行校验
+     * @param key 键名
+     * @param guard 可选类型守卫函数
+     * @returns 解析后的数据，失败或校验不通过返回 undefined
+     */
+    getJSON<T = unknown>(key: string, guard?: (val: unknown) => val is T): T | undefined {
         const data = this.get(key);
-        if (data == undefined) return;
-        if (typeof data != "string") return;
+        if (data === undefined) return;
+        if (typeof data !== "string") return;
         try {
-            return JSON.parse(data);
-        } catch (e) {
+            const parsed: unknown = JSON.parse(data);
+            if (guard) {
+                return guard(parsed) ? parsed : undefined;
+            }
+            return parsed as T;
+        } catch {
             return undefined;
         }
     }
@@ -104,36 +128,43 @@ export class DPDataBase extends DataBase<DPTypes> {
             world.setDynamicProperty(key);
         }
     }
-    private setLargeString(key: string, value: string) {
-        system.run(async () => {
-            const splitStrings = await splitString(value);
-            this.setList(key, splitStrings);
+    /**设置大文本 */
+    private async setLargeString(key: string, value: string) {
+        return new Promise((resolve) => {
+            system.run(async () => {
+                const splitStrings = await splitString(value);
+                this.setList(key, splitStrings);
+                resolve(true);
+            });
         });
     }
     private getLargeString(key: string) {
         return this.getList(key)?.join("");
     }
     private setList(key: string, list: string[]) {
-        const origin = world.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
-        world.setDynamicProperty(this.getKey(key, DPDataBase.ListLenMark), list.length);
+        const lenKey = this.getKey(key, DPDataBase.ListLenMark);
+        const oldLength = world.getDynamicProperty(lenKey);
+        //设置数组长度
+        world.setDynamicProperty(lenKey, list.length);
+        //设置数组每一项
         for (let i = 0; i < list.length; i++) {
-            world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark + i), list[i]);
+            world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i), list[i]);
         }
-        //如果为修改，要删除多余的
-        if (origin != undefined && typeof origin == "number" && origin > list.length) {
-            for (let i = list.length; i < origin; i++) {
-                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
+        //如果oldLength大于数组长度，要删除多余的
+        if (typeof oldLength == "number" && oldLength > list.length) {
+            for (let i = list.length; i < oldLength; i++) {
+                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
         }
     }
     private getList(key: string) {
         const length = this.getListLen(key);
-        if (!length) return;
+        if (length == undefined) return;
         const data: string[] = new Array(length);
         for (let i = 0; i < length; i++) {
-            const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
+            const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             if (part == undefined) {
-                LibErrorMes(`[DPDataBase]获取数组${key}的第${i}项出错`);
+                this.logger.error(`获取数组${key}的第${i}项出错`);
                 return undefined;
             }
             data[i] = part as string;
@@ -141,8 +172,9 @@ export class DPDataBase extends DataBase<DPTypes> {
         return data;
     }
     private getListLen(key: string) {
-        const length = world.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
-        if (length != undefined && typeof length == "number") {
+        const lenKey = this.getKey(key, DPDataBase.ListLenMark);
+        const length = world.getDynamicProperty(lenKey);
+        if (typeof length === "number") {
             return length;
         }
     }
@@ -150,14 +182,13 @@ export class DPDataBase extends DataBase<DPTypes> {
         const length = this.getListLen(key);
         if (length != undefined) {
             for (let i = 0; i < length; i++) {
-                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark + i));
+                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
         }
         world.setDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
     }
-    static isDPDataBase(db: DataBase<any>): db is DPDataBase {
-        return db.type == "DP";
-    }
+
+    //静态方法
     static clearAllDP() {
         world.clearDynamicProperties();
     }
@@ -173,8 +204,7 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
     private scoreboardName: string;
     private data: Record<string, any>;
     constructor(name: string) {
-        super(name);
-        this.type = "jSB";
+        super(name, "jSB");
         this.scoreboardName = this.type + "_" + name;
         this.data = {};
     }
@@ -247,32 +277,6 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
         const write = callback(this.data);
         if (write ?? true) this.setJSON(true);
     }
-    /*
-    getLock() {
-        return sysdb.getObj(this.name + "_lock");
-    }
-    async withLock(callback: (data: Record<string, any>) => Promise<boolean | void> | boolean | undefined | void, maxTrys: number = 10) {
-        const lock = this.getLock();
-        for (let trys = 0; trys < maxTrys; trys++) {
-            if (!lock.get()) {
-                lock.set(1); // 获取锁
-                try {
-                    this.getJSON();
-                    const write = await callback(this.data); // 执行回调函数
-                    if (write ?? true) await this.setJSON(true);
-                    return true; // 操作成功
-                } catch (e) {
-                    console.error("Error during locked operation:", e);
-                    return false; // 操作失败
-                } finally {
-                    lock.set(0); // 释放锁
-                }
-            }
-            await new Promise((resolve) => system.runTimeout(() => resolve(1), trys > 5 ? 1 : 0)); // 等待一段时间后重试
-        }
-        return false; // 锁获取失败
-    }
-    */
 }
 /**虚拟计分项，不一定存在计分板上 */
 export class scoreboardObj {
@@ -304,8 +308,7 @@ export class ScoreBoardDataBase extends DataBase<number> {
     private sb: ScoreboardObjective | undefined;
     private displayName?: string;
     constructor(name: string, displayName?: string, usePrefix: boolean = true) {
-        super(name);
-        this.type = "cSB";
+        super(name, "cSB");
         this.scoreboardName = usePrefix ? this.type + "_" + name : name;
         this.displayName = displayName;
         world.afterEvents.worldLoad.subscribe(() => {
@@ -359,7 +362,7 @@ export class ScoreBoardDataBase extends DataBase<number> {
         this.getScoreBoard();
     }
 
-    /**重置所有积分项*/
+    /**重置所有积分项(调用命令)*/
     resetAll() {
         if (!this.sb) return;
         cmd(`scoreboard players reset * "${this.sb.id}"`);
@@ -383,48 +386,39 @@ export class ScoreBoardDataBase extends DataBase<number> {
         }
     }
 }
+
 /**判断是否超过字节限制 */
 function checkBytes(input: string) {
-    let totalBytes = 0;
-    for (let i = 0; i < input.length; i++) {
-        totalBytes += (input[i].charCodeAt(0) ?? 0) > 0x7f ? 3 : 1;
-        if (totalBytes > DataBase.maxChunkBytes) return true;
-    }
-    return false;
+    return input.length > DataBase.maxChunkBytes / 3;
 }
 
 function splitString(input: String, sync?: false): Promise<string[]>;
 function splitString(input: String, sync: true): string[];
-function splitString(input: String, sync = false) {
-    const maxBytes = 32767; // 每个块的最大字节数
+function splitString(input: String, sync = false, batchSize = 10) {
+    const MAX_LEN = 10922;
     const result: string[] = [];
-    let startIndex = 0;
-    let currentBytes = 0;
+
     // 定义一个生成器函数来分割字符串
     function* split(resolve: (value?: unknown) => void) {
-        for (let i = 0; i < input.length; i++) {
-            const charBytes = (input.codePointAt(i) ?? 0) > 0x7f ? 3 : 1; // 获取当前字符的字节数
-            // 如果加上当前字符后超过最大字节数，则将当前字符串加入结果数组，并重置
-            if (currentBytes + charBytes > maxBytes) {
-                result.push(input.slice(startIndex, i));
-                startIndex = i;
-                currentBytes = 0;
-                yield;
+        let count = 0;
+
+        for (let i = 0; i < input.length; i += MAX_LEN) {
+            result.push(input.slice(i, i + MAX_LEN));
+
+            count++;
+            if (count >= batchSize) {
+                count = 0;
+                yield; // 每 batchSize 次才让出执行权
             }
-            // 更新当前字节数
-            currentBytes += charBytes;
         }
-        if (startIndex < input.length) {
-            result.push(input.slice(startIndex));
-        }
-        resolve(resolve(result));
+
+        resolve(result);
     }
+
     if (sync) {
-        if (input.length < 10922) return [input];
+        if (input.length < MAX_LEN) return [input];
         const sp = split(() => {});
-        while (true) {
-            if (sp.next().done) break;
-        }
+        while (!sp.next().done) {}
         return result;
     } else {
         return new Promise((resolve) => {
