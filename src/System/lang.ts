@@ -1,0 +1,146 @@
+import { defineLangTree } from "../Translate";
+
+export const LangSysInfo = defineLangTree({
+    cmd_desc: {
+        zh_CN: "显示SAPI-Pro系统信息",
+        zh_TW: "顯示SAPI-Pro系統資訊",
+        en_US: "Show SAPI-Pro system information",
+        ja_JP: "SAPI-Proのシステム情報を表示",
+        fr_FR: "Afficher les informations système de SAPI-Pro",
+        de_DE: "SAPI-Pro-Systeminformationen anzeigen",
+        es_ES: "Mostrar información del sistema de SAPI-Pro",
+        ko_KR: "SAPI-Pro 시스템 정보 표시",
+    },
+
+    title: {
+        zh_CN: "SAPI-Pro系统信息",
+        zh_TW: "SAPI-Pro系統資訊",
+        en_US: "SAPI-Pro System Information",
+        ja_JP: "SAPI-Pro システム情報",
+        fr_FR: "Informations système SAPI-Pro",
+        de_DE: "SAPI-Pro Systeminformationen",
+        es_ES: "Información del sistema SAPI-Pro",
+        ko_KR: "SAPI-Pro 시스템 정보",
+    },
+
+    header: {
+        zh_CN: "§6=== §bSAPI-Pro §6| §a版本: {version} §6===",
+        zh_TW: "§6=== §bSAPI-Pro §6| §a版本: {version} §6===",
+        en_US: "§6=== §bSAPI-Pro §6| §aVersion: {version} §6===",
+        ja_JP: "§6=== §bSAPI-Pro §6| §aバージョン: {version} §6===",
+        fr_FR: "§6=== §bSAPI-Pro §6| §aVersion : {version} §6===",
+        de_DE: "§6=== §bSAPI-Pro §6| §aVersion: {version} §6===",
+        es_ES: "§6=== §bSAPI-Pro §6| §aVersión: {version} §6===",
+        ko_KR: "§6=== §bSAPI-Pro §6| §a버전: {version} §6===",
+    },
+
+    mainModule: {
+        zh_CN: "§e* §f主模块: §a{name}",
+        zh_TW: "§e* §f主模組: §a{name}",
+        en_US: "§e* §fMain Module: §a{name}",
+        ja_JP: "§e* §fメインモジュール: §a{name}",
+        fr_FR: "§e* §fModule principal : §a{name}",
+        de_DE: "§e* §fHauptmodul: §a{name}",
+        es_ES: "§e* §fMódulo principal: §a{name}",
+        ko_KR: "§e* §f메인 모듈: §a{name}",
+    },
+
+    registeredCommands: {
+        zh_CN: "§e* §f已注册命令: §c{count} 条",
+        zh_TW: "§e* §f已註冊指令: §c{count} 條",
+        en_US: "§e* §fRegistered Commands: §c{count}",
+        ja_JP: "§e* §f登録済みコマンド: §c{count}",
+        fr_FR: "§e* §fCommandes enregistrées : §c{count}",
+        de_DE: "§e* §fRegistrierte Befehle: §c{count}",
+        es_ES: "§e* §fComandos registrados: §c{count}",
+        ko_KR: "§e* §f등록된 명령어: §c{count}",
+    },
+
+    loadedModules: {
+        zh_CN: "§e* §f已加载模块: §d{count} 个",
+        zh_TW: "§e* §f已載入模組: §d{count} 個",
+        en_US: "§e* §fLoaded Modules: §d{count}",
+        ja_JP: "§e* §f読み込まれたモジュール: §d{count}",
+        fr_FR: "§e* §fModules chargés : §d{count}",
+        de_DE: "§e* §fGeladene Module: §d{count}",
+        es_ES: "§e* §fMódulos cargados: §d{count}",
+        ko_KR: "§e* §f로드된 모듈: §d{count}",
+    },
+
+    clickViewPack: {
+        zh_CN: "点击查看包信息",
+        zh_TW: "點擊查看包資訊",
+        en_US: "Click to view package information",
+        ja_JP: "クリックしてパッケージ情報を表示",
+        fr_FR: "Cliquez pour voir les informations du package",
+        de_DE: "Klicken, um Paketinformationen anzuzeigen",
+        es_ES: "Haz clic para ver la información del paquete",
+        ko_KR: "패키지 정보를 보려면 클릭",
+    },
+
+    packInfoTitle: {
+        zh_CN: "SAPI-Pro包信息",
+        zh_TW: "SAPI-Pro套件資訊",
+        en_US: "SAPI-Pro Package Information",
+        ja_JP: "SAPI-Pro パッケージ情報",
+        fr_FR: "Informations du package SAPI-Pro",
+        de_DE: "SAPI-Pro Paketinformationen",
+        es_ES: "Información del paquete SAPI-Pro",
+        ko_KR: "SAPI-Pro 패키지 정보",
+    },
+
+    uuid: {
+        zh_CN: "§s§lUUID§r§7: §f{uuid}",
+        zh_TW: "§s§lUUID§r§7: §f{uuid}",
+        en_US: "§s§lUUID§r§7: §f{uuid}",
+        ja_JP: "§s§lUUID§r§7: §f{uuid}",
+        fr_FR: "§s§lUUID§r§7 : §f{uuid}",
+        de_DE: "§s§lUUID§r§7: §f{uuid}",
+        es_ES: "§s§lUUID§r§7: §f{uuid}",
+        ko_KR: "§s§lUUID§r§7: §f{uuid}",
+    },
+
+    packName: {
+        zh_CN: "§s§l包名§r§7: §f{name}",
+        zh_TW: "§s§l套件名稱§r§7: §f{name}",
+        en_US: "§s§lPackage Name§r§7: §f{name}",
+        ja_JP: "§s§lパッケージ名§r§7: §f{name}",
+        fr_FR: "§s§lNom du package§r§7 : §f{name}",
+        de_DE: "§s§lPaketname§r§7: §f{name}",
+        es_ES: "§s§lNombre del paquete§r§7: §f{name}",
+        ko_KR: "§s§l패키지 이름§r§7: §f{name}",
+    },
+
+    namespace: {
+        zh_CN: "§s§l命名空间§r§7: §f{namespace}",
+        zh_TW: "§s§l命名空間§r§7: §f{namespace}",
+        en_US: "§s§lNamespace§r§7: §f{namespace}",
+        ja_JP: "§s§l名前空間§r§7: §f{namespace}",
+        fr_FR: "§s§lEspace de noms§r§7 : §f{namespace}",
+        de_DE: "§s§lNamensraum§r§7: §f{namespace}",
+        es_ES: "§s§lEspacio de nombres§r§7: §f{namespace}",
+        ko_KR: "§s§l네임스페이스§r§7: §f{namespace}",
+    },
+
+    author: {
+        zh_CN: "§s§l作者§r§7: §f{author}",
+        zh_TW: "§s§l作者§r§7: §f{author}",
+        en_US: "§s§lAuthor§r§7: §f{author}",
+        ja_JP: "§s§l作者§r§7: §f{author}",
+        fr_FR: "§s§lAuteur§r§7 : §f{author}",
+        de_DE: "§s§lAutor§r§7: §f{author}",
+        es_ES: "§s§lAutor§r§7: §f{author}",
+        ko_KR: "§s§l작성자§r§7: §f{author}",
+    },
+
+    versionField: {
+        zh_CN: "§s§l版本§r§7: §f{version}",
+        zh_TW: "§s§l版本§r§7: §f{version}",
+        en_US: "§s§lVersion§r§7: §f{version}",
+        ja_JP: "§s§lバージョン§r§7: §f{version}",
+        fr_FR: "§s§lVersion§r§7 : §f{version}",
+        de_DE: "§s§lVersion§r§7: §f{version}",
+        es_ES: "§s§lVersión§r§7: §f{version}",
+        ko_KR: "§s§l버전§r§7: §f{version}",
+    },
+});

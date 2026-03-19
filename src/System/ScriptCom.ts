@@ -22,7 +22,10 @@ export async function initCom() {
     LibConfig.isHost = false;
     if (LibConfig.forceHost) LibConfig.version = 999;
     exchangedb.edit((data) => {
-        data["scriptsInfo"][LibConfig.UUID] = { version: LibConfig.version, info: LibConfig.packInfo } as packComInfo;
+        data["scriptsInfo"][LibConfig.UUID] = {
+            version: LibConfig.version,
+            info: LibConfig.packInfo,
+        } as packComInfo;
     });
     const pack = LibConfig.packInfo;
     LibMessage(`已加载模块${pack.name},lib版本:${LibConfig.version}`);
