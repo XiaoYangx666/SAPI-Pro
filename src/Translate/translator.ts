@@ -1,12 +1,31 @@
-import { Player } from "@minecraft/server";
+import { Player, RawMessage } from "@minecraft/server";
 import { ScoreBoardDataBase } from "../DataBase";
-import { Command, formManager, LangSettingForm, Logger, pcommand } from "../main";
-import { LangText, LangTree, languages } from "./interface";
+import { Logger } from "../utils/logger";
+import {
+    LangText,
+    LangTree,
+    languages,
+    PureTranslator,
+    Translator,
+    UniversalTranslator,
+} from "./interface";
 import { languageNames } from "./languages";
 
 /**创建语言翻译结构 */
 export function defineLangTree<T extends LangTree>(tree: T): T {
     return tree;
+}
+
+export function isRawMessage(obj: any): obj is RawMessage {
+    if (!obj || typeof obj !== "object") return false;
+
+    return (
+        obj.rawtext !== undefined ||
+        obj.score !== undefined ||
+        obj.text !== undefined ||
+        obj.translate !== undefined ||
+        obj.with !== undefined
+    );
 }
 
 /**翻译器，用于翻译 */
@@ -95,9 +114,7 @@ class TranslationManager {
     /**
      * 为指定玩家创建一个一次性翻译函数
      */
-    createPureFor(
-        player: Player
-    ): (translation?: LangText, params?: Record<string, string | number>) => string {
+    createPureFor(player: Player): PureTranslator {
         const langId = this.getPlayerLangId(player);
         const langKey = langId != undefined ? this.getLangKeyById(langId) : this._fallBackLang;
 
@@ -121,9 +138,7 @@ class TranslationManager {
     /**
      * 为指定玩家创建一个一次性翻译函数，带语义锚点
      */
-    createFor(
-        player: Player
-    ): (text: string, translation?: LangText, params?: Record<string, string | number>) => string {
+    createFor(player: Player): Translator {
         const langId = this.getPlayerLangId(player);
         const langKey = langId != undefined ? this.getLangKeyById(langId) : undefined;
 
@@ -143,6 +158,30 @@ class TranslationManager {
             }
 
             // 正常翻译路径
+            return this.applyParams(trans, params);
+        };
+    }
+
+    /**创建一个可以自动识别RawMessage,string,langText的翻译函数 */
+    createUniversal(player: Player): UniversalTranslator {
+        const langId = this.getPlayerLangId(player);
+        const langKey = langId != undefined ? this.getLangKeyById(langId) : this._fallBackLang;
+        return (
+            input: LangText | RawMessage | string | undefined,
+            params?: Record<string, string | number>
+        ) => {
+            if (input === undefined) return undefined as any;
+            //提前返回
+            if (typeof input == "string" || isRawMessage(input)) return input;
+
+            // 无语言 / 无翻译对象
+            if (!langKey || !input) return "";
+
+            const trans = input[langKey];
+
+            // 当前语言无翻译
+            if (!trans) return "";
+
             return this.applyParams(trans, params);
         };
     }

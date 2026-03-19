@@ -1,45 +1,9 @@
-import { Player } from "@minecraft/server";
 import { Command, CommandObject, pcommand } from "../Command/main";
 import { formManager } from "../Form/formManager";
 import { languageNames } from "./languages";
-import { defineLangTree, translator } from "./translator";
-import { LangSettingForm, LangUIText } from "./ui";
-
-const langCmdText = defineLangTree({
-    curLangMsg: {
-        zh_CN: "当前语言是: {lang}",
-        zh_TW: "目前語言為：{lang}",
-        en_US: "Current language is: {lang}",
-        ja_JP: "現在の言語は：{lang}",
-        fr_FR: "La langue actuelle est : {lang}",
-        de_DE: "Aktuelle Sprache: {lang}",
-        ko_KR: "현재 언어: {lang}",
-        es_ES: "El idioma actual es: {lang}",
-    },
-    resetMsg: {
-        zh_CN: "已重置您的语言设置",
-        zh_TW: "已重置您的語言設定",
-        en_US: "Your language settings have been reset",
-        ja_JP: "言語設定をリセットしました",
-        fr_FR: "Vos paramètres de langue ont été réinitialisés",
-        de_DE: "Ihre Spracheinstellungen wurden zurückgesetzt",
-        ko_KR: "언어 설정이 초기화되었습니다",
-        es_ES: "La configuración de idioma ha sido restablecida",
-    },
-    listMsg: {
-        zh_CN: "可用语言列表",
-        zh_TW: "可用語言列表",
-        en_US: "Available languages",
-        ja_JP: "利用可能な言語一覧",
-        fr_FR: "Langues disponibles",
-        de_DE: "Verfügbare Sprachen",
-        ko_KR: "사용 가능한 언어 목록",
-        es_ES: "Idiomas disponibles",
-    },
-
-    setSuccess: LangUIText.setSuccess,
-    setFailed: LangUIText.setFailed,
-});
+import { langCmdText } from "./ui_lang";
+import { translator } from "./translator";
+import { LangSettingForm } from "./ui";
 
 const langCmd: CommandObject = {
     name: "lang",

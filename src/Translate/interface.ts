@@ -1,3 +1,5 @@
+import { RawMessage } from "@minecraft/server";
+
 export type languages =
     | "en_US"
     | "en_GB"
@@ -36,3 +38,19 @@ export type LangText = {
 export interface LangTree {
     [key: string]: LangText | LangTree;
 }
+
+export type Translator = (
+    text: string,
+    translation?: LangText,
+    params?: Record<string, string | number>
+) => string;
+
+export type PureTranslator = (
+    translation?: LangText,
+    params?: Record<string, string | number>
+) => string;
+
+export type UniversalTranslator = <T extends RawMessage | string | LangText | undefined>(
+    input: T,
+    params?: Record<string, string | number>
+) => T extends undefined ? undefined : string | RawMessage;
