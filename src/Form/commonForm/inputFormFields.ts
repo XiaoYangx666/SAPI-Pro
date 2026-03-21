@@ -22,7 +22,7 @@ export abstract class ValueField<T extends ValueType> extends BaseField {
     readonly isValueField = true;
 
     protected _key?: string;
-    get key(): string | undefined {
+    getKey(): string | undefined {
         return this._key;
     }
 
@@ -63,7 +63,7 @@ export abstract class ValueField<T extends ValueType> extends BaseField {
     }
 
     /** 设置字段键名，用于最终推导为对象属性 */
-    setKey(key: string) {
+    key(key: string): this {
         this._key = key;
         return this;
     }

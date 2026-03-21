@@ -24,7 +24,7 @@ export interface InputFormData<U extends InputFormArgs, TResult = any> extends C
     submitButton?: RawMessage | string;
 
     /** 表单字段列表（输入框、开关、下拉、UI组件等） */
-    fields: BaseField[];
+    fields?: BaseField[];
 
     /** 动态生成字段（构建表单时追加到 fields 后） */
     fieldsGenerator?: (player: Player, args: U) => BaseField[];
@@ -80,7 +80,7 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
         if (data.generator) data.generator(form, p, args, t);
         if (data.submitButton) form.submitButton(t(data.submitButton));
 
-        const fields = [...data.fields, ...(data.fieldsGenerator?.(p, args) ?? [])];
+        const fields = [...(data.fields ?? []), ...(data.fieldsGenerator?.(p, args) ?? [])];
 
         for (let field of fields) {
             field.build(form, t);
@@ -123,8 +123,9 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
                 if (ans !== undefined) break;
 
                 // 写入 result
-                if (field.key !== undefined) {
-                    result[field.key] = parsed;
+                const key = field.getKey();
+                if (key !== undefined) {
+                    result[key] = parsed;
                 }
             } catch (err) {
                 ans = err instanceof Error ? err.message : FormText.UnknownError;

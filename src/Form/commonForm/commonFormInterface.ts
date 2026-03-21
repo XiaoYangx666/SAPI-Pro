@@ -20,7 +20,7 @@ export interface CommonFormData<T extends formDataType, U extends contextArgs = 
 }
 
 //ButtonForm部分
-export interface FuncButton<U extends contextArgs> {
+export interface FuncButton<U extends contextArgs, TData = unknown> {
     /**图标路径，从textures/后面开始输 */
     icon?: string;
     /**按钮文本(支持翻译) */
@@ -31,24 +31,36 @@ export interface FuncButton<U extends contextArgs> {
     shouldShow?: (player: Player, args: U) => boolean;
     /**按钮点击事件 */
     func?: (context: SAPIProFormContext<ActionFormData, U>) => void | Promise<void>;
+    /**附带自定义属性 */
+    data?: TData;
 }
 
 export interface ButtonFormArgs extends contextArgs {
     buttons?: FuncButton<this>[];
 }
 
-export interface ButtonFormData<U extends contextArgs = contextArgs> extends CommonFormData<
-    ActionFormData,
-    U
-> {
+export interface ButtonFormData<
+    U extends contextArgs = contextArgs,
+    TData = unknown,
+> extends CommonFormData<ActionFormData, U> {
     /**body */
     body?: TextType;
     /**按钮列表 */
-    buttons?: FuncButton<U>[];
+    buttons?: FuncButton<U, TData>[];
     /**按钮生成器 */
-    buttonGenerator?: (player: Player, args: U, t: UniversalTranslator) => Iterable<FuncButton<U>>;
+    buttonGenerator?: (
+        player: Player,
+        args: U,
+        t: UniversalTranslator
+    ) => Iterable<FuncButton<U, TData>>;
     /**列表处理(若点击的按钮已有func，则不会调用此函数处理) */
-    handler?: (ctx: SAPIProFormContext<ActionFormData, U>, index: number) => Promise<void> | void;
+    handler?: (
+        ctx: SAPIProFormContext<ActionFormData, U>,
+        /**按下的按钮 data为构造时附带的数据,btnIndex为排除func按钮后的下标 */
+        button: { data: TData; btnIndex: number },
+        /**表单选择的下标 */
+        index: number
+    ) => Promise<void> | void;
     /**取消事件 */
     oncancel?: formHandler<ActionFormData, U>;
     /**表单验证器，验证失败则不打开表单 */

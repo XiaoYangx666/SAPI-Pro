@@ -2,9 +2,25 @@ import { LangText } from "../../Translate";
 import { FieldValidator } from "./inputFormFields";
 
 /** 验证是否为整数 */
-export function isInt(errorMsg: string | LangText = "请输入有效的整数"): FieldValidator<number> {
-    return (value: number) => {
-        if (!Number.isInteger(value)) return errorMsg;
+export function isInt(
+    errorMsg: string | LangText = "请输入有效的整数"
+): FieldValidator<number | string | undefined> {
+    return (value) => {
+        if (value === undefined || value === null) return errorMsg;
+
+        let num: number;
+
+        if (typeof value === "number") {
+            num = value;
+        } else if (typeof value === "string") {
+            if (value.trim() === "") return errorMsg;
+            num = Number(value);
+        } else {
+            return errorMsg;
+        }
+
+        if (!Number.isInteger(num)) return errorMsg;
+
         return undefined;
     };
 }
@@ -34,7 +50,8 @@ export function stringLength(
     max: number,
     errorMsg?: string | LangText
 ): FieldValidator<string> {
-    return (value: string) => {
+    return (value: string | undefined) => {
+        if (value == undefined) return "文本为空";
         const len = value.trim().length;
         if (len < min || len > max) {
             return errorMsg ?? `文本长度必须在 ${min} 到 ${max} 个字符之间`;
@@ -44,8 +61,11 @@ export function stringLength(
 }
 
 /** 验证字符串不能为空（不仅仅是空格） */
-export function notEmpty(errorMsg: string | LangText = "该字段不能为空"): FieldValidator<string> {
-    return (value: string) => {
+export function notEmpty(
+    errorMsg: string | LangText = "该字段不能为空"
+): FieldValidator<string | undefined> {
+    return (value: string | undefined) => {
+        if (!value) return errorMsg;
         if (value.trim().length === 0) return errorMsg;
         return undefined;
     };

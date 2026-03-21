@@ -36,20 +36,24 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
 
     async handler(res: ActionFormResponse, context: SAPIProFormContext<ActionFormData, U>) {
         const buttons = context.args.buttons as FuncButton<U>[];
+        const listButtons = buttons.filter((btn) => btn.func == undefined);
 
         if (res.selection !== undefined) {
             const button = buttons[res.selection];
             if (!button) return;
-            //执行按钮的func
             if (button.func) {
+                //执行按钮的func
                 await button.func?.(context);
-                return;
+            } else {
+                const idx = listButtons.indexOf(button);
+                //执行列表处理函数
+                await this.data.handler?.(
+                    context,
+                    { data: button.data, btnIndex: idx },
+                    res.selection
+                );
             }
-            //执行列表处理函数
-            await this.data.handler?.(context, res.selection);
-        }
-
-        if (this.data.oncancel) {
+        } else if (this.data.oncancel) {
             await this.data.oncancel(res, context);
         }
     }

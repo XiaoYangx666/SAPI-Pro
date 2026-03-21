@@ -12,9 +12,13 @@ import {
 import { InputForm, InputFormArgs, InputFormData } from "./InputForm";
 import { SimpleMessageForm } from "./MessageForm";
 
-export * as Validators from "./validators";
-export * from "./inputFormFields";
+export * from "./BodyInfoForm";
+export * from "./ButtonForm";
 export * from "./commonFormInterface";
+export * from "./InputForm";
+export * from "./inputFormFields";
+export * from "./MessageForm";
+export * as Validators from "./validators";
 
 export class CommonForm {
     private constructor() {}
@@ -44,7 +48,7 @@ export class CommonForm {
     }
 
     /**输入表单 */
-    static InputForm<TResult extends any, U extends InputFormArgs>(
+    static InputForm<TResult extends any, U extends InputFormArgs = any>(
         data: InputFormData<U, TResult>
     ) {
         return new InputForm<U, TResult>(data);
