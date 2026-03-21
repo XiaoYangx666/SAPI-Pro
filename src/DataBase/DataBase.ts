@@ -1,16 +1,19 @@
 import {
     DisplaySlotId,
-    Player,
+    Entity,
+    ScoreboardIdentity,
     ScoreboardObjective,
     system,
     Vector3,
     world,
 } from "@minecraft/server";
 import { cmd } from "../func";
-import { Logger } from "../main";
+import { Logger } from "../utils/logger";
 
-type DPValueTypes = string | number | boolean | Vector3;
-type DBTypes = "DP" | "jSB" | "cSB";
+export type DPValueTypes = string | number | boolean | Vector3;
+export type DBTypes = "DP" | "jSB" | "cSB";
+export type ValueGuard<T> = (val: unknown) => val is T;
+
 export abstract class DataBase<T> {
     static maxChunkBytes = 32767;
     static DBMap: Record<string, DataBase<any>> = {}; //存储所有注册过的数据库
@@ -108,7 +111,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
      * @param guard 可选类型守卫函数
      * @returns 解析后的数据，失败或校验不通过返回 undefined
      */
-    getJSON<T = unknown>(key: string, guard?: (val: unknown) => val is T): T | undefined {
+    getJSON<T = unknown>(key: string, guard?: ValueGuard<T>): T | undefined {
         const data = this.get(key);
         if (data === undefined) return;
         if (typeof data !== "string") return;
@@ -119,6 +122,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
             }
             return parsed as T;
         } catch {
+            this.logger.warn(`获取json失败,key:${key},原始数据:${data.slice(0, 100)}`);
             return undefined;
         }
     }
@@ -203,10 +207,13 @@ export class DPDataBase extends DataBase<DPValueTypes> {
 export class ScoreBoardJSONDataBase extends DataBase<object> {
     private scoreboardName: string;
     private data: Record<string, any>;
+    private readonly logger: Logger;
+
     constructor(name: string) {
         super(name, "jSB");
         this.scoreboardName = this.type + "_" + name;
         this.data = {};
+        this.logger = new Logger(`${ScoreBoardJSONDataBase.name}_${name}`);
     }
     set(key: string, value: object) {
         this.getJSON();
@@ -215,8 +222,13 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
             await this.setJSON();
         });
     }
-    get(key: string) {
+    get<T = unknown>(key: string, guard?: ValueGuard<T>): T | undefined {
         this.getJSON();
+        const data = this.data?.[key];
+        if (data == undefined) return undefined;
+
+        if (guard) return guard(data) ? data : undefined;
+
         return this.data[key];
     }
     clear() {
@@ -269,34 +281,35 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
             this.data = JSON.parse(list.join("")) as Record<string, object>;
             return this.data;
         } catch (e) {
+            this.logger.error(`转换计分板json数据失败`, e);
             return;
         }
     }
-    edit(callback: (data: Record<string, any>) => boolean | void | undefined) {
+    edit<T extends Record<string, any> = any>(callback: (data: T) => boolean | void | undefined) {
         this.getJSON();
-        const write = callback(this.data);
+        const write = callback(this.data as any);
         if (write ?? true) this.setJSON(true);
     }
 }
 /**虚拟计分项，不一定存在计分板上 */
 export class scoreboardObj {
     private sbObj: ScoreBoardDataBase;
-    private name: string | Player;
-    constructor(sbObj: ScoreBoardDataBase, name: string | Player) {
+    private participant: string | Entity | ScoreboardIdentity;
+    constructor(sbObj: ScoreBoardDataBase, participant: string | Entity | ScoreboardIdentity) {
         this.sbObj = sbObj;
-        this.name = name;
+        this.participant = participant;
     }
     get() {
-        return this.sbObj.get(this.name);
+        return this.sbObj.get(this.participant);
     }
     set(value: number) {
-        this.sbObj.set(this.name, value);
+        this.sbObj.set(this.participant, value);
     }
     add(value: number) {
-        this.sbObj.add(this.name, value);
+        this.sbObj.add(this.participant, value);
     }
     rm() {
-        this.sbObj.rm(this.name);
+        this.sbObj.rm(this.participant);
     }
     isValid() {
         return this.get() != undefined;
@@ -325,27 +338,27 @@ export class ScoreBoardDataBase extends DataBase<number> {
     getScoreBoardName() {
         return this.scoreboardName;
     }
-    set(key: string | Player, value: number | string) {
+    set(key: string | Entity | ScoreboardIdentity, value: number | string) {
         if (typeof value != "number") value = parseInt(value);
         this.getScoreBoard().setScore(key, value);
     }
-    get(key: string | Player) {
+    get(key: string | Entity | ScoreboardIdentity) {
         if (this.getScoreBoard().hasParticipant(key)) {
             return this.getScoreBoard().getScore(key);
         }
     }
-    add(key: string | Player, value: number | string) {
+    add(key: string | Entity | ScoreboardIdentity, value: number | string) {
         if (typeof value != "number") value = parseInt(value);
         this.getScoreBoard().addScore(key, value);
     }
 
     /**获取一个虚拟计分项对象 */
-    getObj(key: string | Player) {
+    getObj(key: string | Entity | ScoreboardIdentity) {
         return new scoreboardObj(this, key);
     }
 
     /**删除指定计分项 */
-    rm(key: string | Player) {
+    rm(key: string | Entity | ScoreboardIdentity) {
         this.getScoreBoard().removeParticipant(key);
     }
 
@@ -354,6 +367,10 @@ export class ScoreBoardDataBase extends DataBase<number> {
         return this.getScoreBoard()
             .getParticipants()
             .map((t) => t.displayName);
+    }
+
+    participants(): ScoreboardIdentity[] {
+        return this.getScoreBoard().getParticipants();
     }
 
     /**清空计分板(删除并重建) */
