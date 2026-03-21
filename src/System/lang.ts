@@ -143,4 +143,14 @@ export const LangSysInfo = defineLangTree({
         es_ES: "§s§lVersión§r§7: §f{version}",
         ko_KR: "§s§l버전§r§7: §f{version}",
     },
+    libVersion: {
+        zh_CN: "§s§lLib版本§r§7: §f{version} - {type}",
+        zh_TW: "§s§lLib版本§r§7: §f{version} - {type}",
+        en_US: "§s§lLib Version§r§7: §f{version} - {type}",
+        ja_JP: "§s§lライブラリバージョン§r§7: §f{version} - {type}",
+        fr_FR: "§s§lVersion de la Lib§r§7 : §f{version} - {type}",
+        de_DE: "§s§lLib-Version§r§7: §f{version} - {type}",
+        es_ES: "§s§lVersión de la Lib§r§7: §f{version} - {type}",
+        ko_KR: "§s§l라이브러리 버전§r§7: §f{version} - {type}",
+    },
 });
