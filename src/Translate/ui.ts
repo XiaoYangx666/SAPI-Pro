@@ -20,7 +20,7 @@ export const LangSettingForm: SAPIProForm<ModalFormData> = {
         const curIndex = curIndexRaw >= 0 ? curIndexRaw : 0;
         //构建
         const form = new ModalFormData()
-            .title({ translate: "menu.language.generalMessage" })
+            .title({ translate: "options.language" })
             .dropdown(t("选择语言", LangUIText.dropdown_label), enabledLanguages, {
                 defaultValueIndex: curIndex,
             })

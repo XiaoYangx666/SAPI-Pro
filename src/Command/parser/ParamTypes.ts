@@ -1,6 +1,6 @@
 import { CustomCommandParamType, Player } from "@minecraft/server";
 import { getAllPlayers } from "../../func";
-import { RandomUtils, Vector3Utils } from "../../main";
+import { RandomUtils, Vector3Utils } from "../../utils/main";
 import { ParamDefinition, ParseError, ParseInfo } from "../interface";
 
 export enum paramTypes {

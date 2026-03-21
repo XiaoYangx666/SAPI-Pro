@@ -6,11 +6,10 @@ import { DimensionIds } from "./utils/vanila-data";
 type Dimensions = {
     [K in keyof typeof DimensionIds]: Dimension;
 };
-const dims = worldDeferredObject<Dimensions>(() => {
+export const Dimensions = worldDeferredObject<Dimensions>(() => {
     return {
         Overworld: world.getDimension(DimensionIds.Overworld),
         Nether: world.getDimension(DimensionIds.Nether),
         End: world.getDimension(DimensionIds.End),
     };
 });
-export const Dimensions = dims;

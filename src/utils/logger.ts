@@ -1,5 +1,3 @@
-import { defaultPackInfo } from "../Config";
-
 export enum logLevel {
     debug = 0,
     info = 1,
@@ -7,7 +5,7 @@ export enum logLevel {
     error = 3,
 }
 
-let namespace = defaultPackInfo.nameSpace;
+let namespace = "";
 
 export function setLoggerNamespace(ns: string) {
     namespace = ns;
@@ -37,9 +35,18 @@ export class Logger {
      */
     error(message: string, e?: unknown, ...optionalParams: any[]) {
         if (e instanceof Error) {
-            console.error(`<${namespace}>[${this.name}] ${message}`, e, e.stack, ...this.stringfy(optionalParams));
+            console.error(
+                `<${namespace}>[${this.name}] ${message}`,
+                e,
+                e.stack,
+                ...this.stringfy(optionalParams)
+            );
         } else {
-            console.error(`<${namespace}>[${this.name}] ${message}`, e, ...this.stringfy(optionalParams));
+            console.error(
+                `<${namespace}>[${this.name}] ${message}`,
+                e,
+                ...this.stringfy(optionalParams)
+            );
         }
     }
 
@@ -57,5 +64,4 @@ export class Logger {
         return params;
     }
 }
-
 export const LibLogger = new Logger("SAPI-Pro");

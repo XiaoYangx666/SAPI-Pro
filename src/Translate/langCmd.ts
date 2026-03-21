@@ -5,6 +5,10 @@ import { langCmdText } from "./ui_lang";
 import { translator } from "./translator";
 import { LangSettingForm } from "./ui";
 
+export function initLangCmd() {
+    pcommand.registerCommand(Command.fromObject(langCmd));
+}
+
 const langCmd: CommandObject = {
     name: "lang",
     explain: "open language setting form",
@@ -63,5 +67,3 @@ const langCmd: CommandObject = {
         },
     ],
 };
-
-pcommand.registerCommand(Command.fromObject(langCmd));

@@ -28,7 +28,7 @@ export function worldDeferredObject<T extends object>(binder: () => T | Promise<
 
 export type DeferredValue<T> = { value: T };
 
-export function createDeferredValue<T extends object>(
+export function createDeferredValue<T extends Object>(
     binder: () => T,
     recreateOnAccess?: boolean
 ): DeferredValue<T> {

@@ -60,13 +60,13 @@ export class CommandManager {
 
     /**客户端注册指令，系统调用，不管 */
     regToHost() {
-        if (LibConfig.UUID == undefined) return;
+        if (LibConfig.packInfo.uuid == undefined) return;
         const obj = [...this.commands.entries()].reduce(
             (obj: any, [key, value]) => ((obj[key] = value), obj),
             {}
         );
         return exchangedb.edit((data) => {
-            data["cmd"][LibConfig.UUID!] = obj;
+            data["cmd"][LibConfig.packInfo.uuid!] = obj;
         });
     }
     /**注册客户端命令(系统调用，不用管) */

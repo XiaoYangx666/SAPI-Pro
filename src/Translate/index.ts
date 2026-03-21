@@ -1,5 +1,5 @@
-export { translator, defineLangTree } from "./translator";
 export * from "./interface";
-export { LangSettingForm } from "./ui";
 export { languageNames } from "./languages";
-import "./langCmd";
+export { defineLangTree, translator } from "./translator";
+export { LangSettingForm } from "./ui";
+export * from "./langCmd";
