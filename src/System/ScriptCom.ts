@@ -28,11 +28,12 @@ export async function initCom() {
 
     exchangedb.edit<exchangedbData>((data) => {
         const packs = data.packs!;
-        packs[uuid] = {
+        const info = {
             isBeta: LibConfig.isBeta,
             version: LibConfig.version,
             info: LibConfig.packInfo,
         };
+        packs[uuid] = info;
     });
 
     const pack = LibConfig.packInfo;

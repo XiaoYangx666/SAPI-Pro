@@ -22,9 +22,10 @@ const sysInfoCmd = new Command("sysinfo", "显示SAPI-Pro系统信息", false, (
     player.sendMessage("\n" + t(LangSysInfo.header, { version: LibConfig.version }));
     player.sendMessage(t(LangSysInfo.mainModule, { name: LibConfig.packInfo.name }));
     player.sendMessage(t(LangSysInfo.registeredCommands, { count: pcommand.commands.size }));
+    const packs = exchangedb.get<exchangedbData["packs"]>("packs") ?? {};
     player.sendMessage(
         t(LangSysInfo.loadedModules, {
-            count: Object.keys(exchangedb.get<exchangedbData>("packs") ?? {}).length,
+            count: Object.keys(packs).length,
         })
     );
     player.sendMessage("§7------------------------------------------");
@@ -47,7 +48,7 @@ const packInfoPage = new BodyInfoForm<{ uuid: string; pack: packComInfo }>(
                 t(LangSysInfo.versionField, { version: info.version }),
                 t(LangSysInfo.libVersion, {
                     version: pack.version,
-                    type: pack.isBeta ? "beta" : "stable",
+                    type: pack.isBeta || pack.isBeta == undefined ? "beta" : "stable",
                 }),
                 "",
                 info.description,
@@ -59,6 +60,7 @@ const packInfoPage = new BodyInfoForm<{ uuid: string; pack: packComInfo }>(
 const sysinfoForm = new ButtonForm({
     title: LangSysInfo.title,
     generator(form, p, args, t) {
+        const packs = exchangedb.get<exchangedbData["packs"]>("packs") ?? {};
         form.body(
             [
                 t(LangSysInfo.header, {
@@ -67,15 +69,14 @@ const sysinfoForm = new ButtonForm({
                 t(LangSysInfo.mainModule, { name: LibConfig.packInfo.name }),
                 t(LangSysInfo.registeredCommands, { count: pcommand.commands.size }),
                 t(LangSysInfo.loadedModules, {
-                    count: Object.keys(exchangedb.get<exchangedbData>("packs") ?? {}).length,
+                    count: Object.keys(packs).length,
                 }),
                 t(LangSysInfo.clickViewPack),
             ].join("\n")
         );
     },
     buttonGenerator() {
-        const packs = exchangedb.get("packs") as Record<string, packComInfo>;
-
+        const packs = exchangedb.get<exchangedbData["packs"]>("packs") ?? {};
         return Object.entries(packs).map(([uuid, pack]) => ({
             label: pack.info.name,
             func(ctx) {
