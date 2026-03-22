@@ -9,6 +9,7 @@
 ## Extended by
 
 - [`ButtonFormArgs`](ButtonFormArgs.md)
+- [`InputFormArgs`](InputFormArgs.md)
 
 ## Indexable
 

@@ -32,7 +32,7 @@
 
 ##### type
 
-`DBTypes`
+[`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Returns
 
@@ -48,7 +48,7 @@
 
 ### type
 
-> **type**: `DBTypes`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 ***
 

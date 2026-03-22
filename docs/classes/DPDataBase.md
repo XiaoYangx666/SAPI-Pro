@@ -8,7 +8,7 @@
 
 ## Extends
 
-- [`DataBase`](DataBase.md)\<`DPValueTypes`\>
+- [`DataBase`](DataBase.md)\<[`DPValueTypes`](../type-aliases/DPValueTypes.md)\>
 
 ## Constructors
 
@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `DBTypes`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,11 +88,11 @@
 
 ### entries()
 
-> **entries**(): \[`string`, `DPValueTypes` \| `undefined`\][]
+> **entries**(): \[`string`, [`DPValueTypes`](../type-aliases/DPValueTypes.md) \| `undefined`\][]
 
 #### Returns
 
-\[`string`, `DPValueTypes` \| `undefined`\][]
+\[`string`, [`DPValueTypes`](../type-aliases/DPValueTypes.md) \| `undefined`\][]
 
 ***
 
@@ -104,7 +104,7 @@
 
 ##### T
 
-`T` *extends* `DPValueTypes` = `DPValueTypes`
+`T` *extends* [`DPValueTypes`](../type-aliases/DPValueTypes.md) = [`DPValueTypes`](../type-aliases/DPValueTypes.md)
 
 #### Parameters
 
@@ -144,7 +144,7 @@
 
 ##### guard?
 
-(`val`) => `val is T`
+[`ValueGuard`](../type-aliases/ValueGuard.md)\<`T`\>
 
 可选类型守卫函数
 
@@ -208,6 +208,10 @@
 
 > **set**(`key`, `value`): `void`
 
+设置值（同步）
+- 小数据直接写入
+- 大字符串同步分片写入（可能造成卡顿）
+
 #### Parameters
 
 ##### key
@@ -216,7 +220,7 @@
 
 ##### value
 
-`DPValueTypes`
+[`DPValueTypes`](../type-aliases/DPValueTypes.md)
 
 #### Returns
 
@@ -228,9 +232,33 @@
 
 ***
 
+### setAsync()
+
+> **setAsync**(`key`, `value`): `Promise`\<`void`\>
+
+设置值（异步）
+- 小数据直接写入
+- 大字符串异步分片写入（避免卡顿）
+
+#### Parameters
+
+##### key
+
+`string`
+
+##### value
+
+[`DPValueTypes`](../type-aliases/DPValueTypes.md)
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
 ### setJSON()
 
-> **setJSON**(`key`, `value`): `void`
+> **setJSON**(`key`, `value`): `Promise`\<`void`\>
 
 以json形式存储一个对象
 
@@ -246,7 +274,7 @@
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
 
 ***
 

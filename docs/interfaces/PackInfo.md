@@ -12,17 +12,23 @@
 
 > **author**: `string`
 
+作者
+
 ***
 
 ### description
 
 > **description**: `string`
 
+包描述
+
 ***
 
 ### greeting?
 
 > `optional` **greeting**: `string`
+
+问候语
 
 ***
 
@@ -40,6 +46,16 @@
 
 ***
 
+### uuid?
+
+> `optional` **uuid**: `string`
+
+包唯一uuid
+
+***
+
 ### version
 
 > **version**: `string`
+
+包版本

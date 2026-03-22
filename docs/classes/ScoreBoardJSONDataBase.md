@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `DBTypes`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,7 +88,13 @@
 
 ### edit()
 
-> **edit**(`callback`): `void`
+> **edit**\<`T`\>(`callback`): `void`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `Record`\<`string`, `any`\> = `any`
 
 #### Parameters
 
@@ -104,7 +110,13 @@
 
 ### get()
 
-> **get**(`key`): `any`
+> **get**\<`T`\>(`key`, `guard?`): `T` \| `undefined`
+
+#### Type Parameters
+
+##### T
+
+`T` = `unknown`
 
 #### Parameters
 
@@ -112,9 +124,13 @@
 
 `string`
 
+##### guard?
+
+[`ValueGuard`](../type-aliases/ValueGuard.md)\<`T`\>
+
 #### Returns
 
-`any`
+`T` \| `undefined`
 
 #### Overrides
 

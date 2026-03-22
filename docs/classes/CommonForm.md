@@ -10,7 +10,7 @@
 
 ### BodyInfoForm()
 
-> `static` **BodyInfoForm**\<`U`\>(`title`, `body`, `onSubmit?`): `BodyInfoForm`\<`U`\>
+> `static` **BodyInfoForm**\<`U`\>(`title`, `body`, `onSubmit?`): [`BodyInfoForm`](BodyInfoForm.md)\<`U`\>
 
 注册一个简单的信息窗口
 
@@ -42,13 +42,13 @@
 
 #### Returns
 
-`BodyInfoForm`\<`U`\>
+[`BodyInfoForm`](BodyInfoForm.md)\<`U`\>
 
 ***
 
 ### ButtonForm()
 
-> `static` **ButtonForm**\<`U`\>(`data`): `ButtonForm`\<`U`\>
+> `static` **ButtonForm**\<`U`\>(`data`): [`ButtonForm`](ButtonForm.md)\<`U`\>
 
 常用的按钮表单
 
@@ -66,13 +66,13 @@
 
 #### Returns
 
-`ButtonForm`\<`U`\>
+[`ButtonForm`](ButtonForm.md)\<`U`\>
 
 ***
 
 ### InputForm()
 
-> `static` **InputForm**\<`TResult`, `U`\>(`data`): `InputForm`\<`U`, `TResult`\>
+> `static` **InputForm**\<`TResult`, `U`\>(`data`): [`InputForm`](InputForm.md)\<`U`, `TResult`\>
 
 输入表单
 
@@ -84,23 +84,23 @@
 
 ##### U
 
-`U` *extends* `InputFormArgs`
+`U` *extends* [`InputFormArgs`](../interfaces/InputFormArgs.md) = `any`
 
 #### Parameters
 
 ##### data
 
-`InputFormData`\<`U`, `TResult`\>
+[`InputFormData`](../interfaces/InputFormData.md)\<`U`, `TResult`\>
 
 #### Returns
 
-`InputForm`\<`U`, `TResult`\>
+[`InputForm`](InputForm.md)\<`U`, `TResult`\>
 
 ***
 
 ### SimpleMessageForm()
 
-> `static` **SimpleMessageForm**\<`U`\>(`data`): `SimpleMessageForm`\<`U`\>
+> `static` **SimpleMessageForm**\<`U`\>(`data`): [`SimpleMessageForm`](SimpleMessageForm.md)\<`U`\>
 
 一个简单的提示窗口，仅含有两个按钮，
 
@@ -118,4 +118,4 @@
 
 #### Returns
 
-`SimpleMessageForm`\<`U`\>
+[`SimpleMessageForm`](SimpleMessageForm.md)\<`U`\>

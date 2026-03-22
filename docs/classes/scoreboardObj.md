@@ -12,7 +12,7 @@
 
 ### Constructor
 
-> **new scoreboardObj**(`sbObj`, `name`): `scoreboardObj`
+> **new scoreboardObj**(`sbObj`, `participant`): `scoreboardObj`
 
 #### Parameters
 
@@ -20,9 +20,9 @@
 
 [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 
-##### name
+##### participant
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 #### Returns
 

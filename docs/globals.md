@@ -18,6 +18,8 @@
 ## Classes
 
 - [BaseField](classes/BaseField.md)
+- [BodyInfoForm](classes/BodyInfoForm.md)
+- [ButtonForm](classes/ButtonForm.md)
 - [ChunkUtils](classes/ChunkUtils.md)
 - [Command](classes/Command.md)
 - [CommandManager](classes/CommandManager.md)
@@ -27,6 +29,7 @@
 - [DPDataBase](classes/DPDataBase.md)
 - [DropDownField](classes/DropDownField.md)
 - [FormManagerClass](classes/FormManagerClass.md)
+- [InputForm](classes/InputForm.md)
 - [LabelField](classes/LabelField.md)
 - [Logger](classes/Logger.md)
 - [NameDB](classes/NameDB.md)
@@ -38,6 +41,7 @@
 - [ScoreBoardDataBase](classes/ScoreBoardDataBase.md)
 - [ScoreBoardJSONDataBase](classes/ScoreBoardJSONDataBase.md)
 - [scoreboardObj](classes/scoreboardObj.md)
+- [SimpleMessageForm](classes/SimpleMessageForm.md)
 - [SliderField](classes/SliderField.md)
 - [TextField](classes/TextField.md)
 - [ToggleField](classes/ToggleField.md)
@@ -54,6 +58,8 @@
 - [contextArgs](interfaces/contextArgs.md)
 - [formGenerator](interfaces/formGenerator.md)
 - [FuncButton](interfaces/FuncButton.md)
+- [InputFormArgs](interfaces/InputFormArgs.md)
+- [InputFormData](interfaces/InputFormData.md)
 - [LangTree](interfaces/LangTree.md)
 - [MessageFormButton](interfaces/MessageFormButton.md)
 - [NameDBOptions](interfaces/NameDBOptions.md)
@@ -69,6 +75,8 @@
 ## Type Aliases
 
 - [commandHandler](type-aliases/commandHandler.md)
+- [DBTypes](type-aliases/DBTypes.md)
+- [DPValueTypes](type-aliases/DPValueTypes.md)
 - [FieldValidator](type-aliases/FieldValidator.md)
 - [formBeforeBuild](type-aliases/formBeforeBuild.md)
 - [FormBuilder](type-aliases/FormBuilder.md)
@@ -84,6 +92,7 @@
 - [TextType](type-aliases/TextType.md)
 - [Translator](type-aliases/Translator.md)
 - [UniversalTranslator](type-aliases/UniversalTranslator.md)
+- [ValueGuard](type-aliases/ValueGuard.md)
 
 ## Variables
 
@@ -99,5 +108,6 @@
 ## Functions
 
 - [defineLangTree](functions/defineLangTree.md)
+- [initLangCmd](functions/initLangCmd.md)
 - [initSAPIPro](functions/initSAPIPro.md)
 - [setLoggerNamespace](functions/setLoggerNamespace.md)

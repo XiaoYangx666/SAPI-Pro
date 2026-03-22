@@ -26,6 +26,7 @@
     "scripts": {
         "build:nodeclare": "python3 build.py --declaration false",
         "build": "python3 build.py --declaration true",
+        "pack": "tsgo & npm pack",
         "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
     },
     "overrides": {},

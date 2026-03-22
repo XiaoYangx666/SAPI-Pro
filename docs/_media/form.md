@@ -2,8 +2,6 @@
 
 ---
 
-> 此文档纯手工编辑，未使用 AI
-
 ## 表单系统
 
 ### 目录
@@ -12,36 +10,46 @@
     - [示例](#实际示例)
     - [注册具名表单](#注册具名表单)
 - [表单上下文](#表单上下文-sapiproformcontext)
-- [常用表单](#常用表单)
+- [常用表单](#常用表单-commonform)
     - [ButtonForm](#commonformbuttonform-通用按钮表单)
     - [BodyInfoForm](#commonformbodyinfoform)
     - [SimpleMessageForm](#commonformsimplemessageform)
-    - [InputForm](#)
+    - [InputForm](#commonforminputform)
 - [多层表单处理](#使用上下文处理多层表单)
 
 ### SAPI-Pro 表单
 
-SAPI-Pro 表单使用接口[SAPIProForm](../docs/interfaces/SAPIProForm.md)构建，指定表单类型，即可构建表单。
+所有表单均基于 [SAPIProForm<T, U>](../docs/interfaces/SAPIProForm.md) 接口构建。
+
+- `T`: 表单类型（`ActionFormData | ModalFormData | MessageFormData`）。
+
+- `U`: 上下文参数类型（必须继承自 `contextArgs`）。
 
 ##### 示例
 
 ```typescript
-import { ActionFormData } from "@minecraft/server-ui";
-import { formManager } from "sapi-pro";
-import { ActionFormResponse } from "@minecraft/server-ui";
-const testForm1: SAPIProForm<ActionFormData> = {
+interface MyArgs extends contextArgs {
+    score: number;
+}
+
+const myForm: SAPIProForm<ActionFormData, MyArgs> = {
     builder: (player, args) => {
-        const form = new ActionFormData().title("测试").body("测试啊测试啊测试啊").button("已阅");
-        return form;
+        // args 类型为 MyArgs
+        return new ActionFormData()
+            .title("分数查询")
+            .body(`你的分数是: ${args.score}`)
+            .button("确定");
     },
-    handler: (res: ActionFormResponse, ctx) => {},
-    beforeBuild: (ctx) => {},
+    handler: async (res, ctx) => {
+        // ctx.args 同样为 MyArgs
+        console.log(ctx.args.score);
+    },
 };
 ```
 
 #### builder:[FormBuiler](../docs/type-aliases/FormBuilder.md)
 
-`FormBuilder:(player, args)=> Promise<T> | T`
+`FormBuilder: (player, args) => Promise<T> | T`
 
 builder 需要提供一个创建函数，每次都会使用它来创建表单。创建时会传入 player 和 args(上下文参数)返回值必须是 ActionFormData | ModalFormData | MessageFormData 的其中一个。
 
@@ -49,23 +57,28 @@ builder 需要提供一个创建函数，每次都会使用它来创建表单。
 
 #### handler:[formHandler](../docs/type-aliases/formHandler.md)
 
-`formHandler:(response: formResponseType<T>, context: SAPIProFormContext<T>) => void | Promise<void>`
+`formHandler: (response: formResponseType<T>, context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
 **参数**：第一个参数是表单返回值，它和你的表单类型有关，例如:ActionFormData 将会返回 ActionFormResponse ; 第二个参数是上下文，你可以通过它进行导航，获得玩家等，具体后面介绍。
 
 #### beforeBuild?[formBeforeBuild](../docs/type-aliases/formBeforeBuild.md)
 
-`formBeforeBuild:(context: SAPIProFormContext<T>) => void | Promise<void>`
+`formBeforeBuild: (context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
-它将在表单已经入栈，builder 被执行前执行。此时你可以拿到 context，可以在其中执行自定义验证逻辑，并执行跳转，如果跳转，则 builder 不会被执行。不进行导航操作则会正常构建表单。
+它将在表单已入栈、builder 被执行前执行。此时你可以拿到 context，可以在其中执行自定义验证逻辑，并执行跳转。如果跳转，则 builder 不会被执行。不进行导航操作则会正常构建表单。
 
-可以使用 formManager.open 来打开表单。
+可以使用 formManager.open 来打开表单
 
 ```typescript
-formManager.open<T extends formDataType>(player: Player, form: SAPIProForm<T>, args?: contextArgs, delay = 0)
+formManager.open<T extends formDataType, U extends contextArgs>(
+    player: Player,
+    form: SAPIProForm<T, U>,
+    args?: U,
+    delay = 0
+)
 /*
 player:玩家对象
-formId:表单对象
+form:表单对象
 args:表单上下文初始参数
 delay:打开延迟(单位tick)
 */
@@ -112,18 +125,18 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 参考:[SAPIProFormContext](../docs/classes/SAPIProFormContext.md)
 
-表单上下文包含表单构建和处理中所需要的传入参数，玩家对象，导航操作等。它由 SAPI-Pro 自动管理，进行出栈与入栈。
+`SAPIProFormContext<T, U>` 是表单处理的核心，提供了导航和数据访问能力。
 
 #### 参数
 
 `player:Player`
 获取当前的玩家
-`args:contextArgs`
-自己设定的表单上下文参数，一般是上个表单传递的
+`args:U`
+获取当前表单的上下文参数，一般是上个表单传递的（泛型 U 提供了完整类型推断）
 
 #### 方法(此处只介绍几种)
 
-`push(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`push(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 打开新表单，并加入堆栈
 
 `pushNamed(name: string, args?: contextArgs, delay = 0)`
@@ -135,174 +148,155 @@ const spCreate: SAPIProForm<ModalFormData> = {
 `reopen(delay = 0)`
 重新打开当前表单（刷新）
 
-`replace(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`replace(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 替换当前表单
 
-`offAll(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`offAll(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 清空堆栈，打开表单
 
 ---
 
-### [常用表单 CommonForm](../docs/classes/CommonForm.md)
+### 常用表单 CommonForm
 
-我们经常会用到一些相似结构的表单，常用表单可以轻松帮助你实现。它们返回常用表单类的实例，这些类都实现了SAPIProForm接口。
+我们经常会用到一些相似结构的表单，常用表单可以轻松帮助你实现。它们返回实现了 `SAPIProForm` 的实例，并且全面支持泛型和多语言。
 
-###
+#### CommonFormData
 
-### CommonForm.ButtonForm 通用按钮表单
+以下所有的常用表单定义数据都继承了[CommonFormData](../docs/interfaces/CommonFormData.md)。`CommonForm`中的`generator`在表单构建后被调用，用于动态生成title与body。
 
-使用CommonForm类中的静态方法即可创建。
-
-```ts
-ButtonForm<U>(data: ButtonFormData<U>):ButtonForm<U>;
-```
-
-参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
-
-```ts
-//此处已展开继承的接口
-interface ButtonFormData<U extends contextArgs = contextArgs> {
+```typescript
+interface CommonFormData<T extends formDataType, U extends contextArgs = contextArgs> {
     /**标题 */
     title?: TextType;
     /**自定义生成器 */
     generator?: formGenerator<T, U>;
-
-    /**body */
-    body?: TextType;
-    /**按钮列表 */
-    buttons?: FuncButton<U>[];
-    /**按钮生成器 */
-    buttonGenerator?: (player: Player, args: U, t: UniversalTranslator) => Iterable<FuncButton<U>>;
-    /**列表处理 */
-    handler?: (ctx: SAPIProFormContext<ActionFormData, U>, index: number) => Promise<void> | void;
-    /**取消事件 */
-    oncancel?: formHandler<ActionFormData, U>;
-    /**表单验证器，验证失败则不打开表单 */
-    validator?: formBeforeBuild<ActionFormData, U>;
 }
 ```
 
-title 和 body 是表单的标题和内容，是静态的，并支持字符串和翻译对象，如果要动态生成，可以使用generator(参见后文)。
+> 提示: 不要用generator来生成按钮等，否则会和原有逻辑冲突
+
+### CommonForm.ButtonForm 通用按钮表单
+
+ButtonForm 是最常用的组件，支持静态按钮、动态生成列表以及下标索引处理。
+
+```ts
+ButtonForm<U>(data: ButtonFormData<U>): ButtonForm<U>;
+```
+
+参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
+
+#### 按钮处理逻辑
+
+`ButtonForm` 的按钮由两部分组成：
+
+- 静态按钮 (buttons): 在数组中定义的按钮。如果带有 func 属性，点击后会直接触发该回调，不进入全局 handler。
+
+- 动态按钮 (buttonGenerator): 每次构建表单时动态生成的按钮列表。
 
 #### buttons 静态按钮
-
-buttons 看这个例子就懂了:
 
 ##### 示例
 
 ```typescript
-const clockMenu: ButtonFormData = {
-    title: clockMenuText.title, //"菜单"
+const clockMenu = CommonForm.ButtonForm({
+    title: clockMenuText.title, // "菜单"
     body: clockMenuText.body,
     buttons: [
         {
             icon: "ui/FriendsIcon",
-            label: clockMenuText.tpa, //"玩家传送"
+            label: clockMenuText.tpa, // "玩家传送"
             func: (ctx) => {
                 ctx.pushNamed("tpa.main");
             },
         },
         {
-            icon: "blocks/jukebox_top",
-            label: clockMenuText.musicPlayer, //"音乐播放器"
-            func: (ctx) => {
-                system.sendScriptEvent("music:open", ctx.player.id);
-            },
-        },
-        {
             icon: "ui/recipe_book_icon.png",
-            label: clockMenuText.statistics, //"统计信息"
+            label: clockMenuText.statistics, // "统计信息"
             func: (ctx) => {
                 ctx.push(statisticsForm);
             },
         },
         {
             icon: "gui/newgui/Language18.png",
-            label: clockMenuText.langSetting, //"语言设置"
+            label: clockMenuText.langSetting, // "语言设置"
             func: (ctx) => {
                 ctx.push(LangSettingForm);
             },
         },
     ],
-};
+});
 ```
 
-通过以上例子，buttons的使用方法已经清晰。其中 icon 和 func 可以不写。
-func 的参数是[SAPIProFormContext](#表单上下文-sapiproformcontext)
-
-```typescript
-func?: (context: SAPIProFormContext<ActionFormData>) => void | Promise<void>
-```
+icon不用写完整路径，从`textures/`后开始写即可。
+label支持字符串、翻译对象及RawMessage
+func用于自定义回调，当点击的按钮有func属性时，则会直接触发func回调，而不会触发handler。
 
 #### buttonGenerator 动态生成按钮
 
-那么这时候就有人说了，你这个不行，那万一我按钮要动态生成你不炸了吗？其实是有办法的，请看`buttonGenerator?: buttonGenerator`，语法如下:
-
 ```typescript
-buttonGenerator: (player: Player, args: contextArgs): Record<string, FuncButton> | undefined;
+buttonGenerator: (player, args, t) => Iterable<FuncButton<U, TData>>;
 ```
 
-通过 buttonGenerator，传入(player,args)，函数经过处理，返回要添加的按钮对象。还是直接用例子来看。
+通过 buttonGenerator可以动态生成按钮，返回的按钮数组被添加在buttons后面。
 
 ##### 示例
 
 ```typescript
-const spMainForm = CommonForm.ButtonForm({
-    title: "假人管理",
-    body: "请选择选项",
-    buttonGenerator: (player, args) => {
-        if (isAdmin(player)) {
-            return {
-                假人结构配置: {
-                    func: (ctx) => {
-                        return ctx.push(spConfigForm);
-                    },
-                },
-            };
+const DbInfoForm = new ButtonForm<{
+    db: DataBase<any>;
+    keys?: string[];
+    participants?: ScoreboardIdentity[];
+}>({
+    title: "数据库详情",
+    // 构建表单（每次打开都会执行）
+    generator(form, p, args) {
+        const db = args.db;
+
+        // 缓存数据给后续 handler 使用
+        const keys = db.keys();
+        args.keys = keys;
+
+        const rows = [`数据库名称:${db.name}`, `类型:${db.type}`, `总键数:${keys.length}`];
+
+        if (db instanceof ScoreBoardDataBase) {
+            rows.push(`计分板名:${db.getScoreBoardName()}`);
+            args.participants = db.participants(); // 与 keys 对应
         }
+
+        form.body(rows.join("\n"));
     },
-    buttons: {
-        创建假人: {
-            func: (ctx) => {
-                return ctx.push(spCreate);
+    // 固定按钮（优先执行 func，不走 handler）
+    buttons: [
+        {
+            label: "设置键值",
+            func(ctx) {
+                ctx.push(setValuePage, { db: ctx.args.db });
             },
         },
-        假人列表: {
-            func: (ctx) => {
-                return ctx.push(spList);
-            },
-        },
+    ],
+    // 动态按钮（对应每个 key）
+    buttonGenerator(player, args, t) {
+        return args.keys!.map((k) => ({ label: k, data: k }));
     },
-    validator: (ctx) => {
-        //略
+    oncancel(res, ctx) {
+        ctx.back();
+    },
+    // 处理动态按钮点击（btnIndex 只计算无 func 的按钮）
+    handler(ctx, btn) {
+        const args = ctx.args;
+
+        const key = args.keys![btn.btnIndex];
+        const identity = args.participants?.[btn.btnIndex];
+
+        ctx.push(DbValuePage, {
+            db: args.db,
+            key: identity ?? key, // 计分板优先
+        });
     },
 });
 ```
 
-例子中使用 buttonGenerator 来根据玩家是否是管理员，动态添加了管理按钮，普通玩家只能看到下面两个按钮，而管理员可以看到配置按钮。
-
-#### generator 自定义生成器
-
-如果你对这些还不满意，还需要自己修改，那么你可以用 generator。
-
-```typescript
-generator:(form: T, player: Player, args: contextArgs): void | Promise<void>;
-```
-
-参考:[formGenerator](../docs/interfaces/formGenerator.md)
-
-你可以用它来动态生成 body,title。添加按钮就不推荐了，毕竟可以直接用 buttonGenerator。
-
-```typescript
-//前面省略
-generator: (form, player, ctx) => {
-    form.body("xxx");
-    form.title("xxx");
-};
-//后面省略
-```
-
-最后还有个 validator,就是[beforeBuild](#beforebuildformbeforebuild)。
+例子中使用 buttonGenerator 来直接生成动态的key按钮，并通过buttons添加了静态按钮。
 
 ### CommonForm.BodyInfoForm
 
@@ -363,7 +357,100 @@ body和title等可以静态也可以通过 generator 来生成。
 ##### 示例
 
 ```typescript
+CommonForm.SimpleMessageForm({
+    title: "确认删除",
+    body: "你确定要删除这个领地吗？此操作不可逆。",
+    button1: {
+        text: "确定删除",
+        func: (ctx) => {
+            // 处理删除逻辑
+            ctx.player.sendMessage("领地已删除");
+        },
+    },
+    button2: {
+        text: "取消",
+        func: (ctx) => ctx.back(),
+    },
+});
+```
 
+### CommonForm.InputForm
+
+`InputForm` 用于构建输入的表单界面，通过 ValueField 实现数据自动解析和校验。
+
+参考:[InputFormData](../docs/interfaces/InputFormData.md)
+
+#### 核心 Field 组件
+
+- `TextField(label, placeholder, defaultValue?)`
+
+- `NumberField(label, placeholder, defaultValue?)` - 自动解析为数字。
+
+- `SliderField(label, min, max, step, defaultValue?)`
+
+- `ToggleField(label, defaultValue?)`
+
+- `DropDownField(label, options, defaultIndex?)`
+
+#### 数据绑定与校验
+
+每个 ValueField 都可以使用 .key() 绑定键名，并使用 .validator() 进行链式校验。
+
+##### 示例
+
+```typescript
+interface AIChatConfig {
+    model: number;
+    systemPrompt: number;
+    max_turns: number;
+    showThink: boolean;
+    includeChat: boolean;
+    chat_length: number;
+}
+
+const configPage = CommonForm.InputForm<AIChatConfig, { models: string[]; prompts: string[] }>({
+    title: "AI聊天设置",
+    fields: [],
+    fieldsGenerator(p, args) {
+        args.models = Object.keys(models);
+        args.prompts = Object.keys(Prompts);
+        const config = Config;
+        return [
+            new DropDownField(
+                "模型选择",
+                Object.entries(models).map(
+                    (t) => `${t[0]}(${t[1].provider ?? "unknown"})`,
+                    args.models.indexOf(config.model)
+                ),
+                args.models.indexOf(config.model)
+            ).key("model"),
+            new DropDownField(
+                "系统提示词",
+                args.prompts,
+                args.prompts.indexOf(config.systemPrompt)
+            ).key("systemPrompt"),
+            new SliderField("最大历史记录轮数", 5, 30, {
+                defaultValue: config.max_turns,
+                step: 1,
+            }).key("max_turns"),
+            new ToggleField("显示思考过程", config.showThink).key("showThink"),
+            new ToggleField("包含历史聊天记录", config.includeChat).key("includeChat"),
+            new SliderField("聊天记录条数", 5, 30, {
+                defaultValue: config.chat_length,
+            }).key("chat_length"),
+        ];
+    },
+    onSubmit(data, ctx) {
+        const config: globalConfig = {
+            ...data,
+            model: ctx.args.models[data.model],
+            systemPrompt: ctx.args.prompts[data.systemPrompt],
+        };
+        Object.assign(Config, config);
+        Configdb.setJSON("aichat", config);
+        ctx.back();
+    },
+});
 ```
 
 ---

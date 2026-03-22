@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / FuncButton
 
-# Interface: FuncButton\<U\>
+# Interface: FuncButton\<U, TData\>
 
 ## Type Parameters
 
@@ -12,7 +12,19 @@
 
 `U` *extends* [`contextArgs`](contextArgs.md)
 
+### TData
+
+`TData` = `unknown`
+
 ## Properties
+
+### data?
+
+> `optional` **data**: `TData`
+
+附带自定义属性
+
+***
 
 ### func()?
 

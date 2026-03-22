@@ -52,7 +52,7 @@
 
 ### type
 
-> **type**: `DBTypes`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,7 +88,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 ##### value
 
@@ -136,7 +136,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 #### Returns
 
@@ -158,7 +158,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 #### Returns
 
@@ -220,6 +220,16 @@
 
 ***
 
+### participants()
+
+> **participants**(): `ScoreboardIdentity`[]
+
+#### Returns
+
+`ScoreboardIdentity`[]
+
+***
+
 ### resetAll()
 
 > **resetAll**(): `void`
@@ -242,7 +252,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 #### Returns
 
@@ -262,7 +272,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` | `Entity` | `ScoreboardIdentity`
 
 ##### value
 

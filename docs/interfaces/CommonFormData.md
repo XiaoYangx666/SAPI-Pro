@@ -10,6 +10,7 @@
 
 - [`ButtonFormData`](ButtonFormData.md)
 - [`SimpleMessageFormData`](SimpleMessageFormData.md)
+- [`InputFormData`](InputFormData.md)
 
 ## Type Parameters
 

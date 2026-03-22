@@ -112,22 +112,6 @@
 
 [`ValueField`](ValueField.md).[`isOptional`](ValueField.md#isoptional)
 
-***
-
-### key
-
-#### Get Signature
-
-> **get** **key**(): `string` \| `undefined`
-
-##### Returns
-
-`string` \| `undefined`
-
-#### Inherited from
-
-[`ValueField`](ValueField.md).[`key`](ValueField.md#key)
-
 ## Methods
 
 ### baseValidate()
@@ -178,6 +162,42 @@ UI 构建
 
 ***
 
+### getKey()
+
+> **getKey**(): `string` \| `undefined`
+
+#### Returns
+
+`string` \| `undefined`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`getKey`](ValueField.md#getkey)
+
+***
+
+### key()
+
+> **key**(`key`): `this`
+
+设置字段键名，用于最终推导为对象属性
+
+#### Parameters
+
+##### key
+
+`string`
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+[`ValueField`](ValueField.md).[`key`](ValueField.md#key)
+
+***
+
 ### optional()
 
 > **optional**(): `SliderField` & `object`
@@ -213,28 +233,6 @@ UI 构建
 #### Overrides
 
 [`ValueField`](ValueField.md).[`parse`](ValueField.md#parse)
-
-***
-
-### setKey()
-
-> **setKey**(`key`): `SliderField`
-
-设置字段键名，用于最终推导为对象属性
-
-#### Parameters
-
-##### key
-
-`string`
-
-#### Returns
-
-`SliderField`
-
-#### Inherited from
-
-[`ValueField`](ValueField.md).[`setKey`](ValueField.md#setkey)
 
 ***
 

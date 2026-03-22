@@ -80,18 +80,6 @@
 
 `boolean`
 
-***
-
-### key
-
-#### Get Signature
-
-> **get** **key**(): `string` \| `undefined`
-
-##### Returns
-
-`string` \| `undefined`
-
 ## Methods
 
 ### baseValidate()
@@ -138,6 +126,34 @@ UI 构建
 
 ***
 
+### getKey()
+
+> **getKey**(): `string` \| `undefined`
+
+#### Returns
+
+`string` \| `undefined`
+
+***
+
+### key()
+
+> **key**(`key`): `this`
+
+设置字段键名，用于最终推导为对象属性
+
+#### Parameters
+
+##### key
+
+`string`
+
+#### Returns
+
+`this`
+
+***
+
 ### optional()
 
 > **optional**(): `ValueField`\<`T`\> & `object`
@@ -165,24 +181,6 @@ UI 构建
 #### Returns
 
 `T`
-
-***
-
-### setKey()
-
-> **setKey**(`key`): `ValueField`\<`T`\>
-
-设置字段键名，用于最终推导为对象属性
-
-#### Parameters
-
-##### key
-
-`string`
-
-#### Returns
-
-`ValueField`\<`T`\>
 
 ***
 
