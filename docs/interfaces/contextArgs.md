@@ -6,6 +6,11 @@
 
 # Interface: contextArgs
 
+## Extended by
+
+- [`ButtonFormArgs`](ButtonFormArgs.md)
+- [`InputFormArgs`](InputFormArgs.md)
+
 ## Indexable
 
-\[`key`: `string`\]: `any`
+> \[`key`: `string`\]: `any`

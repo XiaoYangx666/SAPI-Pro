@@ -56,7 +56,7 @@ export class CommandManager {
         );
         //执行失败
         if (typeof ans == "string")
-            return { message: JSON.stringify(args), status: CustomCommandStatus.Failure };
+            return { message: ans + JSON.stringify(args), status: CustomCommandStatus.Failure };
         return { status: CustomCommandStatus.Success };
     }
 }

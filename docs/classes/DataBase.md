@@ -9,8 +9,8 @@
 ## Extended by
 
 - [`DPDataBase`](DPDataBase.md)
-- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 - [`ScoreBoardJSONDataBase`](ScoreBoardJSONDataBase.md)
+- [`ScoreBoardDataBase`](ScoreBoardDataBase.md)
 
 ## Type Parameters
 
@@ -22,13 +22,17 @@
 
 ### Constructor
 
-> **new DataBase**\<`T`\>(`name`): `DataBase`\<`T`\>
+> **new DataBase**\<`T`\>(`name`, `type`): `DataBase`\<`T`\>
 
 #### Parameters
 
 ##### name
 
 `string`
+
+##### type
+
+[`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Returns
 
@@ -44,7 +48,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 ***
 
@@ -72,7 +76,7 @@
 
 ### get()
 
-> `abstract` **get**(`key`): `undefined` \| `T`
+> `abstract` **get**(`key`): `T` \| `undefined`
 
 #### Parameters
 
@@ -82,7 +86,7 @@
 
 #### Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
 
 ***
 
@@ -134,7 +138,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| `DataBase`\<`any`\>
+> `static` **getDB**(`name`): `DataBase`\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -144,7 +148,7 @@
 
 #### Returns
 
-`undefined` \| `DataBase`\<`any`\>
+`DataBase`\<`any`\> \| `undefined`
 
 ***
 

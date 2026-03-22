@@ -10,6 +10,6 @@ function initCommandSystem() {
 }
 
 export const pcommand = initCommandSystem();
-export { Command } from "./commandClass";
-export * from "./interface";
 export { CommandManager } from "./manager";
+export * from "./commandClass";
+export * from "./interface";

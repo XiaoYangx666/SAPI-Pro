@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / commandHandler
 
-# Type Alias: commandHandler()\<T\>
+# Type Alias: commandHandler\<T\>
 
 > **commandHandler**\<`T`\> = (`player`, `params`) => `void`
 

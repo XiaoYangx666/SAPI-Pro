@@ -4,58 +4,58 @@
 
 [sapi-pro](../globals.md) / SimpleMessageFormData
 
-# Interface: SimpleMessageFormData
+# Interface: SimpleMessageFormData\<U\>
+
+## Extends
+
+- [`CommonFormData`](CommonFormData.md)\<`MessageFormData`, `U`\>
+
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md) = [`contextArgs`](contextArgs.md)
 
 ## Properties
 
 ### body?
 
-> `optional` **body**: `string`
+> `optional` **body?**: [`TextType`](../type-aliases/TextType.md)
+
+body
 
 ***
 
 ### button1?
 
-> `optional` **button1**: `string`
+> `optional` **button1?**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
 ### button2?
 
-> `optional` **button2**: `string`
+> `optional` **button2?**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
-### generator()?
+### generator?
 
-> `optional` **generator**: (`form`, `player`, `args`) => `void` \| `Promise`\<`void`\>
+> `optional` **generator?**: [`formGenerator`](formGenerator.md)\<`MessageFormData`, `U`\>
 
-#### Parameters
+自定义生成器
 
-##### form
+#### Inherited from
 
-`MessageFormData`
-
-##### player
-
-`Player`
-
-##### args
-
-[`contextArgs`](contextArgs.md)
-
-#### Returns
-
-`void` \| `Promise`\<`void`\>
-
-***
-
-### handler
-
-> **handler**: [`formHandler`](../type-aliases/formHandler.md)\<`MessageFormData`\>
+[`CommonFormData`](CommonFormData.md).[`generator`](CommonFormData.md#generator)
 
 ***
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title?**: [`TextType`](../type-aliases/TextType.md)
+
+标题
+
+#### Inherited from
+
+[`CommonFormData`](CommonFormData.md).[`title`](CommonFormData.md#title)

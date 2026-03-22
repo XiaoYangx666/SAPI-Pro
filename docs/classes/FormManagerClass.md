@@ -34,7 +34,7 @@
 
 ### \_show()
 
-> **\_show**(`player`, `delay`): `void`
+> **\_show**(`player`, `delay?`): `void`
 
 **`Internal`**
 
@@ -47,7 +47,7 @@
 
 `Player`
 
-##### delay
+##### delay?
 
 `number` = `0`
 
@@ -59,7 +59,7 @@
 
 ### \_showNamed()
 
-> **\_showNamed**(`player`, `name`, `delay`): `void`
+> **\_showNamed**(`player`, `name`, `delay?`): `void`
 
 **`Internal`**
 
@@ -76,7 +76,7 @@
 
 `string`
 
-##### delay
+##### delay?
 
 `number` = `0`
 
@@ -88,7 +88,7 @@
 
 ### getForm()
 
-> **getForm**(`name`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`\>
+> **getForm**(`name`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`, [`contextArgs`](../interfaces/contextArgs.md)\>
 
 获取指定名字的form
 
@@ -100,7 +100,7 @@
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`, [`contextArgs`](../interfaces/contextArgs.md)\>
 
 #### Throws
 
@@ -110,7 +110,7 @@
 
 ### open()
 
-> **open**\<`T`\>(`player`, `form`, `args?`, `delay?`): `void`
+> **open**\<`T`, `TArgs`\>(`player`, `form`, `args?`, `delay?`): `void`
 
 为玩家打开表单
 
@@ -119,6 +119,10 @@
 ##### T
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
+
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
 
 #### Parameters
 
@@ -130,13 +134,13 @@
 
 ##### form
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`\>
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 表单实例
 
 ##### args?
 
-[`contextArgs`](../interfaces/contextArgs.md)
+`TArgs`
 
 初始参数
 

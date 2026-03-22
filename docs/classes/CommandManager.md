@@ -62,7 +62,7 @@
 
 ### runNativeCommand()
 
-> **runNativeCommand**(`command`, `origin`, ...`args`): `undefined` \| `CustomCommandResult`
+> **runNativeCommand**(`command`, `origin`, ...`args`): `CustomCommandResult` \| `undefined`
 
 #### Parameters
 
@@ -80,4 +80,4 @@
 
 #### Returns
 
-`undefined` \| `CustomCommandResult`
+`CustomCommandResult` \| `undefined`

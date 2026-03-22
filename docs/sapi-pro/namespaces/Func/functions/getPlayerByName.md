@@ -6,7 +6,9 @@
 
 # Function: getPlayerByName()
 
-> **getPlayerByName**(`name`): `undefined` \| `Player`
+> **getPlayerByName**(`name`): `Player` \| `undefined`
+
+根据玩家名获取玩家
 
 ## Parameters
 
@@ -16,4 +18,4 @@
 
 ## Returns
 
-`undefined` \| `Player`
+`Player` \| `undefined`

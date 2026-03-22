@@ -14,7 +14,7 @@
 
 ### branches?
 
-> `optional` **branches**: [`paramBranches`](../type-aliases/paramBranches.md)[]
+> `optional` **branches?**: [`paramBranches`](../type-aliases/paramBranches.md)[]
 
 参数分支
 
@@ -26,7 +26,7 @@
 
 ### default?
 
-> `optional` **default**: [`parsedTypes`](../type-aliases/parsedTypes.md)
+> `optional` **default?**: [`parsedTypes`](../type-aliases/parsedTypes.md)
 
 默认值
 
@@ -38,7 +38,7 @@
 
 ### enums?
 
-> `optional` **enums**: `string`[]
+> `optional` **enums?**: `string`[]
 
 枚举值
 
@@ -50,7 +50,7 @@
 
 ### explain?
 
-> `optional` **explain**: `string`
+> `optional` **explain?**: `string`
 
 参数解释
 
@@ -74,7 +74,7 @@
 
 ### optional?
 
-> `optional` **optional**: `boolean`
+> `optional` **optional?**: `boolean`
 
 是否可选，默认否
 
@@ -86,7 +86,7 @@
 
 ### subParams?
 
-> `optional` **subParams**: `ParamDefinition`[]
+> `optional` **subParams?**: `ParamDefinition`[]
 
 ***
 
@@ -104,7 +104,7 @@
 
 ### validator?
 
-> `optional` **validator**: [`ParamValidator`](ParamValidator.md)
+> `optional` **validator?**: [`ParamValidator`](ParamValidator.md)
 
 参数验证器
 

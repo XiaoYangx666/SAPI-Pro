@@ -4,13 +4,31 @@
 
 [sapi-pro](../globals.md) / FuncButton
 
-# Interface: FuncButton
+# Interface: FuncButton\<U, TData\>
+
+## Type Parameters
+
+### U
+
+`U` *extends* [`contextArgs`](contextArgs.md)
+
+### TData
+
+`TData` = `unknown`
 
 ## Properties
 
-### func()
+### data?
 
-> **func**: (`context`) => `void` \| `Promise`\<`void`\>
+> `optional` **data?**: `TData`
+
+附带自定义属性
+
+***
+
+### func?
+
+> `optional` **func?**: (`context`) => `void` \| `Promise`\<`void`\>
 
 按钮点击事件
 
@@ -18,7 +36,7 @@
 
 ##### context
 
-[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`\>
+[`SAPIProFormContext`](../classes/SAPIProFormContext.md)\<`ActionFormData`, `U`\>
 
 #### Returns
 
@@ -28,6 +46,44 @@
 
 ### icon?
 
-> `optional` **icon**: `string`
+> `optional` **icon?**: `string`
 
 图标路径，从textures/后面开始输
+
+***
+
+### label
+
+> **label**: [`TextType`](../type-aliases/TextType.md)
+
+按钮文本(支持翻译)
+
+***
+
+### permission?
+
+> `optional` **permission?**: `PlayerPermissionLevel`
+
+玩家权限，具有对应权限才会显示按钮
+
+***
+
+### shouldShow?
+
+> `optional` **shouldShow?**: (`player`, `args`) => `boolean`
+
+按钮是否应该显示(默认显示)
+
+#### Parameters
+
+##### player
+
+`Player`
+
+##### args
+
+`U`
+
+#### Returns
+
+`boolean`

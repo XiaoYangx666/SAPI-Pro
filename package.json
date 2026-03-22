@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.3.4-stable",
+    "version": "0.4.0-stable",
     "description": "A practical library for MCBE ScriptAPI",
     "main": "scripts/main.js",
     "types": "scripts/main.d.ts",
@@ -14,27 +14,40 @@
         "type": "git",
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
-    "dependencies": {
-        "@minecraft/server": "2.3.0",
-        "@minecraft/server-ui": "2.0.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "typedoc": "^0.28.7",
         "typedoc-plugin-markdown": "^4.4.2"
+    },
+    "peerDependencies": {
+        "@minecraft/server": "^2.5.0",
+        "@minecraft/server-ui": "^2.0.0"
+    },
+    "overrides": {
+        "@minecraft/server-ui": {
+            "@minecraft/server": "2.5.0"
+        }
     },
     "scripts": {
         "build:nodeclare": "python3 build.py --declaration false",
         "build": "python3 build.py --declaration true",
         "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
     },
-    "overrides": {
-        "@minecraft/server-ui": {
-            "@minecraft/server": "2.3.0"
-        }
-    },
     "files": [
         "scripts"
     ],
+    "exports": {
+        ".": "./scripts/main.js",
+        "./Deferred": "./scripts/Deferred/index.js",
+        "./Form": "./scripts/Form/main.js",
+        "./Translate": "./scripts/Translate/index.js",
+        "./Event": "./scripts/Event.js",
+        "./func": "./scripts/func.js",
+        "./constants": "./scripts/constants.js",
+        "./utils": "./scripts/utils/main.js",
+        "./Command": "./scripts/Command/main.js",
+        "./DataBase": "./scripts/DataBase/index.js"
+    },
     "keywords": [
         "minecraft",
         "bedrock",

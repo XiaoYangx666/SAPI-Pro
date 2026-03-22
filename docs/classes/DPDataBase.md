@@ -8,7 +8,7 @@
 
 ## Extends
 
-- [`DataBase`](DataBase.md)\<`DPTypes`\>
+- [`DataBase`](DataBase.md)\<[`DPValueTypes`](../type-aliases/DPValueTypes.md)\>
 
 ## Constructors
 
@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -86,9 +86,25 @@
 
 ***
 
+### entries()
+
+> **entries**(): \[`string`, [`DPValueTypes`](../type-aliases/DPValueTypes.md) \| `undefined`\][]
+
+#### Returns
+
+\[`string`, [`DPValueTypes`](../type-aliases/DPValueTypes.md) \| `undefined`\][]
+
+***
+
 ### get()
 
-> **get**(`key`): `undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
+> **get**\<`T`\>(`key`): `T` \| `undefined`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`DPValueTypes`](../type-aliases/DPValueTypes.md) = [`DPValueTypes`](../type-aliases/DPValueTypes.md)
 
 #### Parameters
 
@@ -98,7 +114,7 @@
 
 #### Returns
 
-`undefined` \| `string` \| `number` \| `boolean` \| `Vector3`
+`T` \| `undefined`
 
 #### Overrides
 
@@ -108,15 +124,15 @@
 
 ### getJSON()
 
-> **getJSON**\<`T`\>(`key`): `undefined` \| `T`
+> **getJSON**\<`T`\>(`key`, `guard?`): `T` \| `undefined`
 
-获取json形式存储的对象，没有或转换错误返回undefined
+获取JSON形式存储的对象，可选使用类型守卫进行校验
 
 #### Type Parameters
 
 ##### T
 
-`T` *extends* `object`
+`T` = `unknown`
 
 #### Parameters
 
@@ -124,9 +140,19 @@
 
 `string`
 
+键名
+
+##### guard?
+
+[`ValueGuard`](../type-aliases/ValueGuard.md)\<`T`\>
+
+可选类型守卫函数
+
 #### Returns
 
-`undefined` \| `T`
+`T` \| `undefined`
+
+解析后的数据，失败或校验不通过返回 undefined
 
 ***
 
@@ -182,6 +208,10 @@
 
 > **set**(`key`, `value`): `void`
 
+设置值（同步）
+- 小数据直接写入
+- 大字符串同步分片写入（可能造成卡顿）
+
 #### Parameters
 
 ##### key
@@ -190,7 +220,7 @@
 
 ##### value
 
-`DPTypes`
+[`DPValueTypes`](../type-aliases/DPValueTypes.md)
 
 #### Returns
 
@@ -202,17 +232,13 @@
 
 ***
 
-### setJSON()
+### setAsync()
 
-> **setJSON**\<`T`\>(`key`, `value`): `void`
+> **setAsync**(`key`, `value`): `Promise`\<`void`\>
 
-以json形式存储一个对象
-
-#### Type Parameters
-
-##### T
-
-`T` *extends* `object`
+设置值（异步）
+- 小数据直接写入
+- 大字符串异步分片写入（避免卡顿）
 
 #### Parameters
 
@@ -222,11 +248,33 @@
 
 ##### value
 
-`T`
+[`DPValueTypes`](../type-aliases/DPValueTypes.md)
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
+
+***
+
+### setJSON()
+
+> **setJSON**(`key`, `value`): `Promise`\<`void`\>
+
+以json形式存储一个对象
+
+#### Parameters
+
+##### key
+
+`string`
+
+##### value
+
+`object`
+
+#### Returns
+
+`Promise`\<`void`\>
 
 ***
 
@@ -262,7 +310,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -272,7 +320,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 
@@ -291,19 +339,3 @@
 #### Inherited from
 
 [`DataBase`](DataBase.md).[`getDBs`](DataBase.md#getdbs)
-
-***
-
-### isDPDataBase()
-
-> `static` **isDPDataBase**(`db`): `db is DPDataBase`
-
-#### Parameters
-
-##### db
-
-[`DataBase`](DataBase.md)\<`any`\>
-
-#### Returns
-
-`db is DPDataBase`

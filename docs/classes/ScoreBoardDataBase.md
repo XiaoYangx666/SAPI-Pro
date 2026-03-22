@@ -52,7 +52,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,11 +88,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 
@@ -130,17 +130,17 @@
 
 ### get()
 
-> **get**(`key`): `undefined` \| `number`
+> **get**(`key`): `number` \| `undefined`
 
 #### Parameters
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
-`undefined` \| `number`
+`number` \| `undefined`
 
 #### Overrides
 
@@ -150,7 +150,7 @@
 
 ### getObj()
 
-> **getObj**(`key`): `scoreboardObj`
+> **getObj**(`key`): [`scoreboardObj`](scoreboardObj.md)
 
 获取一个虚拟计分项对象
 
@@ -158,11 +158,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
-`scoreboardObj`
+[`scoreboardObj`](scoreboardObj.md)
 
 ***
 
@@ -220,11 +220,21 @@
 
 ***
 
+### participants()
+
+> **participants**(): `ScoreboardIdentity`[]
+
+#### Returns
+
+`ScoreboardIdentity`[]
+
+***
+
 ### resetAll()
 
 > **resetAll**(): `void`
 
-重置所有计分项(调用命令)
+重置所有积分项(调用命令)
 
 #### Returns
 
@@ -242,7 +252,7 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
@@ -262,11 +272,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 
@@ -298,7 +308,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -308,7 +318,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 

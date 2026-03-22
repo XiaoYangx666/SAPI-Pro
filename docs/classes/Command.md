@@ -72,7 +72,7 @@
 
 ### handler?
 
-> `optional` **handler**: [`commandHandler`](../type-aliases/commandHandler.md)
+> `optional` **handler?**: [`commandHandler`](../type-aliases/commandHandler.md)
 
 ***
 
@@ -84,7 +84,7 @@
 
 ### isClientCommand?
 
-> `optional` **isClientCommand**: `boolean`
+> `optional` **isClientCommand?**: `boolean`
 
 ***
 
@@ -114,7 +114,7 @@
 
 ### validator?
 
-> `optional` **validator**: [`CommandValidator`](../interfaces/CommandValidator.md)
+> `optional` **validator?**: [`CommandValidator`](../interfaces/CommandValidator.md)
 
 ## Methods
 

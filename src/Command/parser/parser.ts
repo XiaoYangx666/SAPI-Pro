@@ -1,4 +1,6 @@
 import { Player, system } from "@minecraft/server";
+import { LibConfig } from "../../Config";
+import { chatOpe } from "../../Event";
 import { isAdmin, LibErrorMes } from "../../func";
 import { Command } from "../commandClass";
 import { ParamDefinition, parsedTypes, ParseError } from "../interface";
@@ -62,7 +64,14 @@ export class CommandParser {
                 return this.ErrorMes(player, validationResult, showError);
             }
         }
-        const params = this.parseParams(command, subCommand, paramStrings, current, player, showError);
+        const params = this.parseParams(
+            command,
+            subCommand,
+            paramStrings,
+            current,
+            player,
+            showError
+        );
         if (typeof params == "string") {
             return this.ErrorMes(player, params, showError);
         }
@@ -87,7 +96,7 @@ export class CommandParser {
 
                 return true;
             } catch (e) {
-                LibErrorMes("Command Run Error:" + e + "at" + command.name);
+                LibErrorMes("Command Run Error at" + command.name, e);
             }
         }
     }
@@ -104,7 +113,13 @@ export class CommandParser {
         //没有参数则返回
         if (subCommand.paramBranches.length == 0) {
             if (paramStrings.length != 0)
-                return this.BuildErrorMessage(command, paramStrings[0], params, current, "多余参数");
+                return this.BuildErrorMessage(
+                    command,
+                    paramStrings[0],
+                    params,
+                    current,
+                    "多余参数"
+                );
             return {};
         }
         //转换后参数对象
@@ -140,7 +155,11 @@ export class CommandParser {
                     if (paramDef.default) T.parsed = paramDef.default;
                     return true;
                 } else {
-                    return new ParseError("缺少参数", false, T.index + req - paramStrings.length + 1);
+                    return new ParseError(
+                        "缺少参数",
+                        false,
+                        T.index + req - paramStrings.length + 1
+                    );
                 }
             }
             // 先用正则匹配
@@ -148,7 +167,8 @@ export class CommandParser {
             let regexArray: RegExpMatchArray | null = null;
             if (parser.regex) {
                 regexArray = ReqParams.join(" ").match(parser.regex);
-                if (!regexArray) return new ParseError(parser.regexError ?? "regexError", false, 0, true);
+                if (!regexArray)
+                    return new ParseError(parser.regexError ?? "regexError", false, 0, true);
             }
             //转换参数
             const parsed = parser.parser(regexArray ?? ReqParams, {

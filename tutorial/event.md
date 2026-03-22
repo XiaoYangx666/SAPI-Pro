@@ -42,12 +42,14 @@ Event.chatBus.subscribe((t) => {
 
 ```typescript
 //简单的tps计算器
+export const gg = new ScoreBoardDataBase("gg", "公告");
 Event.intervalBus.subscribesec((lastsec) => {
     tps = ((system.currentTick - lasttick) / ((Date.now() - lastsec) / 1000)).toFixed(1);
     if (parseFloat(tps) > 20) tps = "20.0";
     lasttick = system.currentTick;
-    cmd("scoreboard players reset * gg");
-    cmd(`scoreboard players set "§6tps §r${tps}" gg 3`);
+    //设置计分板
+    gg.clear();
+    gg.set(`§6TPS §r${tps}`, 3);
 });
 ```
 

@@ -3,6 +3,7 @@ import { DimensionIds } from "./vanila-data";
 
 /**有关区块的工具 */
 export class ChunkUtils {
+    private constructor() {}
     /**
      * 通过方块坐标获得该方块所在区块坐标
      * @param pos 方块的坐标
@@ -39,7 +40,7 @@ export class ChunkUtils {
     /**
      * 获取某区块最大点的坐标
      * @param chunkPos 指定区块的坐标
-     * @returns 该区块最大点的坐标
+     * @returns 该区块最大点的坐标(y为319)
      */
     static getChunkMaxPos(chunkPos: VectorXZ): Vector3 {
         return {
@@ -51,13 +52,24 @@ export class ChunkUtils {
 
     /** 获取某区块最小点的坐标
      * @param chunkPos 指定区块的坐标
-     * @returns 该区块最小点的坐标
+     * @returns 该区块最小点的坐标(y为-64)
      */
     static getChunkMinPos(chunkPos: VectorXZ): Vector3 {
         return {
             x: chunkPos.x * 16,
             y: -64,
             z: chunkPos.z * 16,
+        };
+    }
+
+    /** 根据坐标获取区块的最小点与最大点，y不变
+     * @param pos 指定位置坐标
+     */
+    static getChunkMinMaxPos(pos: Vector3) {
+        const chunkPos = this.getChunkPosFromBlockPos(pos);
+        return {
+            min: { ...this.getChunkMinPos(chunkPos), y: pos.y },
+            max: { ...this.getChunkMaxPos(chunkPos), y: pos.y },
         };
     }
 }

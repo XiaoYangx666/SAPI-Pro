@@ -1,4 +1,10 @@
-import { ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
+import {
+    ItemUseAfterEvent,
+    Player,
+    ScriptEventCommandMessageAfterEvent,
+    system,
+    world,
+} from "@minecraft/server";
 import { LibErrorMes } from "./func";
 
 export enum chatOpe {
@@ -22,16 +28,20 @@ export class intervalBusClass {
         this.tickEvents = [];
         this.lasttime = Date.now();
         this.lastsec = Date.now();
-        system.runInterval(this.interval.bind(this));
+        world.afterEvents.worldLoad.subscribe(() => {
+            system.runInterval(this.interval.bind(this));
+        });
     }
+
     private interval() {
-        if (Date.now() - this.lasttime >= 60000) {
+        const now = Date.now();
+        if (now - this.lasttime >= 60000) {
             this.publishmin();
-            this.lasttime = Date.now();
+            this.lasttime = now;
         }
-        if (Date.now() - this.lastsec >= 1000) {
+        if (now - this.lastsec >= 1000) {
             this.publishsec(this.lastsec);
-            this.lastsec = Date.now();
+            this.lastsec = now;
         }
         this.publishtick();
     }
@@ -49,7 +59,7 @@ export class intervalBusClass {
             try {
                 callback(lastsec);
             } catch (e) {
-                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }
@@ -58,7 +68,7 @@ export class intervalBusClass {
             try {
                 callback();
             } catch (e) {
-                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }

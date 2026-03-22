@@ -10,7 +10,7 @@
 
 ### args?
 
-> `optional` **args**: [`contextArgs`](contextArgs.md)
+> `optional` **args?**: [`contextArgs`](contextArgs.md)
 
 ***
 

@@ -44,9 +44,9 @@
     sapi-kit init
     ```
 
-3. 安装 SAPI-Pro
+3. 安装 SAPI-Pro(稳定版)
     ```bash
-    npm i sapi-pro
+    npm i sapi-pro@stable
     ```
 4. 在 src/main.ts 中初始化库
 
@@ -108,39 +108,13 @@ initSAPIPro(packInfo);
 
 ### 命令系统
 
+> 此功能在稳定版已被大砍
+
 命令系统支持内建命令和游戏原生命令两种方式，可以注册"."开头的模拟命令和游戏内/开头的命令。
 
 可以使用 Command 构造函数来创建命令，或使用`Command.fromObject`。在命令较为复杂时，推荐后者。
 
 以下是两个简单的命令注册示例。你还可以创建更为复杂的命令,请阅读[命令注册](_media/command.md)。
-
-#### 命令示例
-
-```typescript
-import { Player, system } from "@minecraft/server";
-import { Command, pcommand } from "sapi-pro";
-
-const ExampleCmd = new Command("test", "命令测试", false, (player, param) => {
-    player.sendMessage("SAPI-Pro，启动！");
-});
-const killCmd = Command.fromObject({
-    name: "kill", //命令名
-    explain: "紫砂", //命令解释
-    handler(player, param) {
-        //命令处理函数
-        system.run(() => {
-            player.kill(); //只读模式，需要使用system.run
-        });
-    },
-});
-//注册游戏命令
-pcommand.registerNative(ExampleCmd);
-pcommand.registerNative(killCmd);
-```
-
-#### 性能
-
-实测 10000 条命令解析耗时 1100ms，平均 9 条/ms。1tick 可解析 300+命令，完全够用。
 
 ---
 
@@ -241,4 +215,4 @@ Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](https://gitee.com/ykxyx666_adm
 >
 > -   VSCode
 > -   TypeScript 5.7+
-> -   Node.js 20+
+> -   Node.js 22+

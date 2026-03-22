@@ -6,92 +6,116 @@
 
 # Class: CommonForm
 
-## Constructors
-
-### Constructor
-
-> **new CommonForm**(): `CommonForm`
-
-#### Returns
-
-`CommonForm`
-
 ## Methods
 
 ### BodyInfoForm()
 
-> `static` **BodyInfoForm**(`title`, `body`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+> `static` **BodyInfoForm**\<`U`\>(`title`, `body`, `onSubmit?`): [`BodyInfoForm`](BodyInfoForm.md)\<`U`\>
 
 注册一个简单的信息窗口
+
+#### Type Parameters
+
+##### U
+
+`U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
 
 #### Parameters
 
 ##### title
 
-`string`
+[`TextType`](../type-aliases/TextType.md)
 
 标题
 
 ##### body
 
+[`TextType`](../type-aliases/TextType.md) \| [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
+
 内容，可以是生成器
 
-`string` | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`\>
+##### onSubmit?
+
+(`ctx`) => `void`
+
+提交后执行
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+[`BodyInfoForm`](BodyInfoForm.md)\<`U`\>
 
 ***
 
 ### ButtonForm()
 
-> `static` **ButtonForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+> `static` **ButtonForm**\<`U`\>(`data`): [`ButtonForm`](ButtonForm.md)\<`U`\>
 
 常用的按钮表单
 
+#### Type Parameters
+
+##### U
+
+`U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
+
 #### Parameters
 
 ##### data
 
-[`ButtonFormData`](../interfaces/ButtonFormData.md)
+[`ButtonFormData`](../interfaces/ButtonFormData.md)\<`U`\>
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+[`ButtonForm`](ButtonForm.md)\<`U`\>
 
 ***
 
-### ButtonListForm()
+### InputForm()
 
-> `static` **ButtonListForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+> `static` **InputForm**\<`TResult`, `U`\>(`data`): [`InputForm`](InputForm.md)\<`U`, `TResult`\>
 
-按钮列表表单
+输入表单
+
+#### Type Parameters
+
+##### TResult
+
+`TResult` *extends* `unknown`
+
+##### U
+
+`U` *extends* [`InputFormArgs`](../interfaces/InputFormArgs.md) = `any`
 
 #### Parameters
 
 ##### data
 
-[`ButtonListFormData`](../interfaces/ButtonListFormData.md)
+[`InputFormData`](../interfaces/InputFormData.md)\<`U`, `TResult`\>
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`\>
+[`InputForm`](InputForm.md)\<`U`, `TResult`\>
 
 ***
 
 ### SimpleMessageForm()
 
-> `static` **SimpleMessageForm**(`data`): [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`\>
+> `static` **SimpleMessageForm**\<`U`\>(`data`): [`SimpleMessageForm`](SimpleMessageForm.md)\<`U`\>
 
 一个简单的提示窗口，仅含有两个按钮，
+
+#### Type Parameters
+
+##### U
+
+`U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
 
 #### Parameters
 
 ##### data
 
-[`SimpleMessageFormData`](../interfaces/SimpleMessageFormData.md)
+[`SimpleMessageFormData`](../interfaces/SimpleMessageFormData.md)\<`U`\>
 
 #### Returns
 
-[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`MessageFormData`\>
+[`SimpleMessageForm`](SimpleMessageForm.md)\<`U`\>

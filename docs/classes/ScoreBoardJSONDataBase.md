@@ -44,7 +44,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,13 +88,19 @@
 
 ### edit()
 
-> **edit**(`callback`): `void`
+> **edit**\<`T`\>(`callback`): `void`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `Record`\<`string`, `any`\> = `any`
 
 #### Parameters
 
 ##### callback
 
-(`data`) => `undefined` \| `boolean` \| `void`
+(`data`) => `boolean` \| `void` \| `undefined`
 
 #### Returns
 
@@ -104,7 +110,13 @@
 
 ### get()
 
-> **get**(`key`): `any`
+> **get**\<`T`\>(`key`, `guard?`): `T` \| `undefined`
+
+#### Type Parameters
+
+##### T
+
+`T` = `unknown`
 
 #### Parameters
 
@@ -112,9 +124,13 @@
 
 `string`
 
+##### guard?
+
+[`ValueGuard`](../type-aliases/ValueGuard.md)\<`T`\>
+
 #### Returns
 
-`any`
+`T` \| `undefined`
 
 #### Overrides
 
@@ -182,7 +198,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -192,7 +208,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 
