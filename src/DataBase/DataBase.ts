@@ -56,13 +56,34 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private getKey(key: string, mark: string = "", index?: number) {
         return `${this.keyPrefix}.${key}_${mark}${index ?? ""}`;
     }
+    /**
+     * 设置值（同步）
+     * - 小数据直接写入
+     * - 大字符串同步分片写入（可能造成卡顿）
+     */
     set(key: string, value: DPValueTypes) {
         if (typeof value == "string" && checkBytes(value)) {
-            this.setLargeString(key, value);
+            const splitStrings = splitString(value, true);
+            this.setList(key, splitStrings);
         } else {
             world.setDynamicProperty(this.getKey(key), value);
         }
     }
+
+    /**
+     * 设置值（异步）
+     * - 小数据直接写入
+     * - 大字符串异步分片写入（避免卡顿）
+     */
+    async setAsync(key: string, value: DPValueTypes) {
+        if (typeof value === "string" && checkBytes(value)) {
+            const splitStrings = await splitString(value);
+            this.setList(key, splitStrings);
+        } else {
+            world.setDynamicProperty(this.getKey(key), value);
+        }
+    }
+
     get<T extends DPValueTypes = DPValueTypes>(key: string): T | undefined {
         let value: DPValueTypes | undefined;
         if (this.getListLen(key) != undefined) {
@@ -101,9 +122,9 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         return entires;
     }
     /**以json形式存储一个对象 */
-    setJSON(key: string, value: object) {
+    async setJSON(key: string, value: object) {
         const data = JSON.stringify(value);
-        this.set(key, data);
+        await this.setAsync(key, data);
     }
     /**
      * 获取JSON形式存储的对象，可选使用类型守卫进行校验
@@ -131,16 +152,6 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         for (let key of keys) {
             world.setDynamicProperty(key);
         }
-    }
-    /**设置大文本 */
-    private async setLargeString(key: string, value: string) {
-        return new Promise((resolve) => {
-            system.run(async () => {
-                const splitStrings = await splitString(value);
-                this.setList(key, splitStrings);
-                resolve(true);
-            });
-        });
     }
     private getLargeString(key: string) {
         return this.getList(key)?.join("");
@@ -257,14 +268,14 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
             const sb = this.resetScoreBoard();
             const splitStrings = splitString(JSON.stringify(data), sync);
             for (let i = 0; i < splitStrings.length; i++) {
-                sb.setScore(i + splitStrings[i], i);
+                sb.setScore(splitStrings[i], i);
             }
         } else {
             return new Promise(async (resolve) => {
                 const sb = this.resetScoreBoard();
                 const splitStrings = await splitString(JSON.stringify(data), sync);
                 for (let i = 0; i < splitStrings.length; i++) {
-                    sb.setScore(i + splitStrings[i], i);
+                    sb.setScore(splitStrings[i], i);
                 }
                 resolve(1);
             });
@@ -276,7 +287,7 @@ export class ScoreBoardJSONDataBase extends DataBase<object> {
         let list = sb
             .getScores()
             .sort((a, b) => a.score - b.score)
-            .map((t) => t.participant.displayName.slice(1));
+            .map((t) => t.participant.displayName);
         try {
             this.data = JSON.parse(list.join("")) as Record<string, object>;
             return this.data;
