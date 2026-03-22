@@ -87,8 +87,11 @@ export class intervalBusClass {
         this.tickEvents = [];
         this.lasttime = Date.now();
         this.lastsec = Date.now();
-        system.runInterval(this.interval.bind(this));
+        world.afterEvents.worldLoad.subscribe(() => {
+            system.runInterval(this.interval.bind(this));
+        });
     }
+
     private interval() {
         const now = Date.now();
         if (now - this.lasttime >= 60000) {

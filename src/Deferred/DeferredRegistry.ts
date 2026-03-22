@@ -1,16 +1,8 @@
-import { world } from "@minecraft/server";
-
 type Binder = () => void | Promise<void>;
 
 class DeferredRegistry {
     private binders: Binder[] = [];
     private bound = false;
-
-    constructor() {
-        world.afterEvents.worldLoad.subscribe((t) => {
-            this.bindAll();
-        });
-    }
 
     register(binder: Binder) {
         this.binders.push(binder);
