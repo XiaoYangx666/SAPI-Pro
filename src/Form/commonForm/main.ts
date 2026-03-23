@@ -9,6 +9,7 @@ import {
     TextType,
     formGenerator,
 } from "./commonFormInterface";
+import { AnyConfig, ConfigForm, ConfigFormOptions } from "./ConfigForm";
 import { InputForm, InputFormArgs, InputFormData } from "./InputForm";
 import { SimpleMessageForm } from "./MessageForm";
 
@@ -16,8 +17,9 @@ export * from "./BodyInfoForm";
 export * from "./ButtonForm";
 export * from "./commonFormInterface";
 export * from "./InputForm";
-export * from "./inputFormFields";
+export * from "./InputFormFields";
 export * from "./MessageForm";
+export * from "./ConfigForm";
 export * as Validators from "./validators";
 
 export class CommonForm {
@@ -52,5 +54,15 @@ export class CommonForm {
         data: InputFormData<U, TResult>
     ) {
         return new InputForm<U, TResult>(data);
+    }
+
+    /**配置表单 */
+    static ConfigForm<U extends InputFormArgs>() {
+        return {
+            create: <T extends Record<string, AnyConfig<U>>>(
+                schema: T,
+                options: ConfigFormOptions<T, U>
+            ) => new ConfigForm<T, U>(schema, options),
+        };
     }
 }

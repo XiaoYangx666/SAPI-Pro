@@ -3,6 +3,7 @@ import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { translator, UniversalTranslator } from "../../Translate";
 import { SAPIProForm, SAPIProFormContext } from "../form";
 import { ButtonFormArgs, ButtonFormData, FuncButton } from "./commonFormInterface";
+import { isAdmin } from "../../func";
 
 /**通用按钮表单 */
 export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionFormData, U> {
@@ -26,7 +27,11 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
 
         const buttons = this.collectButtons(player, args, t);
 
-        this.renderButtons(form, buttons, player, args, t);
+        for (const button of buttons) {
+            const iconPath = button.icon ? `textures/${button.icon}` : undefined;
+
+            form.button(t(button.label), iconPath);
+        }
 
         // 注入给 handler 使用
         args.buttons = buttons;
@@ -78,7 +83,13 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
 
         // 静态按钮
         if (this.data.buttons) {
-            result.push(...this.data.buttons);
+            for (const button of this.data.buttons) {
+                //检查权限
+                if (button.isAdmin && !isAdmin(player)) continue;
+                //检查自定义显隐函数
+                if (!(button.shouldShow?.(player, args) ?? true)) continue;
+                result.push(button);
+            }
         }
 
         // 动态按钮
@@ -89,24 +100,5 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
         }
 
         return result;
-    }
-
-    private renderButtons(
-        form: ActionFormData,
-        buttons: FuncButton<U>[],
-        player: Player,
-        args: U,
-        t: UniversalTranslator
-    ) {
-        for (const button of buttons) {
-            //检查权限
-            if (button.permission && button.permission !== player.playerPermissionLevel) continue;
-            //检查自定义隐藏函数
-            if (!(button.shouldShow?.(player, args) ?? true)) continue;
-
-            const iconPath = button.icon ? `textures/${button.icon}` : undefined;
-
-            form.button(t(button.label), iconPath);
-        }
     }
 }

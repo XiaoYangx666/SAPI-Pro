@@ -1,5 +1,5 @@
 import { LangText } from "../../Translate";
-import { FieldValidator } from "./inputFormFields";
+import { FieldValidator } from "./InputFormFields";
 
 /** 验证是否为整数 */
 export function isInt(

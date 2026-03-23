@@ -25,8 +25,8 @@ export interface FuncButton<U extends contextArgs, TData = unknown> {
     icon?: string;
     /**按钮文本(支持翻译) */
     label: TextType;
-    /**玩家权限，具有对应权限才会显示按钮 */
-    permission?: PlayerPermissionLevel;
+    /**是否要求管理员权限 */
+    isAdmin?: boolean;
     /**按钮是否应该显示(默认显示) */
     shouldShow?: (player: Player, args: U) => boolean;
     /**按钮点击事件 */

@@ -1,11 +1,11 @@
-import { Player, RawMessage } from "@minecraft/server";
+import { Player } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { LangText, translator } from "../../Translate";
 import { SAPIProForm, SAPIProFormContext } from "../form";
 import { contextArgs, formHandler } from "../interface";
 import { FormText } from "../lang";
-import { CommonFormData } from "./commonFormInterface";
-import { BaseField, ValueField } from "./inputFormFields";
+import { CommonFormData, TextType } from "./commonFormInterface";
+import { BaseField, FieldParseError, ValueField } from "./InputFormFields";
 
 export interface InputFormArgs extends contextArgs {
     fields?: ValueField<any>[];
@@ -21,7 +21,7 @@ export interface InputFormData<U extends InputFormArgs, TResult = any> extends C
     U
 > {
     /** 提交按钮文本 */
-    submitButton?: RawMessage | string;
+    submitButton?: TextType;
 
     /** 表单字段列表（输入框、开关、下拉、UI组件等） */
     fields?: BaseField[];
@@ -86,7 +86,6 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
             field.build(form, t);
         }
 
-        // 将值字段筛选出来存入 args，以便 handler 处理时能一一对应
         args.fields = fields.filter((f) => f.isValueField) as ValueField<any>[];
 
         return form;
@@ -102,45 +101,60 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
         const values = res.formValues;
         const t = translator.createPureFor(ctx.player);
 
-        if (values.length != fields.length) {
+        // 基础长度校验
+        if (values.length !== fields.length) {
             ctx.player.sendMessage("§c" + t(FormText.Filed_Len_MisMatch));
             return ctx.reopen();
         }
 
-        let ans: string | LangText | undefined;
-        let field: ValueField<any> | undefined;
-
         const result: Record<string, any> = {};
+        let errorMsg: string | LangText | undefined;
+        let errorField: ValueField<any> | undefined;
+        let errorIndex = 0;
 
         // 1. 字段级解析与基础验证
         for (let i = 0; i < fields.length; i++) {
-            field = fields[i];
+            const field = fields[i];
+            const rawValue = values[i];
 
             try {
-                const parsed = field.parse(values[i]);
+                // 第一步：解析（类型检查）
+                const parsed = field.parse(rawValue);
 
-                ans = field.validate(parsed);
-                if (ans !== undefined) break;
+                // 第二步：验证（空值及自定义规则）
+                const validateErr = field.validate(parsed);
+                if (validateErr) {
+                    errorMsg = validateErr;
+                    errorField = field;
+                    errorIndex = i;
+                    break;
+                }
 
-                // 写入 result
+                // 验证通过，写入结果（仅当设置了 key 时）
                 const key = field.getKey();
                 if (key !== undefined) {
                     result[key] = parsed;
                 }
             } catch (err) {
-                ans = err instanceof Error ? err.message : FormText.UnknownError;
+                // 捕获 parse 抛出的具体错误
+                errorField = field;
+                errorIndex = i;
+                errorMsg = err instanceof FieldParseError ? err.translation : FormText.UnknownError;
                 break;
             }
         }
 
-        // 字段级错误
-        if (ans !== undefined) {
+        // 处理字段验证失败
+        if (errorMsg !== undefined) {
             if (this.data.onValidateFailed) {
-                await this.data.onValidateFailed(ctx, field!, ans);
+                await this.data.onValidateFailed(ctx, errorField!, errorMsg);
             } else {
                 if (this.data.validationMessage ?? true) {
-                    const mes = typeof ans == "string" ? ans : t(ans);
-                    ctx.player.sendMessage("§c" + mes);
+                    const detail = typeof errorMsg === "string" ? errorMsg : t(errorMsg);
+                    // 精准提示：字段 X 验证失败: 具体原因
+                    ctx.player.sendMessage(
+                        `§c${t(FormText.Field_valiErr, { index: errorIndex + 1 })}: ${detail}`
+                    );
                 }
                 return ctx.reopen();
             }
@@ -149,10 +163,9 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
 
         const typedResult = result as TResult;
 
-        // 2. 表单级验证
+        // 2. 表单整体逻辑验证
         if (this.data.validateForm) {
             const formErr = this.data.validateForm(typedResult);
-
             if (formErr !== undefined) {
                 if (this.data.onFormValidateFailed) {
                     await this.data.onFormValidateFailed(ctx, formErr, typedResult);
@@ -167,7 +180,7 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
             }
         }
 
-        // 3. 提交
+        // 3. 验证全部通过，提交
         await this.data.onSubmit(typedResult, ctx);
     }
 }

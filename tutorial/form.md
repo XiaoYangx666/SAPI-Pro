@@ -453,6 +453,102 @@ const configPage = CommonForm.InputForm<AIChatConfig, { models: string[]; prompt
 });
 ```
 
+### CommonForm.ConfigForm
+
+`ConfigForm` 是 `InputForm` 的高级声明式封装。它通过一个配置对象（Schema）自动生成表单字段、处理动态默认值、执行字段级逻辑（Setter）并提供完美的类型推导，非常适合用于制作插件配置、玩家设置等界面。
+
+#### 字段类型 (FieldType)
+
+- `FieldType.String` - 对应 `TextField`。支持 `optional`。
+- `FieldType.Number` - 对应 `NumberField`。支持 `optional`。
+- `FieldType.Boolean` - 对应 `ToggleField`。**始终必选**。
+- `FieldType.Slider` - 对应 `SliderField`。**始终必选**。
+- `FieldType.Dropdown` - 对应 `DropDownField`。**始终必选**。
+
+#### 示例
+
+```typescript
+interface MyArgs extends InputFormArgs {
+    isVip: boolean;
+}
+
+// 1. 使用 CommonForm.config<U>() 开启链式调用并注入 Args 类型
+const settingsForm = CommonForm.ConfigForm<MyArgs>().create(
+    {
+        // 字符串字段
+        nickname: {
+            type: FieldType.String,
+            label: (p) => `修改昵称 (当前: ${p.name})`,
+            placeholder: "输入新昵称...",
+            defaultValue: (p) => p.nameTag,
+            optional: true, // result.nickname 将推导为 string | undefined
+            setter: (val, p) => (p.nameTag = val), // 提交时自动修改玩家名
+        },
+        // 数字字段
+        age: {
+            type: FieldType.Number,
+            label: "玩家年龄",
+            defaultValue: 18,
+            validators: [(v) => (v < 0 ? "年龄不能为负数" : undefined)],
+        },
+        // 下拉框字段
+        skinType: {
+            type: FieldType.Dropdown,
+            label: "皮肤选择",
+            items: ["经典", "苗条", "自定义"],
+            defaultValue: 0,
+        },
+        // 滑块字段
+        particleScale: {
+            type: FieldType.Slider,
+            label: "粒子大小",
+            min: 1,
+            max: 10,
+            defaultValue: (p, args) => (args.isVip ? 5 : 1), // 根据 Args 动态决定默认值
+        },
+        // 开关字段
+        autoSave: {
+            type: FieldType.Boolean,
+            label: "自动保存配置",
+            defaultValue: true,
+        },
+    },
+    {
+        title: "玩家个人设置",
+        // 初始值对象：优先级高于字段定义的 defaultValue，适合从数据库加载
+        initialValues: (player, args) => {
+            return {
+                autoSave: true,
+                skinType: 1,
+            };
+        },
+        onSubmit(result, player, args) {
+            // result 的类型已由 Simplify 自动展开为：
+            // { nickname?: string, age: number, skinType: number, particleScale: number, autoSave: boolean }
+            player.sendMessage(`§a设置已保存！新年龄: ${result.age}`);
+
+            // 注意：各个字段定义的 setter 也会在此之前被自动调用
+        },
+        onCancel(player) {
+            player.sendMessage("您取消了配置修改");
+        },
+    }
+);
+
+// 2. 调用方法
+// settingsForm.show(player, { isVip: true });
+```
+
+#### 配置参数说明 (ConfigFormOptions)
+
+| 参数名          | 类型                             | 说明                                               |
+| :-------------- | :------------------------------- | :------------------------------------------------- |
+| `title`         | `Dynamic<TextType, U>`           | 表单标题，支持函数。                               |
+| `submitButton`  | `Dynamic<TextType, U>`           | 提交按钮文本（可选）。                             |
+| `initialValues` | `Dynamic<Partial<Result>, U>`    | 覆盖所有字段默认值的初始对象，常用于加载已有配置。 |
+| `onSubmit`      | `(result, player, args) => void` | 全局提交回调，参数 `result` 具有精确的类型推导。   |
+| `onCancel`      | `(player, args) => void`         | 玩家关闭表单时的回调。                             |
+
 ---
 
 ### 使用上下文处理多层表单
