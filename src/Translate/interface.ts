@@ -42,15 +42,15 @@ export interface LangTree {
 export type Translator = (
     text: string,
     translation?: LangText,
-    params?: Record<string, string | number>
+    params?: Record<string, string | number | LangText>
 ) => string;
 
 export type PureTranslator = (
     translation?: LangText,
-    params?: Record<string, string | number>
+    params?: Record<string, string | number | LangText>
 ) => string;
 
 export type UniversalTranslator = <T extends RawMessage | string | LangText | undefined>(
     input: T,
-    params?: Record<string, string | number>
+    params?: Record<string, string | number | LangText>
 ) => T extends undefined ? undefined : string | RawMessage;

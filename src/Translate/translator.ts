@@ -118,7 +118,7 @@ class TranslationManager {
         const langId = this.getPlayerLangId(player);
         const langKey = langId != undefined ? this.getLangKeyById(langId) : this._fallBackLang;
 
-        return (translation?: LangText, params?: Record<string, string | number>) => {
+        return (translation?: LangText, params?: Record<string, string | number | LangText>) => {
             // 无语言 / 无翻译对象
             if (!langKey || !translation) {
                 return "";
@@ -144,7 +144,11 @@ class TranslationManager {
 
         // 提前定义替换函数，避免重复代码
 
-        return (text: string, translation?: LangText, params?: Record<string, string | number>) => {
+        return (
+            text: string,
+            translation?: LangText,
+            params?: Record<string, string | number | LangText>
+        ) => {
             // 没语言 or 没翻译对象 → 用 text 作为模板
             if (!langKey || !translation) {
                 return params ? this.applyParams(text, params) : text;
@@ -168,7 +172,7 @@ class TranslationManager {
         const langKey = langId != undefined ? this.getLangKeyById(langId) : this._fallBackLang;
         return (
             input: LangText | RawMessage | string | undefined,
-            params?: Record<string, string | number>
+            params?: Record<string, string | number | LangText>
         ) => {
             if (input === undefined) return undefined as any;
             //提前返回
@@ -186,12 +190,42 @@ class TranslationManager {
         };
     }
 
-    private applyParams(tpl: string, params?: Record<string, string | number>) {
+    /**指定语言进行翻译(否则使用默认语言翻译) */
+    translate(
+        translation: LangText,
+        params?: Record<string, string | number | LangText>,
+        langKey?: languages
+    ) {
+        const result = this.trans(translation, langKey);
+        // 正常翻译路径
+        return this.applyParams(result, params, langKey);
+    }
+
+    private trans(translation: LangText, langKey?: languages) {
+        const key = langKey ?? this._fallBackLang;
+        const trans = translation[key];
+        // 当前语言无翻译 → 用 text
+        if (!trans) {
+            return "";
+        }
+        return trans;
+    }
+
+    private applyParams(
+        tpl: string,
+        params?: Record<string, string | number | LangText>,
+        langKey?: languages
+    ) {
         if (!params) return tpl;
 
         return tpl.replace(/\{(\w+)\}/g, (match, key) => {
             if (params[key] !== undefined) {
-                return String(params[key]);
+                const replacement = params[key];
+                if (typeof replacement == "object") {
+                    return this.trans(replacement, langKey);
+                } else {
+                    return String(replacement);
+                }
             }
             return match;
         });
