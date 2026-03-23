@@ -455,5 +455,5 @@ function splitString(input: String, sync = false, batchSize = 10) {
     }
 }
 
-export const exchangedb = new ScoreBoardJSONDataBase("exchange"); //脚本通信计分板
+export const exchangedb = new ScoreBoardJSONDataBase("exchange_new"); //脚本通信计分板
 export const Configdb = new DPDataBase("Config");
