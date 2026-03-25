@@ -26,7 +26,7 @@ export enum FieldType {
     Dropdown = "dropdown",
 }
 
-export type FieldTypeMap = {
+type FieldTypeMap = {
     [FieldType.String]: string;
     [FieldType.Number]: number;
     [FieldType.Boolean]: boolean;
@@ -39,18 +39,23 @@ export type FieldTypeMap = {
  * - String 和 Number 支持 optional (undefined)
  * - Boolean, Slider, Dropdown 始终有值，忽略 optional 标记
  */
-export type InferResult<T, U> = Simplify<{
-    [K in keyof T]: T[K] extends AnyConfig<U>
-        ? T[K]["type"] extends FieldType.String | FieldType.Number
-            ? T[K] extends { optional: true }
-                ? FieldTypeMap[T[K]["type"]] | undefined
-                : FieldTypeMap[T[K]["type"]]
-            : FieldTypeMap[T[K]["type"]] // 其他类型始终必选
+type _InferField<T, U> =
+    T extends AnyConfig<U>
+        ? T["type"] extends FieldType.String | FieldType.Number
+            ? T extends { optional: true }
+                ? FieldTypeMap[T["type"]] | undefined
+                : FieldTypeMap[T["type"]]
+            : FieldTypeMap[T["type"]]
         : never;
-}>;
+
+type _InferResult<T, U> = {
+    [K in keyof T]: _InferField<T[K], U>;
+};
+
+export type InferResult<T, U> = Simplify<_InferResult<T, U>>;
 
 // --- 配置项定义 ---
-interface BaseConfig<T extends FieldType, U> {
+export interface BaseConfig<T extends FieldType, U> {
     type: T;
     label: Dynamic<TextType, U>;
     defaultValue?: Dynamic<FieldTypeMap[T], U>;
@@ -60,19 +65,19 @@ interface BaseConfig<T extends FieldType, U> {
     setter?: (value: FieldTypeMap[T], player: Player, args: U) => void | Promise<void>;
 }
 
-interface StringConfig<U> extends BaseConfig<FieldType.String, U> {
+export interface StringConfig<U> extends BaseConfig<FieldType.String, U> {
     placeholder?: Dynamic<TextType, U>;
 }
-interface NumberConfig<U> extends BaseConfig<FieldType.Number, U> {
+export interface NumberConfig<U> extends BaseConfig<FieldType.Number, U> {
     placeholder?: Dynamic<TextType, U>;
 }
-interface SliderConfig<U> extends BaseConfig<FieldType.Slider, U> {
+export interface SliderConfig<U> extends BaseConfig<FieldType.Slider, U> {
     min: Dynamic<number, U>;
     max: Dynamic<number, U>;
     step?: Dynamic<number, U>;
 }
-interface ToggleConfig<U> extends BaseConfig<FieldType.Boolean, U> {}
-interface DropdownConfig<U> extends BaseConfig<FieldType.Dropdown, U> {
+export interface ToggleConfig<U> extends BaseConfig<FieldType.Boolean, U> {}
+export interface DropdownConfig<U> extends BaseConfig<FieldType.Dropdown, U> {
     items: Dynamic<TextType[], U>;
 }
 
@@ -90,8 +95,12 @@ export interface ConfigFormOptions<
     title: Dynamic<TextType, U>;
     submitButton?: Dynamic<TextType | undefined, U>;
     initialValues?: Dynamic<Partial<InferResult<T, U>>, U>;
-    onSubmit?: (result: InferResult<T, U>, player: Player, args: U) => void | Promise<void>;
-    onCancel?: (player: Player, args: U) => void | Promise<void>;
+    onSubmit?: (
+        result: InferResult<T, U>,
+        player: Player,
+        ctx: SAPIProFormContext<ModalFormData, U>
+    ) => void | Promise<void>;
+    onCancel?: (player: Player, ctx: SAPIProFormContext<ModalFormData, U>) => void | Promise<void>;
 }
 
 function resolve<T, U>(val: Dynamic<T, U>, player: Player, args: U): T {
@@ -118,11 +127,11 @@ export class ConfigForm<
             fieldsGenerator: (p, a) => this.generateFields(p, a),
             onSubmit: async (result, ctx) => {
                 await this.runSetters(result, ctx.player, ctx.args);
-                await this.options.onSubmit?.(result, ctx.player, ctx.args);
+                await this.options.onSubmit?.(result, ctx.player, ctx);
             },
             // 如果 options 没有 onCancel，直传 undefined
             onCancel: this.options.onCancel
-                ? (_, ctx) => this.options.onCancel!(ctx.player, ctx.args)
+                ? (_, ctx) => this.options.onCancel!(ctx.player, ctx)
                 : undefined,
         });
     }
