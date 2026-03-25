@@ -20,12 +20,12 @@
         "typedoc-plugin-markdown": "^4.4.2"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.5.0",
+        "@minecraft/server": "^2.6.0",
         "@minecraft/server-ui": "^2.0.0"
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "2.5.0"
+            "@minecraft/server": "2.6.0"
         }
     },
     "scripts": {
