@@ -52,19 +52,19 @@
 
 ***
 
+### isAdmin?
+
+> `optional` **isAdmin?**: `boolean`
+
+是否要求管理员权限
+
+***
+
 ### label
 
 > **label**: [`TextType`](../type-aliases/TextType.md)
 
 按钮文本(支持翻译)
-
-***
-
-### permission?
-
-> `optional` **permission?**: `PlayerPermissionLevel`
-
-玩家权限，具有对应权限才会显示按钮
 
 ***
 

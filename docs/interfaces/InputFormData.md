@@ -38,7 +38,7 @@
 
 ### fieldsGenerator?
 
-> `optional` **fieldsGenerator?**: (`player`, `args`) => [`BaseField`](../classes/BaseField.md)[]
+> `optional` **fieldsGenerator?**: (`player`, `args`, `t`) => [`BaseField`](../classes/BaseField.md)[]
 
 动态生成字段（构建表单时追加到 fields 后）
 
@@ -51,6 +51,10 @@
 ##### args
 
 `U`
+
+##### t
+
+[`UniversalTranslator`](../type-aliases/UniversalTranslator.md)
 
 #### Returns
 
@@ -156,7 +160,7 @@
 
 ### submitButton?
 
-> `optional` **submitButton?**: `string` \| `RawMessage`
+> `optional` **submitButton?**: [`TextType`](../type-aliases/TextType.md)
 
 提交按钮文本
 

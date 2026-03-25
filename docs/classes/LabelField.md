@@ -6,7 +6,7 @@
 
 # Class: LabelField
 
-文本标签（非值字段）
+文本标签
 
 ## Extends
 
@@ -38,8 +38,6 @@
 
 > `readonly` **isValueField**: `boolean` = `false`
 
-是否是值字段
-
 #### Inherited from
 
 [`BaseField`](BaseField.md).[`isValueField`](BaseField.md#isvaluefield)
@@ -49,8 +47,6 @@
 ### build()
 
 > **build**(`form`, `t`): `void`
-
-UI 构建
 
 #### Parameters
 

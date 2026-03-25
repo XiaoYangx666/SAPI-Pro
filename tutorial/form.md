@@ -15,6 +15,7 @@
     - [BodyInfoForm](#commonformbodyinfoform)
     - [SimpleMessageForm](#commonformsimplemessageform)
     - [InputForm](#commonforminputform)
+    - [ConfigForm](#commonformconfigform)
 - [多层表单处理](#使用上下文处理多层表单)
 
 ### SAPI-Pro 表单
@@ -455,6 +456,8 @@ const configPage = CommonForm.InputForm<AIChatConfig, { models: string[]; prompt
 
 ### CommonForm.ConfigForm
 
+参考:[ConfigForm](../docs/interfaces/ConfigFormOptions.md)
+
 `ConfigForm` 是 `InputForm` 的高级声明式封装。它通过一个配置对象（Schema）自动生成表单字段、处理动态默认值、执行字段级逻辑（Setter）并提供完美的类型推导，非常适合用于制作插件配置、玩家设置等界面。
 
 #### 字段类型 (FieldType)
@@ -522,32 +525,29 @@ const settingsForm = CommonForm.ConfigForm<MyArgs>().create(
                 skinType: 1,
             };
         },
-        onSubmit(result, player, args) {
+        onSubmit(result, player, ctx) {
             // result 的类型已由 Simplify 自动展开为：
             // { nickname?: string, age: number, skinType: number, particleScale: number, autoSave: boolean }
             player.sendMessage(`§a设置已保存！新年龄: ${result.age}`);
 
             // 注意：各个字段定义的 setter 也会在此之前被自动调用
         },
-        onCancel(player) {
+        onCancel(player, ctx) {
             player.sendMessage("您取消了配置修改");
         },
     }
 );
-
-// 2. 调用方法
-// settingsForm.show(player, { isVip: true });
 ```
 
 #### 配置参数说明 (ConfigFormOptions)
 
-| 参数名          | 类型                             | 说明                                               |
-| :-------------- | :------------------------------- | :------------------------------------------------- |
-| `title`         | `Dynamic<TextType, U>`           | 表单标题，支持函数。                               |
-| `submitButton`  | `Dynamic<TextType, U>`           | 提交按钮文本（可选）。                             |
-| `initialValues` | `Dynamic<Partial<Result>, U>`    | 覆盖所有字段默认值的初始对象，常用于加载已有配置。 |
-| `onSubmit`      | `(result, player, args) => void` | 全局提交回调，参数 `result` 具有精确的类型推导。   |
-| `onCancel`      | `(player, args) => void`         | 玩家关闭表单时的回调。                             |
+| 参数名          | 类型                            | 说明                                               |
+| :-------------- | :------------------------------ | :------------------------------------------------- |
+| `title`         | `Dynamic<TextType, U>`          | 表单标题，支持函数。                               |
+| `submitButton`  | `Dynamic<TextType, U>`          | 提交按钮文本（可选）。                             |
+| `initialValues` | `Dynamic<Partial<Result>, U>`   | 覆盖所有字段默认值的初始对象，常用于加载已有配置。 |
+| `onSubmit`      | `(result, player, ctx) => void` | 全局提交回调，参数 `result` 具有精确的类型推导。   |
+| `onCancel`      | `(player, ctx) => void`         | 玩家关闭表单时的回调。                             |
 
 ---
 

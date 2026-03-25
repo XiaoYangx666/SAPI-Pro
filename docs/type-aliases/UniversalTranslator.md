@@ -22,7 +22,7 @@
 
 ### params?
 
-`Record`\<`string`, `string` \| `number`\>
+`Record`\<`string`, `string` \| `number` \| [`LangText`](LangText.md)\>
 
 ## Returns
 

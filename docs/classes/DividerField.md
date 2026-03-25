@@ -6,7 +6,7 @@
 
 # Class: DividerField
 
-分割线（非值字段）
+分割线
 
 ## Extends
 
@@ -32,8 +32,6 @@
 
 > `readonly` **isValueField**: `boolean` = `false`
 
-是否是值字段
-
 #### Inherited from
 
 [`BaseField`](BaseField.md).[`isValueField`](BaseField.md#isvaluefield)
@@ -43,8 +41,6 @@
 ### build()
 
 > **build**(`form`): `void`
-
-UI 构建
 
 #### Parameters
 
