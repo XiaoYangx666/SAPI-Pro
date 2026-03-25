@@ -28,15 +28,11 @@
 
 > `readonly` **isValueField**: `boolean` = `false`
 
-是否是值字段
-
 ## Methods
 
 ### build()
 
 > `abstract` **build**(`form`, `t`): `void`
-
-UI 构建
 
 #### Parameters
 

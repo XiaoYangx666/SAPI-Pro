@@ -6,7 +6,7 @@
 
 # Class: NumberField
 
-数字文本输入（通过文本框输入数字）
+数字文本输入
 
 ## Extends
 
@@ -70,8 +70,6 @@
 
 > `readonly` **isValueField**: `true` = `true`
 
-是否是值字段
-
 #### Inherited from
 
 [`ValueField`](ValueField.md).[`isValueField`](ValueField.md#isvaluefield)
@@ -104,33 +102,9 @@
 
 ## Methods
 
-### baseValidate()
-
-> `protected` **baseValidate**(`value`): \{ `de_DE`: `string`; `en_US`: `string`; `es_ES`: `string`; `fr_FR`: `string`; `ja_JP`: `string`; `ko_KR`: `string`; `zh_CN`: `string`; `zh_TW`: `string`; \} \| `undefined`
-
-基础类型校验（类型层面）
-
-#### Parameters
-
-##### value
-
-`number`
-
-#### Returns
-
-\{ `de_DE`: `string`; `en_US`: `string`; `es_ES`: `string`; `fr_FR`: `string`; `ja_JP`: `string`; `ko_KR`: `string`; `zh_CN`: `string`; `zh_TW`: `string`; \} \| `undefined`
-
-#### Overrides
-
-[`ValueField`](ValueField.md).[`baseValidate`](ValueField.md#basevalidate)
-
-***
-
 ### build()
 
 > **build**(`form`, `t`): `void`
-
-UI 构建
 
 #### Parameters
 
@@ -170,8 +144,6 @@ UI 构建
 
 > **key**(`key`): `this`
 
-设置字段键名，用于最终推导为对象属性
-
 #### Parameters
 
 ##### key
@@ -192,8 +164,6 @@ UI 构建
 
 > **optional**(): `NumberField` & `object`
 
-标记为可选字段
-
 #### Returns
 
 `NumberField` & `object`
@@ -206,9 +176,11 @@ UI 构建
 
 ### parse()
 
-> **parse**(`raw`): `number`
+> **parse**(`raw`): `number` \| `undefined`
 
-类型判断与转换，若类型不正确则抛出错误
+将 UI 原始值解析为目标类型。
+- 如果是基础类型错误（如期待数字却得到布尔），抛出对应类型的 ParseError。
+- 如果是数值格式错误（如 TextField 输入了非数字），抛出格式 ParseError。
 
 #### Parameters
 
@@ -218,7 +190,7 @@ UI 构建
 
 #### Returns
 
-`number`
+`number` \| `undefined`
 
 #### Overrides
 
@@ -230,13 +202,15 @@ UI 构建
 
 > **validate**(`value`): `string` \| [`LangText`](../type-aliases/LangText.md) \| `undefined`
 
-执行完整校验链
+执行校验链。
+- isEmpty 判定：undefined 或空字符串。
+- 如果必填且为空，返回 Field_Empty 错误。
 
 #### Parameters
 
 ##### value
 
-`number`
+`number` \| `undefined`
 
 #### Returns
 
@@ -251,8 +225,6 @@ UI 构建
 ### validator()
 
 > **validator**(...`v`): `NumberField`
-
-添加自定义验证器
 
 #### Parameters
 

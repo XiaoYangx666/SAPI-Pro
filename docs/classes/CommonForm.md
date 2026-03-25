@@ -70,6 +70,48 @@
 
 ***
 
+### ConfigForm()
+
+> `static` **ConfigForm**\<`U`\>(): `object`
+
+配置表单
+
+#### Type Parameters
+
+##### U
+
+`U` *extends* [`InputFormArgs`](../interfaces/InputFormArgs.md)
+
+#### Returns
+
+`object`
+
+##### create
+
+> **create**: \<`T`\>(`schema`, `options`) => [`ConfigForm`](ConfigForm.md)\<`T`, `U`\>
+
+###### Type Parameters
+
+###### T
+
+`T` *extends* `Record`\<`string`, [`AnyConfig`](../type-aliases/AnyConfig.md)\<`U`\>\>
+
+###### Parameters
+
+###### schema
+
+`T`
+
+###### options
+
+[`ConfigFormOptions`](../interfaces/ConfigFormOptions.md)\<`T`, `U`\>
+
+###### Returns
+
+[`ConfigForm`](ConfigForm.md)\<`T`, `U`\>
+
+***
+
 ### InputForm()
 
 > `static` **InputForm**\<`TResult`, `U`\>(`data`): [`InputForm`](InputForm.md)\<`U`, `TResult`\>

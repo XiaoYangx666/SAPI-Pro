@@ -44,7 +44,7 @@
 
 ##### callback
 
-(`lastsec`) => `void`
+(`lastsec`, `cursec`) => `void`
 
 #### Returns
 

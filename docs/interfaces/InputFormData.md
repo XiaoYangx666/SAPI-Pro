@@ -1,6 +1,6 @@
 [**sapi-pro**](../README.md)
 
-***
+---
 
 [sapi-pro](../globals.md) / InputFormData
 
@@ -16,7 +16,7 @@
 
 ### U
 
-`U` *extends* [`InputFormArgs`](InputFormArgs.md)
+`U` _extends_ [`InputFormArgs`](InputFormArgs.md)
 
 传递给表单的参数类型
 
@@ -34,11 +34,11 @@
 
 表单字段列表（输入框、开关、下拉、UI组件等）
 
-***
+---
 
 ### fieldsGenerator()?
 
-> `optional` **fieldsGenerator**: (`player`, `args`) => [`BaseField`](../classes/BaseField.md)[]
+> `optional` **fieldsGenerator?**: (`player`, `args`, `t`) => [`BaseField`](../classes/BaseField.md)[]
 
 动态生成字段（构建表单时追加到 fields 后）
 
@@ -52,11 +52,15 @@
 
 `U`
 
+##### t
+
+[`UniversalTranslator`](../type-aliases/UniversalTranslator.md)
+
 #### Returns
 
 [`BaseField`](../classes/BaseField.md)[]
 
-***
+---
 
 ### generator?
 
@@ -68,7 +72,7 @@
 
 [`CommonFormData`](CommonFormData.md).[`generator`](CommonFormData.md#generator)
 
-***
+---
 
 ### onCancel?
 
@@ -76,7 +80,7 @@
 
 玩家取消表单时回调
 
-***
+---
 
 ### onFormValidateFailed()?
 
@@ -103,7 +107,7 @@
 
 `void` \| `Promise`\<`void`\>
 
-***
+---
 
 ### onSubmit()
 
@@ -125,7 +129,7 @@
 
 `void` \| `Promise`\<`void`\>
 
-***
+---
 
 ### onValidateFailed()?
 
@@ -152,15 +156,15 @@
 
 `void` \| `Promise`\<`void`\>
 
-***
+---
 
 ### submitButton?
 
-> `optional` **submitButton**: `string` \| `RawMessage`
+> `optional` **submitButton?**: [`TextType`](../type-aliases/TextType.md)
 
 提交按钮文本
 
-***
+---
 
 ### title?
 
@@ -172,7 +176,7 @@
 
 [`CommonFormData`](CommonFormData.md).[`title`](CommonFormData.md#title)
 
-***
+---
 
 ### validateForm()?
 
@@ -191,7 +195,7 @@
 
 `string` \| [`LangText`](../type-aliases/LangText.md) \| `undefined`
 
-***
+---
 
 ### validationMessage?
 

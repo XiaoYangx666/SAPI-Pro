@@ -1,6 +1,6 @@
 [**sapi-pro**](../README.md)
 
-***
+---
 
 [sapi-pro](../globals.md) / FuncButton
 
@@ -10,7 +10,7 @@
 
 ### U
 
-`U` *extends* [`contextArgs`](contextArgs.md)
+`U` _extends_ [`contextArgs`](contextArgs.md)
 
 ### TData
 
@@ -24,7 +24,7 @@
 
 附带自定义属性
 
-***
+---
 
 ### func()?
 
@@ -42,7 +42,7 @@
 
 `void` \| `Promise`\<`void`\>
 
-***
+---
 
 ### icon?
 
@@ -50,7 +50,15 @@
 
 图标路径，从textures/后面开始输
 
-***
+---
+
+### isAdmin?
+
+> `optional` **isAdmin?**: `boolean`
+
+是否要求管理员权限
+
+---
 
 ### label
 
@@ -58,15 +66,7 @@
 
 按钮文本(支持翻译)
 
-***
-
-### permission?
-
-> `optional` **permission**: `PlayerPermissionLevel`
-
-玩家权限，具有对应权限才会显示按钮
-
-***
+---
 
 ### shouldShow()?
 
