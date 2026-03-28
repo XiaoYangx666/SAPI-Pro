@@ -88,11 +88,11 @@
 
 ##### key
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 
@@ -136,7 +136,7 @@
 
 ##### key
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
@@ -158,7 +158,7 @@
 
 ##### key
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
@@ -252,7 +252,7 @@
 
 ##### key
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
@@ -272,11 +272,11 @@
 
 ##### key
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 

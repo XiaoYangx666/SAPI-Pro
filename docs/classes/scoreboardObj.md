@@ -22,7 +22,7 @@
 
 ##### participant
 
-`string` | `Entity` | `ScoreboardIdentity`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 

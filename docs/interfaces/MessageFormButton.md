@@ -14,7 +14,7 @@
 
 ## Properties
 
-### func()
+### func
 
 > **func**: (`context`) => `void` \| `Promise`\<`void`\>
 

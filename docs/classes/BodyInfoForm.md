@@ -30,7 +30,7 @@
 
 ##### body
 
-[`TextType`](../type-aliases/TextType.md) | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
+[`TextType`](../type-aliases/TextType.md) \| [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
 
 ##### onSubmit?
 

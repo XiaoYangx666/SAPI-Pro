@@ -26,7 +26,7 @@
 
 ### greeting?
 
-> `optional` **greeting**: `string`
+> `optional` **greeting?**: `string`
 
 问候语
 
@@ -48,7 +48,7 @@
 
 ### uuid?
 
-> `optional` **uuid**: `string`
+> `optional` **uuid?**: `string`
 
 包唯一uuid
 

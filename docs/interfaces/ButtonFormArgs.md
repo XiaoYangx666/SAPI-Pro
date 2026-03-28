@@ -12,10 +12,10 @@
 
 ## Indexable
 
-\[`key`: `string`\]: `any`
+> \[`key`: `string`\]: `any`
 
 ## Properties
 
 ### buttons?
 
-> `optional` **buttons**: [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`, `unknown`\>[]
+> `optional` **buttons?**: [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`, `unknown`\>[]

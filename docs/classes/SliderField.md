@@ -68,7 +68,7 @@
 
 ### \_key?
 
-> `protected` `optional` **\_key**: `string`
+> `protected` `optional` **\_key?**: `string`
 
 #### Inherited from
 

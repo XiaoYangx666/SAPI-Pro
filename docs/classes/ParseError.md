@@ -52,10 +52,10 @@
 
 ### msg?
 
-> `optional` **msg**: `string`
+> `optional` **msg?**: `string`
 
 ***
 
 ### onlymsg?
 
-> `optional` **onlymsg**: `boolean`
+> `optional` **onlymsg?**: `boolean`

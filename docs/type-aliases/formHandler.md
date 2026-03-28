@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / formHandler
 
-# Type Alias: formHandler()\<T, TArgs\>
+# Type Alias: formHandler\<T, TArgs\>
 
 > **formHandler**\<`T`, `TArgs`\> = (`response`, `context`) => `void` \| `Promise`\<`void`\>
 

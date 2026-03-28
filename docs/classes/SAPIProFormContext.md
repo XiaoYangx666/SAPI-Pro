@@ -44,7 +44,7 @@
 
 ### \_form?
 
-> `optional` **\_form**: [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `U`\>
+> `optional` **\_form?**: [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `U`\>
 
 **`Internal`**
 
@@ -82,13 +82,13 @@
 
 ### back()
 
-> **back**(`delay`): `void`
+> **back**(`delay?`): `void`
 
 返回上一个表单
 
 #### Parameters
 
-##### delay
+##### delay?
 
 `number` = `0`
 
@@ -236,13 +236,13 @@
 
 ### reopen()
 
-> **reopen**(`delay`): `void`
+> **reopen**(`delay?`): `void`
 
 重新打开当前表单
 
 #### Parameters
 
-##### delay
+##### delay?
 
 `number` = `0`
 

@@ -6,7 +6,7 @@
 
 # Function: cmd()
 
-> **cmd**(`text`, `async`): `void`
+> **cmd**(`text`, `async?`): `void`
 
 执行命令 (维度:主世界)
 
@@ -16,7 +16,7 @@
 
 `string`
 
-### async
+### async?
 
 `boolean` = `false`
 

@@ -20,7 +20,7 @@
 
 ### body?
 
-> `optional` **body**: [`TextType`](../type-aliases/TextType.md)
+> `optional` **body?**: [`TextType`](../type-aliases/TextType.md)
 
 body
 
@@ -28,19 +28,19 @@ body
 
 ### button1?
 
-> `optional` **button1**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
+> `optional` **button1?**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
 ### button2?
 
-> `optional` **button2**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
+> `optional` **button2?**: [`MessageFormButton`](MessageFormButton.md)\<`U`\>
 
 ***
 
 ### generator?
 
-> `optional` **generator**: [`formGenerator`](formGenerator.md)\<`MessageFormData`, `U`\>
+> `optional` **generator?**: [`formGenerator`](formGenerator.md)\<`MessageFormData`, `U`\>
 
 自定义生成器
 
@@ -52,7 +52,7 @@ body
 
 ### title?
 
-> `optional` **title**: [`TextType`](../type-aliases/TextType.md)
+> `optional` **title?**: [`TextType`](../type-aliases/TextType.md)
 
 标题
 

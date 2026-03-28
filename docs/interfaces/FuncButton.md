@@ -1,6 +1,6 @@
 [**sapi-pro**](../README.md)
 
----
+***
 
 [sapi-pro](../globals.md) / FuncButton
 
@@ -10,7 +10,7 @@
 
 ### U
 
-`U` _extends_ [`contextArgs`](contextArgs.md)
+`U` *extends* [`contextArgs`](contextArgs.md)
 
 ### TData
 
@@ -20,15 +20,15 @@
 
 ### data?
 
-> `optional` **data**: `TData`
+> `optional` **data?**: `TData`
 
 附带自定义属性
 
----
+***
 
-### func()?
+### func?
 
-> `optional` **func**: (`context`) => `void` \| `Promise`\<`void`\>
+> `optional` **func?**: (`context`) => `void` \| `Promise`\<`void`\>
 
 按钮点击事件
 
@@ -42,15 +42,15 @@
 
 `void` \| `Promise`\<`void`\>
 
----
+***
 
 ### icon?
 
-> `optional` **icon**: `string`
+> `optional` **icon?**: `string`
 
 图标路径，从textures/后面开始输
 
----
+***
 
 ### isAdmin?
 
@@ -58,7 +58,7 @@
 
 是否要求管理员权限
 
----
+***
 
 ### label
 
@@ -66,11 +66,11 @@
 
 按钮文本(支持翻译)
 
----
+***
 
-### shouldShow()?
+### shouldShow?
 
-> `optional` **shouldShow**: (`player`, `args`) => `boolean`
+> `optional` **shouldShow?**: (`player`, `args`) => `boolean`
 
 按钮是否应该显示(默认显示)
 

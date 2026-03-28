@@ -34,7 +34,7 @@
 
 ### \_show()
 
-> **\_show**(`player`, `delay`): `void`
+> **\_show**(`player`, `delay?`): `void`
 
 **`Internal`**
 
@@ -47,7 +47,7 @@
 
 `Player`
 
-##### delay
+##### delay?
 
 `number` = `0`
 
@@ -59,7 +59,7 @@
 
 ### \_showNamed()
 
-> **\_showNamed**(`player`, `name`, `delay`): `void`
+> **\_showNamed**(`player`, `name`, `delay?`): `void`
 
 **`Internal`**
 
@@ -76,7 +76,7 @@
 
 `string`
 
-##### delay
+##### delay?
 
 `number` = `0`
 

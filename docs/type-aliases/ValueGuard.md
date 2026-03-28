@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / ValueGuard
 
-# Type Alias: ValueGuard()\<T\>
+# Type Alias: ValueGuard\<T\>
 
 > **ValueGuard**\<`T`\> = (`val`) => `val is T`
 

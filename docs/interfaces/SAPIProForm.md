@@ -20,7 +20,7 @@
 
 ### beforeBuild?
 
-> `optional` **beforeBuild**: [`formBeforeBuild`](../type-aliases/formBeforeBuild.md)\<`T`, `U`\>
+> `optional` **beforeBuild?**: [`formBeforeBuild`](../type-aliases/formBeforeBuild.md)\<`T`, `U`\>
 
 在展示前运行，可用来处理验证或跳转
 

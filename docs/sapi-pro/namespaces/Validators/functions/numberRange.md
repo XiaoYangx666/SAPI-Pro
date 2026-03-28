@@ -22,7 +22,7 @@
 
 ### errorMsg?
 
-`string` | [`LangText`](../../../../type-aliases/LangText.md)
+`string` \| [`LangText`](../../../../type-aliases/LangText.md)
 
 ## Returns
 

@@ -24,15 +24,15 @@
 
 ### body?
 
-> `optional` **body**: [`TextType`](../type-aliases/TextType.md)
+> `optional` **body?**: [`TextType`](../type-aliases/TextType.md)
 
 body
 
 ***
 
-### buttonGenerator()?
+### buttonGenerator?
 
-> `optional` **buttonGenerator**: (`player`, `args`, `t`) => `Iterable`\<[`FuncButton`](FuncButton.md)\<`U`, `TData`\>\>
+> `optional` **buttonGenerator?**: (`player`, `args`, `t`) => `Iterable`\<[`FuncButton`](FuncButton.md)\<`U`, `TData`\>\>
 
 按钮生成器
 
@@ -58,7 +58,7 @@ body
 
 ### buttons?
 
-> `optional` **buttons**: [`FuncButton`](FuncButton.md)\<`U`, `TData`\>[]
+> `optional` **buttons?**: [`FuncButton`](FuncButton.md)\<`U`, `TData`\>[]
 
 按钮列表
 
@@ -66,7 +66,7 @@ body
 
 ### generator?
 
-> `optional` **generator**: [`formGenerator`](formGenerator.md)\<`ActionFormData`, `U`\>
+> `optional` **generator?**: [`formGenerator`](formGenerator.md)\<`ActionFormData`, `U`\>
 
 自定义生成器
 
@@ -76,9 +76,9 @@ body
 
 ***
 
-### handler()?
+### handler?
 
-> `optional` **handler**: (`ctx`, `button`, `index`) => `void` \| `Promise`\<`void`\>
+> `optional` **handler?**: (`ctx`, `button`, `index`) => `void` \| `Promise`\<`void`\>
 
 列表处理(若点击的按钮已有func，则不会调用此函数处理)
 
@@ -114,7 +114,7 @@ body
 
 ### oncancel?
 
-> `optional` **oncancel**: [`formHandler`](../type-aliases/formHandler.md)\<`ActionFormData`, `U`\>
+> `optional` **oncancel?**: [`formHandler`](../type-aliases/formHandler.md)\<`ActionFormData`, `U`\>
 
 取消事件
 
@@ -122,7 +122,7 @@ body
 
 ### title?
 
-> `optional` **title**: [`TextType`](../type-aliases/TextType.md)
+> `optional` **title?**: [`TextType`](../type-aliases/TextType.md)
 
 标题
 
@@ -134,6 +134,6 @@ body
 
 ### validator?
 
-> `optional` **validator**: [`formBeforeBuild`](../type-aliases/formBeforeBuild.md)\<`ActionFormData`, `U`\>
+> `optional` **validator?**: [`formBeforeBuild`](../type-aliases/formBeforeBuild.md)\<`ActionFormData`, `U`\>
 
 表单验证器，验证失败则不打开表单

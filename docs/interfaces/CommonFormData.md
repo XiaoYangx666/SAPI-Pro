@@ -26,7 +26,7 @@
 
 ### generator?
 
-> `optional` **generator**: [`formGenerator`](formGenerator.md)\<`T`, `U`\>
+> `optional` **generator?**: [`formGenerator`](formGenerator.md)\<`T`, `U`\>
 
 自定义生成器
 
@@ -34,6 +34,6 @@
 
 ### title?
 
-> `optional` **title**: [`TextType`](../type-aliases/TextType.md)
+> `optional` **title?**: [`TextType`](../type-aliases/TextType.md)
 
 标题

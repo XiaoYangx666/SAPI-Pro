@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / formBeforeBuild
 
-# Type Alias: formBeforeBuild()\<T, U\>
+# Type Alias: formBeforeBuild\<T, U\>
 
 > **formBeforeBuild**\<`T`, `U`\> = (`context`) => `void` \| `Promise`\<`void`\>
 

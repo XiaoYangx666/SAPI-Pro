@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / FieldValidator
 
-# Type Alias: FieldValidator()\<T\>
+# Type Alias: FieldValidator\<T\>
 
 > **FieldValidator**\<`T`\> = (`value`) => [`LangText`](LangText.md) \| `string` \| `undefined`
 

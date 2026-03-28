@@ -12,7 +12,7 @@
 
 ### above()
 
-> `static` **above**(`v`, `step`): `Vector3`
+> `static` **above**(`v`, `step?`): `Vector3`
 
 返回上方指定距离(默认1)的Vector
 
@@ -22,7 +22,7 @@
 
 `Vector3`
 
-##### step
+##### step?
 
 `number` = `1`
 
@@ -56,7 +56,7 @@ v1+v2
 
 ### below()
 
-> `static` **below**(`v`, `step`): `Vector3`
+> `static` **below**(`v`, `step?`): `Vector3`
 
 返回下方指定距离(默认1)的Vector
 
@@ -66,7 +66,7 @@ v1+v2
 
 `Vector3`
 
-##### step
+##### step?
 
 `number` = `1`
 
@@ -204,7 +204,7 @@ v1+v2
 
 ### isApproxEqual()
 
-> `static` **isApproxEqual**(`v1`, `v2`, `eps`): `boolean`
+> `static` **isApproxEqual**(`v1`, `v2`, `eps?`): `boolean`
 
 v1与v2在误差eps范围内相等?
 
@@ -218,7 +218,7 @@ v1与v2在误差eps范围内相等?
 
 `Vector3`
 
-##### eps
+##### eps?
 
 `number` = `1e-6`
 
@@ -396,7 +396,7 @@ v1-v2
 
 ### toFixed()
 
-> `static` **toFixed**(`v`, `digits`): `Vector3`
+> `static` **toFixed**(`v`, `digits?`): `Vector3`
 
 #### Parameters
 
@@ -404,7 +404,7 @@ v1-v2
 
 `Vector3`
 
-##### digits
+##### digits?
 
 `number` = `2`
 

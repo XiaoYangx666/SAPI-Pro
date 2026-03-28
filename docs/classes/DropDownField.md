@@ -16,7 +16,7 @@
 
 ### Constructor
 
-> **new DropDownField**(`label`, `items`, `defaultValueIndex`, `tooltip?`): `DropDownField`
+> **new DropDownField**(`label`, `items`, `defaultValueIndex?`, `tooltip?`): `DropDownField`
 
 #### Parameters
 
@@ -28,7 +28,7 @@
 
 `TextType`[]
 
-##### defaultValueIndex
+##### defaultValueIndex?
 
 `number` = `0`
 
@@ -58,7 +58,7 @@
 
 ### \_key?
 
-> `protected` `optional` **\_key**: `string`
+> `protected` `optional` **\_key?**: `string`
 
 #### Inherited from
 

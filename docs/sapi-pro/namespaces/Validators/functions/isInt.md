@@ -6,15 +6,15 @@
 
 # Function: isInt()
 
-> **isInt**(`errorMsg`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string` \| `number` \| `undefined`\>
+> **isInt**(`errorMsg?`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string` \| `number` \| `undefined`\>
 
 验证是否为整数
 
 ## Parameters
 
-### errorMsg
+### errorMsg?
 
-`string` | [`LangText`](../../../../type-aliases/LangText.md)
+`string` \| [`LangText`](../../../../type-aliases/LangText.md)
 
 ## Returns
 

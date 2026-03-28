@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / FormBuilder
 
-# Type Alias: FormBuilder()\<T, U\>
+# Type Alias: FormBuilder\<T, U\>
 
 > **FormBuilder**\<`T`, `U`\> = (`player`, `args`) => `Promise`\<`T`\> \| `T`
 

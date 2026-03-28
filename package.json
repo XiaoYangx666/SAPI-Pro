@@ -15,22 +15,13 @@
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.6.0-beta.1.26.3-stable",
-        "@minecraft/server-ui": "^2.1.0-beta.1.26.3-stable",
+        "@minecraft/server": "^2.7.0-beta.1.26.10-stable",
+        "@minecraft/server-ui": "^2.1.0-beta.1.26.10-stable",
         "@minecraft/vanilla-data": ">=1.26.0"
     },
     "devDependencies": {
         "typedoc": "^0.28.7",
         "typedoc-plugin-markdown": "^4.4.2"
-    },
-    "peerDependencies": {
-        "@minecraft/server": "^2.6.0",
-        "@minecraft/server-ui": "^2.0.0"
-    },
-    "overrides": {
-        "@minecraft/server-ui": {
-            "@minecraft/server": "2.6.0"
-        }
     },
     "scripts": {
         "build:nodeclare": "python3 build.py --declaration false",

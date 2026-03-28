@@ -32,7 +32,7 @@
 
 ### help?
 
-> `optional` **help**: `CommandHelp`
+> `optional` **help?**: `CommandHelp`
 
 ***
 

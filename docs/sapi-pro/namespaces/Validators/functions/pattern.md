@@ -6,7 +6,7 @@
 
 # Function: pattern()
 
-> **pattern**(`reg`, `errorMsg`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string`\>
+> **pattern**(`reg`, `errorMsg?`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string`\>
 
 正则表达式验证 (例如验证邮箱、特定格式的ID等)
 
@@ -16,9 +16,9 @@
 
 `RegExp`
 
-### errorMsg
+### errorMsg?
 
-`string` | [`LangText`](../../../../type-aliases/LangText.md)
+`string` \| [`LangText`](../../../../type-aliases/LangText.md)
 
 ## Returns
 

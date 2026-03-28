@@ -46,7 +46,7 @@
 
 ### error()
 
-> **error**(`message`, `e?`, ...`optionalParams?`): `void`
+> **error**(`message`, `e?`, ...`optionalParams`): `void`
 
 打印错误信息
 
@@ -64,7 +64,7 @@
 
 错误
 
-##### optionalParams?
+##### optionalParams
 
 ...`any`[]
 

@@ -12,10 +12,10 @@
 
 ## Indexable
 
-\[`key`: `string`\]: `any`
+> \[`key`: `string`\]: `any`
 
 ## Properties
 
 ### fields?
 
-> `optional` **fields**: [`ValueField`](../classes/ValueField.md)\<`any`\>[]
+> `optional` **fields?**: [`ValueField`](../classes/ValueField.md)\<`any`\>[]

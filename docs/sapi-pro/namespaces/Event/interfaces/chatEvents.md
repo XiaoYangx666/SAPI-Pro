@@ -8,7 +8,7 @@
 
 ## Properties
 
-### callback()
+### callback
 
 > **callback**: (`t`) => `void` \| [`chatOpe`](../enumerations/chatOpe.md)
 

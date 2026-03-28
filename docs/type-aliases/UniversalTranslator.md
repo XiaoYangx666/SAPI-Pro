@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / UniversalTranslator
 
-# Type Alias: UniversalTranslator()
+# Type Alias: UniversalTranslator
 
 > **UniversalTranslator** = \<`T`\>(`input`, `params?`) => `T` *extends* `undefined` ? `undefined` : `string` \| `RawMessage`
 

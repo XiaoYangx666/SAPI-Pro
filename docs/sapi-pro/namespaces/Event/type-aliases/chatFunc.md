@@ -4,7 +4,7 @@
 
 [sapi-pro](../../../../globals.md) / [Event](../README.md) / chatFunc
 
-# Type Alias: chatFunc()
+# Type Alias: chatFunc
 
 > **chatFunc** = (`t`) => `void` \| [`chatOpe`](../enumerations/chatOpe.md)
 

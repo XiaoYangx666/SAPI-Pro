@@ -30,9 +30,9 @@
 
 ##### body
 
-内容，可以是生成器
+[`TextType`](../type-aliases/TextType.md) \| [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
 
-[`TextType`](../type-aliases/TextType.md) | [`formGenerator`](../interfaces/formGenerator.md)\<`ActionFormData`, `U`\>
+内容，可以是生成器
 
 ##### onSubmit?
 

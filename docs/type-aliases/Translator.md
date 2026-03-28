@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / Translator
 
-# Type Alias: Translator()
+# Type Alias: Translator
 
 > **Translator** = (`text`, `translation?`, `params?`) => `string`
 

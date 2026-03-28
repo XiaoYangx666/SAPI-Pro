@@ -6,15 +6,15 @@
 
 # Function: notEmpty()
 
-> **notEmpty**(`errorMsg`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string` \| `undefined`\>
+> **notEmpty**(`errorMsg?`): [`FieldValidator`](../../../../type-aliases/FieldValidator.md)\<`string` \| `undefined`\>
 
 验证字符串不能为空（不仅仅是空格）
 
 ## Parameters
 
-### errorMsg
+### errorMsg?
 
-`string` | [`LangText`](../../../../type-aliases/LangText.md)
+`string` \| [`LangText`](../../../../type-aliases/LangText.md)
 
 ## Returns
 

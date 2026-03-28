@@ -16,7 +16,7 @@
 
 ### Constructor
 
-> **new ToggleField**(`label`, `defaultValue`, `tooltip?`): `ToggleField`
+> **new ToggleField**(`label`, `defaultValue?`, `tooltip?`): `ToggleField`
 
 #### Parameters
 
@@ -24,7 +24,7 @@
 
 `TextType`
 
-##### defaultValue
+##### defaultValue?
 
 `boolean` = `false`
 
@@ -54,7 +54,7 @@
 
 ### \_key?
 
-> `protected` `optional` **\_key**: `string`
+> `protected` `optional` **\_key?**: `string`
 
 #### Inherited from
 

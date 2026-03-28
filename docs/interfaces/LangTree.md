@@ -8,4 +8,4 @@
 
 ## Indexable
 
-\[`key`: `string`\]: [`LangText`](../type-aliases/LangText.md) \| `LangTree`
+> \[`key`: `string`\]: [`LangText`](../type-aliases/LangText.md) \| `LangTree`
