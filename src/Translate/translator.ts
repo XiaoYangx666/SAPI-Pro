@@ -39,7 +39,7 @@ class TranslationManager {
         "en_US",
         "ja_JP",
         "fr_FR",
-        "de_DE",
+        "pt_BR",
         "ko_KR",
         "es_ES",
     ];
@@ -119,19 +119,10 @@ class TranslationManager {
         const langKey = langId != undefined ? this.getLangKeyById(langId) : this._fallBackLang;
 
         return (translation?: LangText, params?: Record<string, string | number | LangText>) => {
-            // 无语言 / 无翻译对象
-            if (!langKey || !translation) {
-                return "";
-            }
+            if (!translation) return "";
+            const result = this.trans(translation, langKey);
 
-            const trans = translation[langKey];
-
-            // 当前语言无翻译
-            if (!trans) {
-                return "";
-            }
-
-            return this.applyParams(trans, params);
+            return this.applyParams(result, params, langKey);
         };
     }
 
@@ -158,11 +149,11 @@ class TranslationManager {
 
             // 当前语言无翻译 → 用 text
             if (!trans) {
-                return this.applyParams(text, params);
+                return this.applyParams(text, params, langKey);
             }
 
             // 正常翻译路径
-            return this.applyParams(trans, params);
+            return this.applyParams(trans, params, langKey);
         };
     }
 
@@ -178,15 +169,9 @@ class TranslationManager {
             //提前返回
             if (typeof input == "string" || isRawMessage(input)) return input;
 
-            // 无语言 / 无翻译对象
-            if (!langKey || !input) return "";
+            const result = this.trans(input, langKey);
 
-            const trans = input[langKey];
-
-            // 当前语言无翻译
-            if (!trans) return "";
-
-            return this.applyParams(trans, params);
+            return this.applyParams(result, params, langKey);
         };
     }
 
@@ -204,9 +189,9 @@ class TranslationManager {
     private trans(translation: LangText, langKey?: languages) {
         const key = langKey ?? this._fallBackLang;
         const trans = translation[key];
-        // 当前语言无翻译 → 用 text
+        // 当前语言无翻译 → 用默认语言
         if (!trans) {
-            return "";
+            return translation[this._fallBackLang] ?? "";
         }
         return trans;
     }
