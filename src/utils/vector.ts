@@ -1,7 +1,8 @@
 import { Vector3 } from "@minecraft/server";
 
 /**向量工具类，提供向量相关的操作方法 */
-export class VectorUtils {
+export class Vector3Utils {
+    private constructor() {}
     /**距离 */
     static distance(v1: Vector3, v2: Vector3): number {
         return Math.sqrt(this.squaredDistance(v1, v2));
@@ -55,7 +56,11 @@ export class VectorUtils {
 
     /**v1与v2在误差eps范围内相等? */
     static isApproxEqual(v1: Vector3, v2: Vector3, eps: number = 1e-6): boolean {
-        return Math.abs(v1.x - v2.x) < eps && Math.abs(v1.y - v2.y) < eps && Math.abs(v1.z - v2.z) < eps;
+        return (
+            Math.abs(v1.x - v2.x) < eps &&
+            Math.abs(v1.y - v2.y) < eps &&
+            Math.abs(v1.z - v2.z) < eps
+        );
     }
 
     /**向量长度 */
@@ -97,5 +102,14 @@ export class VectorUtils {
     /**小数坐标转为整数坐标 */
     static intLoc(v: Vector3) {
         return { x: Math.floor(v.x), y: Math.floor(v.y), z: Math.floor(v.z) };
+    }
+
+    static toFixed(v: Vector3, digits: number = 2): Vector3 {
+        const factor = Math.pow(10, digits);
+        return {
+            x: Math.round(v.x * factor) / factor,
+            y: Math.round(v.y * factor) / factor,
+            z: Math.round(v.z * factor) / factor,
+        };
     }
 }

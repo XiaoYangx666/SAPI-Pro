@@ -2,46 +2,55 @@
 
 ---
 
-> 此文档纯手工编辑，未使用 AI
-
 ## 表单系统
 
 ### 目录
 
--   [SAPI-Pro 表单](#sapi-pro-表单)
-    -   [示例](#实际示例)
-    -   [注册具名表单](#注册具名表单)
--   [表单上下文](#表单上下文-sapiproformcontext)
--   [模板表单](#模板表单)
-    -   [ButtonForm](#commonformbuttonform-通用按钮表单)
-    -   [ButtonListForm](#commonformbuttonlistform-按钮列表表单)
-    -   [BodyInfoForm](#commonformbodyinfoform)
-    -   [SimpleMessageForm](#commonformsimplemessageform)
--   [多层表单处理](#使用上下文处理多层表单)
+- [SAPI-Pro 表单](#sapi-pro-表单)
+    - [示例](#实际示例)
+    - [注册具名表单](#注册具名表单)
+- [表单上下文](#表单上下文-sapiproformcontext)
+- [常用表单](#常用表单-commonform)
+    - [ButtonForm](#commonformbuttonform-通用按钮表单)
+    - [BodyInfoForm](#commonformbodyinfoform)
+    - [SimpleMessageForm](#commonformsimplemessageform)
+    - [InputForm](#commonforminputform)
+    - [ConfigForm](#commonformconfigform)
+- [多层表单处理](#使用上下文处理多层表单)
 
 ### SAPI-Pro 表单
 
-SAPI-Pro 表单使用类型[SAPIProForm](../docs/interfaces/SAPIProForm.md)构建，指定表单类型，即可构建表单。
+所有表单均基于 [SAPIProForm<T, U>](../docs/interfaces/SAPIProForm.md) 接口构建。
+
+- `T`: 表单类型（`ActionFormData | ModalFormData | MessageFormData`）。
+
+- `U`: 上下文参数类型（必须继承自 `contextArgs`）。
 
 ##### 示例
 
 ```typescript
-import { ActionFormData } from "@minecraft/server-ui";
-import { formManager } from "sapi-pro";
-import { ActionFormResponse } from "@minecraft/server-ui";
-const testForm1: SAPIProForm<ActionFormData> = {
+interface MyArgs extends contextArgs {
+    score: number;
+}
+
+const myForm: SAPIProForm<ActionFormData, MyArgs> = {
     builder: (player, args) => {
-        const form = new ActionFormData().title("测试").body("测试啊测试啊测试啊").button("已阅");
-        return form;
+        // args 类型为 MyArgs
+        return new ActionFormData()
+            .title("分数查询")
+            .body(`你的分数是: ${args.score}`)
+            .button("确定");
     },
-    handler: (res: ActionFormResponse, ctx) => {},
-    beforeBuild: (ctx) => {},
+    handler: async (res, ctx) => {
+        // ctx.args 同样为 MyArgs
+        console.log(ctx.args.score);
+    },
 };
 ```
 
 #### builder:[FormBuiler](../docs/type-aliases/FormBuilder.md)
 
-`FormBuilder:(player, args)=> Promise<T> | T`
+`FormBuilder: (player, args) => Promise<T> | T`
 
 builder 需要提供一个创建函数，每次都会使用它来创建表单。创建时会传入 player 和 args(上下文参数)返回值必须是 ActionFormData | ModalFormData | MessageFormData 的其中一个。
 
@@ -49,23 +58,28 @@ builder 需要提供一个创建函数，每次都会使用它来创建表单。
 
 #### handler:[formHandler](../docs/type-aliases/formHandler.md)
 
-`formHandler:(response: formResponseType<T>, context: SAPIProFormContext<T>) => void | Promise<void>`
+`formHandler: (response: formResponseType<T>, context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
 **参数**：第一个参数是表单返回值，它和你的表单类型有关，例如:ActionFormData 将会返回 ActionFormResponse ; 第二个参数是上下文，你可以通过它进行导航，获得玩家等，具体后面介绍。
 
 #### beforeBuild?[formBeforeBuild](../docs/type-aliases/formBeforeBuild.md)
 
-`formBeforeBuild:(context: SAPIProFormContext<T>) => void | Promise<void>`
+`formBeforeBuild: (context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
-它将在表单已经入栈，builder 被执行前执行。此时你可以拿到 context，可以在其中执行自定义验证逻辑，并执行跳转，如果跳转，则 builder 不会被执行。不进行导航操作则会正常构建表单。
+它将在表单已入栈、builder 被执行前执行。此时你可以拿到 context，可以在其中执行自定义验证逻辑，并执行跳转。如果跳转，则 builder 不会被执行。不进行导航操作则会正常构建表单。
 
-可以使用 formManager.open 来打开表单。
+可以使用 formManager.open 来打开表单
 
 ```typescript
-formManager.open<T extends formDataType>(player: Player, form: SAPIProForm<T>, args?: contextArgs, delay = 0)
+formManager.open<T extends formDataType, U extends contextArgs>(
+    player: Player,
+    form: SAPIProForm<T, U>,
+    args?: U,
+    delay = 0
+)
 /*
 player:玩家对象
-formId:表单对象
+form:表单对象
 args:表单上下文初始参数
 delay:打开延迟(单位tick)
 */
@@ -78,7 +92,9 @@ delay:打开延迟(单位tick)
 ```typescript
 const spCreate: SAPIProForm<ModalFormData> = {
     builder: async (player, context) => {
-        const form = new ModalFormData().title("创建假人").textField("假人名字", "输入假人名字，不能有特殊字符");
+        const form = new ModalFormData()
+            .title("创建假人")
+            .textField("假人名字", "输入假人名字，不能有特殊字符");
         return form;
     },
     handler: (res: ModalFormResponse, ctx) => {
@@ -102,26 +118,26 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 表单多数是无名的，可以直接通过对象打开，但如果需要在多行为包间打开表单，则需要为表单命名。
 
-使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed)来注具名表单：
+使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed) 来注册具名表单
 
-使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed)来打开具名表单
+使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed) 来打开具名表单
 
 ### 表单上下文 SAPIProFormContext
 
 参考:[SAPIProFormContext](../docs/classes/SAPIProFormContext.md)
 
-表单上下文包含表单构建和处理中所需要的传入参数，玩家对象，导航操作等。它由 SAPI-Pro 自动管理，进行出栈与入栈。
+`SAPIProFormContext<T, U>` 是表单处理的核心，提供了导航和数据访问能力。
 
 #### 参数
 
 `player:Player`
 获取当前的玩家
-`args:contextArgs`
-自己设定的表单上下文参数，一般是上个表单传递的
+`args:U`
+获取当前表单的上下文参数，一般是上个表单传递的（泛型 U 提供了完整类型推断）
 
 #### 方法(此处只介绍几种)
 
-`push(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`push(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 打开新表单，并加入堆栈
 
 `pushNamed(name: string, args?: contextArgs, delay = 0)`
@@ -133,202 +149,171 @@ const spCreate: SAPIProForm<ModalFormData> = {
 `reopen(delay = 0)`
 重新打开当前表单（刷新）
 
-`replace(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`replace(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 替换当前表单
 
-`offAll(form: SAPIProForm<T>, args?: contextArgs, delay = 0)`
+`offAll(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
 清空堆栈，打开表单
 
 ---
 
-### 模板表单
+### 常用表单 CommonForm
 
-模板表单是一种内置好的表单，因为这类表单有着相似的结构和处理，所以把它作为模板。接下来我们介绍三种模板表单。
+我们经常会用到一些相似结构的表单，常用表单可以轻松帮助你实现。它们返回实现了 `SAPIProForm` 的实例，并且全面支持泛型和多语言。
+
+#### CommonFormData
+
+以下所有的常用表单定义数据都继承了[CommonFormData](../docs/interfaces/CommonFormData.md)。`CommonForm`中的`generator`在表单构建后被调用，用于动态生成title与body。
+
+```typescript
+interface CommonFormData<T extends formDataType, U extends contextArgs = contextArgs> {
+    /**标题 */
+    title?: TextType;
+    /**自定义生成器 */
+    generator?: formGenerator<T, U>;
+}
+```
+
+> 提示: 不要用generator来生成按钮等，否则会和原有逻辑冲突
 
 ### CommonForm.ButtonForm 通用按钮表单
 
-语法是`CommonForm.ButtonForm(data:ButtonFormData)`，返回`SAPIProForm<ActionFormData>`。
+ButtonForm 是最常用的组件，支持静态按钮、动态生成列表以及下标索引处理。
+
+```ts
+ButtonForm<U>(data: ButtonFormData<U>): ButtonForm<U>;
+```
 
 参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
 
-title 和 body 就不讲了，就是标题和内容，你可以选填。
+#### 按钮处理逻辑
+
+`ButtonForm` 的按钮由两部分组成：
+
+- 静态按钮 (buttons): 在数组中定义的按钮。如果带有 func 属性，点击后会直接触发该回调，不进入全局 handler。
+
+- 动态按钮 (buttonGenerator): 每次构建表单时动态生成的按钮列表。
 
 #### buttons 静态按钮
-
-buttons 看这个例子就懂了:
 
 ##### 示例
 
 ```typescript
-const clockMenu: ButtonFormData = {
-    title: "菜单",
-    body: "请选择你要打开的功能",
-    buttons: {
-        自动整理: {
-            icon: "blocks/chest_front",
-            func: (ctx) => {
-                formManager.openExternal(ctx.player, "sorter", "sorter.main");
-            },
-        },
-        玩家互传: {
+const clockMenu = CommonForm.ButtonForm({
+    title: clockMenuText.title, // "菜单"
+    body: clockMenuText.body,
+    buttons: [
+        {
             icon: "ui/FriendsIcon",
+            label: clockMenuText.tpa, // "玩家传送"
             func: (ctx) => {
                 ctx.pushNamed("tpa.main");
             },
         },
-        音乐播放器: {
-            icon: "blocks/jukebox_top",
+        {
+            icon: "ui/recipe_book_icon.png",
+            label: clockMenuText.statistics, // "统计信息"
             func: (ctx) => {
-                system.sendScriptEvent("music:open", ctx.player.id);
+                ctx.push(statisticsForm);
             },
         },
-        领地: {
-            icon: "blocks/grass_side_carried",
+        {
+            icon: "gui/newgui/Language18.png",
+            label: clockMenuText.langSetting, // "语言设置"
             func: (ctx) => {
-                ctx.pushNamed("res.main");
+                ctx.push(LangSettingForm);
             },
         },
-    },
-};
+    ],
+});
 ```
 
-懂的都懂好吧，buttons 怎么用应该很明显了吧。其中 icon 可以不写。
-func 的参数是[SAPIProFormContext](#表单上下文-sapiproformcontext)
-
-```typescript
-func: (context: SAPIProFormContext<ActionFormData>) => void | Promise<void>
-```
+icon不用写完整路径，从`textures/`后开始写即可。
+label支持字符串、翻译对象及RawMessage
+func用于自定义回调，当点击的按钮有func属性时，则会直接触发func回调，而不会触发handler。
 
 #### buttonGenerator 动态生成按钮
 
-那么这时候就有人说了，你这个不行，那万一我按钮要动态生成你不炸了吗？其实是有办法的，请看`buttonGenerator?: buttonGenerator`，语法如下:
-
 ```typescript
-buttonGenerator: (player: Player, args: contextArgs): Record<string, FuncButton> | undefined;
+buttonGenerator: (player, args, t) => Iterable<FuncButton<U, TData>>;
 ```
 
-通过 buttonGenerator，传入(player,args)，函数经过处理，返回要添加的按钮对象。还是直接用例子来看。
+通过 buttonGenerator可以动态生成按钮，返回的按钮数组被添加在buttons后面。
 
 ##### 示例
 
 ```typescript
-const spMainForm = CommonForm.ButtonForm({
-    title: "假人管理",
-    body: "请选择选项",
-    buttonGenerator: (player, args) => {
-        if (isAdmin(player)) {
-            return {
-                假人结构配置: {
-                    func: (ctx) => {
-                        return ctx.push(spConfigForm);
-                    },
-                },
-            };
+const DbInfoForm = new ButtonForm<{
+    db: DataBase<any>;
+    keys?: string[];
+    participants?: ScoreboardIdentity[];
+}>({
+    title: "数据库详情",
+    // 构建表单（每次打开都会执行）
+    generator(form, p, args) {
+        const db = args.db;
+
+        // 缓存数据给后续 handler 使用
+        const keys = db.keys();
+        args.keys = keys;
+
+        const rows = [`数据库名称:${db.name}`, `类型:${db.type}`, `总键数:${keys.length}`];
+
+        if (db instanceof ScoreBoardDataBase) {
+            rows.push(`计分板名:${db.getScoreBoardName()}`);
+            args.participants = db.participants(); // 与 keys 对应
         }
+
+        form.body(rows.join("\n"));
     },
-    buttons: {
-        创建假人: {
-            func: (ctx) => {
-                return ctx.push(spCreate);
+    // 固定按钮（优先执行 func，不走 handler）
+    buttons: [
+        {
+            label: "设置键值",
+            func(ctx) {
+                ctx.push(setValuePage, { db: ctx.args.db });
             },
         },
-        假人列表: {
-            func: (ctx) => {
-                return ctx.push(spList);
-            },
-        },
+    ],
+    // 动态按钮（对应每个 key）
+    buttonGenerator(player, args, t) {
+        return args.keys!.map((k) => ({ label: k, data: k }));
     },
-    validator: (ctx) => {
-        //略
+    oncancel(res, ctx) {
+        ctx.back();
+    },
+    // 处理动态按钮点击（btnIndex 只计算无 func 的按钮）
+    handler(ctx, btn) {
+        const args = ctx.args;
+
+        const key = args.keys![btn.btnIndex];
+        const identity = args.participants?.[btn.btnIndex];
+
+        ctx.push(DbValuePage, {
+            db: args.db,
+            key: identity ?? key, // 计分板优先
+        });
     },
 });
 ```
 
-例子中使用 buttonGenerator 来根据玩家是否是管理员，动态添加了管理按钮，普通玩家只能看到下面两个按钮，而管理员可以看到配置按钮。
-
-#### generator 自定义生成器
-
-如果你对这些还不满意，还需要自己修改，那么你可以用 generator。
-
-```typescript
-generator:(form: T, player: Player, args: contextArgs): void | Promise<void>;
-```
-
-参考:[formGenerator](../docs/interfaces/formGenerator.md)
-
-你可以用它来动态生成 body,title。添加按钮就不推荐了，毕竟可以直接用 buttonGenerator。
-
-```typescript
-//前面省略
-generator: (form, player, ctx) => {
-    form.body("xxx");
-    form.title("xxx");
-};
-//后面省略
-```
-
-最后还有个 validator,就是[beforeBuild](#beforebuildformbeforebuild)。
-
-### CommonForm.ButtonListForm 按钮列表表单
-
-按钮列表表单适用于一堆按钮，最后根据玩家选择的序号来执行相应的操作的场景。当然，你也可以用前面的`ButtonForm`来实现，只需要用`buttonGenerator`就行了。
-
-仍然先上语法
-`CommonForm.ButtonListForm(data: ButtonListFormData)`
-
-参考:[ButtonListFormData](../docs/interfaces/ButtonListFormData.md)
-
-#### generator
-
-在这里，我们使用 generator 来生成列表，generator 和上面 ButtonForm 的是一样的。
-
-##### 示例
-
-```typescript
-const spList = CommonForm.ButtonListForm({
-    title: "假人列表",
-    generator: (form, player, args) => {
-        const spList = spManager.getSPList();
-        form.button("返回");
-        for (let spdata of spList) {
-            form.button(spdata.sp.name);
-        }
-        args.list = spList;
-    },
-    handler: (selection, ctx) => {
-        if (selection == 0) return ctx.back();
-        ctx.push(spInfo, { spdata: ctx.args.list[selection - 1] });
-    },
-    validator: (ctx) => {
-        if (spManager.getSPList().length == 0) {
-            spManager.mes(ctx.player, "没有假人，请先创建");
-            ctx.back();
-        }
-    },
-});
-```
-
-上面这个例子使用 generator 来生成假人列表，并且将假人列表设置到 context 的 args 中，这样 handler 就可以拿到 generator 里假人列表，进而方便处理。
-
-#### handler:ListFormHandler
-
-```typescript
-handler: (selection: number, context: SAPIProFormContext<ActionFormData>) =>
-    Promise<void > | void;
-```
-
-看了上面的例子，其实这个也很简单。  
-这个函数会传入一个 selection，selection 就是玩家选择的按钮序号，从 0 开始。而 context 是上下文。可以根据玩家选择项的不同进行不同的逻辑。
+例子中使用 buttonGenerator 来直接生成动态的key按钮，并通过buttons添加了静态按钮。
 
 ### CommonForm.BodyInfoForm
 
-这个会创建一个只有标题，body 和一个确认按钮的表单。3,2,1,上语法
+一个只有标题，body 和一个确认按钮的表单,用于显示简单的文本信息。
 
 ```typescript
-CommonForm.BodyInfoForm(title: string, body: formGenerator<ActionFormData> | string)
+BodyInfoForm<U extends ButtonFormArgs>(
+    title: TextType,
+    body: formGenerator<ActionFormData, U> | TextType,
+    onSubmit?: (ctx: SAPIProFormContext<ActionFormData, U>) => void
+)
 ```
 
-可以看到，只需要传入 title,body。其中 body 可以传 string 或 formGenerator。如果你是静态的表单。那么直接传字符串就行了，如果内容动态生成，那么传 formGenerator 就对了。
+传入title,body。其中 body 可以传TextType 或 formGenerator。对于静态表单，直接传文本即可。如果需要内容动态生成，那么可以使用formGenerator。
+
+点击确认后默认返回上一级，可以通过传入onSubmit参数自定义处理。
 
 ##### 示例
 
@@ -338,40 +323,231 @@ const promptPage = CommonForm.BodyInfoForm("AIChat系统提示词", (form, playe
 });
 ```
 
-这个太简单了好吧，不多说了。
-
 ### CommonForm.SimpleMessageForm
 
-这个可以创建一个简单的对话框，用户只需要选择是或不是。
+一个简单的对话框，用户只需要选择是或不是。
 
 `CommonForm.SimpleMessageForm(data: SimpleMessageFormData)`
 
-其中 data:SimpleMessageFormData 是这个:
+其中 [SimpleMessageFormData](../docs/interfaces/SimpleMessageFormData.md) 定义如下:
 
-参考:[SimpleMessageFormData](../docs/interfaces/SimpleMessageFormData.md)
+```ts
+interface SimpleMessageFormData<U extends contextArgs = contextArgs> extends CommonFormData<
+    MessageFormData,
+    U
+> {
+    /**body */
+    body?: TextType;
+    button1?: MessageFormButton<U>;
+    button2?: MessageFormButton<U>;
+}
+```
 
-button1，button2 就是对话框的俩按钮，你静态的话就直接写上。如果动态的话你也可以用 generator 来生成，自由度很高。  
-handler 就是处理函数([formHandler](#handlerformhandler))，你自己根据结果处理就行。没有 oncancel，但是 handler 也可以处理，问题不大。
+button1，button2 就是对话框的俩按钮，每个都有独立的处理函数和文本，会在点击后执行。默认情况下不会执行任何操作(表单直接关闭)。
+
+```ts
+interface MessageFormButton<U extends contextArgs> {
+    text: TextType;
+    /**按钮点击事件 */
+    func: (context: SAPIProFormContext<MessageFormData, U>) => void | Promise<void>;
+}
+```
+
+body和title等可以静态也可以通过 generator 来生成。
 
 ##### 示例
 
 ```typescript
-const deleteFriendConfirmForm = CommonForm.SimpleMessageForm({
-    title: "删除好友",
-    button1: "取消",
-    button2: "确定",
-    generator: (form, p, args) => {
-        form.body(`你确定要删除领地§3${args.item.rname}§r的好友:§e${args.fname}§r吗？`);
+CommonForm.SimpleMessageForm({
+    title: "确认删除",
+    body: "你确定要删除这个领地吗？此操作不可逆。",
+    button1: {
+        text: "确定删除",
+        func: (ctx) => {
+            // 处理删除逻辑
+            ctx.player.sendMessage("领地已删除");
+        },
     },
-    handler: (res: MessageFormResponse, context) => {
-        if (res.selection == undefined) return undefined;
-        if (res.selection == 1) {
-            resgame.removeFriend(context.args.item.id, context.player, context.args.fname);
-        }
-        context.back();
+    button2: {
+        text: "取消",
+        func: (ctx) => ctx.back(),
     },
 });
 ```
+
+### CommonForm.InputForm
+
+`InputForm` 用于构建输入的表单界面，通过 ValueField 实现数据自动解析和校验。
+
+参考:[InputFormData](../docs/interfaces/InputFormData.md)
+
+#### 核心 Field 组件
+
+- `TextField(label, placeholder, defaultValue?)`
+
+- `NumberField(label, placeholder, defaultValue?)` - 自动解析为数字。
+
+- `SliderField(label, min, max, step, defaultValue?)`
+
+- `ToggleField(label, defaultValue?)`
+
+- `DropDownField(label, options, defaultIndex?)`
+
+#### 数据绑定与校验
+
+每个 ValueField 都可以使用 .key() 绑定键名，并使用 .validator() 进行链式校验。
+
+##### 示例
+
+```typescript
+interface AIChatConfig {
+    model: number;
+    systemPrompt: number;
+    max_turns: number;
+    showThink: boolean;
+    includeChat: boolean;
+    chat_length: number;
+}
+
+const configPage = CommonForm.InputForm<AIChatConfig, { models: string[]; prompts: string[] }>({
+    title: "AI聊天设置",
+    fields: [],
+    fieldsGenerator(p, args) {
+        args.models = Object.keys(models);
+        args.prompts = Object.keys(Prompts);
+        const config = Config;
+        return [
+            new DropDownField(
+                "模型选择",
+                Object.entries(models).map(
+                    (t) => `${t[0]}(${t[1].provider ?? "unknown"})`,
+                    args.models.indexOf(config.model)
+                ),
+                args.models.indexOf(config.model)
+            ).key("model"),
+            new DropDownField(
+                "系统提示词",
+                args.prompts,
+                args.prompts.indexOf(config.systemPrompt)
+            ).key("systemPrompt"),
+            new SliderField("最大历史记录轮数", 5, 30, {
+                defaultValue: config.max_turns,
+                step: 1,
+            }).key("max_turns"),
+            new ToggleField("显示思考过程", config.showThink).key("showThink"),
+            new ToggleField("包含历史聊天记录", config.includeChat).key("includeChat"),
+            new SliderField("聊天记录条数", 5, 30, {
+                defaultValue: config.chat_length,
+            }).key("chat_length"),
+        ];
+    },
+    onSubmit(data, ctx) {
+        const config: globalConfig = {
+            ...data,
+            model: ctx.args.models[data.model],
+            systemPrompt: ctx.args.prompts[data.systemPrompt],
+        };
+        Object.assign(Config, config);
+        Configdb.setJSON("aichat", config);
+        ctx.back();
+    },
+});
+```
+
+### CommonForm.ConfigForm
+
+参考:[ConfigForm](../docs/interfaces/ConfigFormOptions.md)
+
+`ConfigForm` 是 `InputForm` 的高级声明式封装。它通过一个配置对象（Schema）自动生成表单字段、处理动态默认值、执行字段级逻辑（Setter）并提供完美的类型推导，非常适合用于制作插件配置、玩家设置等界面。
+
+#### 字段类型 (FieldType)
+
+- `FieldType.String` - 对应 `TextField`。支持 `optional`。
+- `FieldType.Number` - 对应 `NumberField`。支持 `optional`。
+- `FieldType.Boolean` - 对应 `ToggleField`。**始终必选**。
+- `FieldType.Slider` - 对应 `SliderField`。**始终必选**。
+- `FieldType.Dropdown` - 对应 `DropDownField`。**始终必选**。
+
+#### 示例
+
+```typescript
+interface MyArgs extends InputFormArgs {
+    isVip: boolean;
+}
+
+// 1. 使用 CommonForm.config<U>() 开启链式调用并注入 Args 类型
+const settingsForm = CommonForm.ConfigForm<MyArgs>().create(
+    {
+        // 字符串字段
+        nickname: {
+            type: FieldType.String,
+            label: (p) => `修改昵称 (当前: ${p.name})`,
+            placeholder: "输入新昵称...",
+            defaultValue: (p) => p.nameTag,
+            optional: true, // result.nickname 将推导为 string | undefined
+            setter: (val, p) => (p.nameTag = val), // 提交时自动修改玩家名
+        },
+        // 数字字段
+        age: {
+            type: FieldType.Number,
+            label: "玩家年龄",
+            defaultValue: 18,
+            validators: [(v) => (v < 0 ? "年龄不能为负数" : undefined)],
+        },
+        // 下拉框字段
+        skinType: {
+            type: FieldType.Dropdown,
+            label: "皮肤选择",
+            items: ["经典", "苗条", "自定义"],
+            defaultValue: 0,
+        },
+        // 滑块字段
+        particleScale: {
+            type: FieldType.Slider,
+            label: "粒子大小",
+            min: 1,
+            max: 10,
+            defaultValue: (p, args) => (args.isVip ? 5 : 1), // 根据 Args 动态决定默认值
+        },
+        // 开关字段
+        autoSave: {
+            type: FieldType.Boolean,
+            label: "自动保存配置",
+            defaultValue: true,
+        },
+    },
+    {
+        title: "玩家个人设置",
+        // 初始值对象：优先级高于字段定义的 defaultValue，适合从数据库加载
+        initialValues: (player, args) => {
+            return {
+                autoSave: true,
+                skinType: 1,
+            };
+        },
+        onSubmit(result, player, ctx) {
+            // result 的类型已由 Simplify 自动展开为：
+            // { nickname?: string, age: number, skinType: number, particleScale: number, autoSave: boolean }
+            player.sendMessage(`§a设置已保存！新年龄: ${result.age}`);
+
+            // 注意：各个字段定义的 setter 也会在此之前被自动调用
+        },
+        onCancel(player, ctx) {
+            player.sendMessage("您取消了配置修改");
+        },
+    }
+);
+```
+
+#### 配置参数说明 (ConfigFormOptions)
+
+| 参数名          | 类型                            | 说明                                               |
+| :-------------- | :------------------------------ | :------------------------------------------------- |
+| `title`         | `Dynamic<TextType, U>`          | 表单标题，支持函数。                               |
+| `submitButton`  | `Dynamic<TextType, U>`          | 提交按钮文本（可选）。                             |
+| `initialValues` | `Dynamic<Partial<Result>, U>`   | 覆盖所有字段默认值的初始对象，常用于加载已有配置。 |
+| `onSubmit`      | `(result, player, ctx) => void` | 全局提交回调，参数 `result` 具有精确的类型推导。   |
+| `onCancel`      | `(player, ctx) => void`         | 玩家关闭表单时的回调。                             |
 
 ---
 

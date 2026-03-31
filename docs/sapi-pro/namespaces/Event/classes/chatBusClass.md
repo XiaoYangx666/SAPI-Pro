@@ -44,7 +44,7 @@
 
 ### subscribe()
 
-> **subscribe**(`callback`, `priority`): `void`
+> **subscribe**(`callback`, `priority?`): `void`
 
 订阅聊天事件
 
@@ -56,7 +56,7 @@
 
 [`chatFunc`](../type-aliases/chatFunc.md)
 
-##### priority
+##### priority?
 
 `number` = `0`
 

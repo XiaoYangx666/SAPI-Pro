@@ -6,7 +6,9 @@
 
 # Function: getPlayerById()
 
-> **getPlayerById**(`id`): `undefined` \| `Player`
+> **getPlayerById**(`id`): `Player` \| `undefined`
+
+根据玩家id获取玩家
 
 ## Parameters
 
@@ -16,4 +18,4 @@
 
 ## Returns
 
-`undefined` \| `Player`
+`Player` \| `undefined`

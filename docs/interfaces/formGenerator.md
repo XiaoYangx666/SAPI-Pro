@@ -4,7 +4,9 @@
 
 [sapi-pro](../globals.md) / formGenerator
 
-# Interface: formGenerator()\<T\>
+# Interface: formGenerator()\<T, U\>
+
+自定义表单生成器
 
 ## Type Parameters
 
@@ -12,9 +14,13 @@
 
 `T` *extends* [`formDataType`](../type-aliases/formDataType.md)
 
-> **formGenerator**(`form`, `player`, `args`): `void` \| `Promise`\<`void`\>
+### U
 
-自定义表单生成器，不要和原本的冲突了
+`U` *extends* [`contextArgs`](contextArgs.md)
+
+> **formGenerator**(`form`, `player`, `args`, `t`): `void` \| `Promise`\<`void`\>
+
+自定义表单生成器
 
 ## Parameters
 
@@ -28,7 +34,11 @@
 
 ### args
 
-[`contextArgs`](contextArgs.md)
+`U`
+
+### t
+
+[`UniversalTranslator`](../type-aliases/UniversalTranslator.md)
 
 ## Returns
 

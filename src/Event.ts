@@ -1,5 +1,13 @@
-import { ChatSendBeforeEvent, ItemUseAfterEvent, Player, ScriptEventCommandMessageAfterEvent, system, world } from "@minecraft/server";
-import { LibErrorMes, LibMessage } from "./func";
+import {
+    ChatSendBeforeEvent,
+    ItemUseAfterEvent,
+    Player,
+    ScriptEventCommandMessageAfterEvent,
+    system,
+    world,
+} from "@minecraft/server";
+import { LibErrorMes } from "./func";
+import { RandomUtils } from "./utils/random";
 
 //先不搞优先队列了，能用就行，反正只有注册的时候排序
 export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;
@@ -65,11 +73,15 @@ export enum chatOpe {
     /**捕获消息并原版发送 */
     skipsend,
 }
+
 /**
  * 订阅周期事件
  */
 export class intervalBusClass {
-    private secEventList: ((lastsec: number) => void)[];
+    private secEventList: ((
+        /**上次调度的时间(ms) */ lastsec: number,
+        /**本次调度的时间(ms) */ cursec: number
+    ) => void)[];
     private minEventList: (() => void)[];
     private tickEvents: (() => void)[];
     private lasttime: number;
@@ -78,36 +90,40 @@ export class intervalBusClass {
         this.secEventList = [];
         this.minEventList = [];
         this.tickEvents = [];
-        this.lasttime = Date.now();
-        this.lastsec = Date.now();
-        system.runInterval(this.interval.bind(this));
+        this.lasttime = Date.now() - RandomUtils.int(60000);
+        this.lastsec = Date.now() - RandomUtils.int(1000);
+        world.afterEvents.worldLoad.subscribe(() => {
+            system.runInterval(this.interval.bind(this));
+        });
     }
+
     private interval() {
-        if (Date.now() - this.lasttime >= 60000) {
+        const now = Date.now();
+        if (now - this.lasttime >= 60000) {
             this.publishmin();
-            this.lasttime = Date.now();
+            this.lasttime = now;
         }
-        if (Date.now() - this.lastsec >= 1000) {
-            this.publishsec(this.lastsec);
-            this.lastsec = Date.now();
+        if (now - this.lastsec >= 1000) {
+            this.publishsec(this.lastsec, now);
+            this.lastsec = now;
         }
         this.publishtick();
     }
     subscribetick(callback: () => void) {
         this.tickEvents.push(callback);
     }
-    subscribesec(callback: (lastsec: number) => void) {
+    subscribesec(callback: (lastsec: number, cursec: number) => void) {
         this.secEventList.push(callback);
     }
     subscribemin(callback: () => void) {
         this.minEventList.push(callback);
     }
-    private publishsec(lastsec: number) {
+    private publishsec(lastsec: number, now: number) {
         for (let callback of this.secEventList) {
             try {
-                callback(lastsec);
+                callback(lastsec, now);
             } catch (e) {
-                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("secIntervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }
@@ -116,7 +132,7 @@ export class intervalBusClass {
             try {
                 callback();
             } catch (e) {
-                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40));
+                LibErrorMes("MinintervalError(" + e + ")at" + callback.toString().slice(40), e);
             }
         }
     }

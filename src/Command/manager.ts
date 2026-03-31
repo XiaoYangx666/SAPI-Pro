@@ -8,7 +8,7 @@ import {
     system,
 } from "@minecraft/server";
 import { LibConfig } from "../Config";
-import { exchangedb } from "../DataBase";
+import { exchangedb } from "../DataBase/DataBase";
 import { chatBus } from "../Event";
 import { Command } from "./commandClass";
 import { CommandHelp } from "./help";
@@ -60,10 +60,13 @@ export class CommandManager {
 
     /**客户端注册指令，系统调用，不管 */
     regToHost() {
-        if (LibConfig.UUID == undefined) return;
-        const obj = [...this.commands.entries()].reduce((obj: any, [key, value]) => ((obj[key] = value), obj), {});
+        if (LibConfig.packInfo.uuid == undefined) return;
+        const obj = [...this.commands.entries()].reduce(
+            (obj: any, [key, value]) => ((obj[key] = value), obj),
+            {}
+        );
         return exchangedb.edit((data) => {
-            data["cmd"][LibConfig.UUID!] = obj;
+            data["cmd"][LibConfig.packInfo.uuid!] = obj;
         });
     }
     /**注册客户端命令(系统调用，不用管) */
@@ -94,14 +97,27 @@ export class CommandManager {
         this.parser.parseCommand(input, player);
     }
 
-    runNativeCommand(command: Command, origin: CustomCommandOrigin, ...args: any[]): CustomCommandResult | undefined {
+    runNativeCommand(
+        command: Command,
+        origin: CustomCommandOrigin,
+        ...args: any[]
+    ): CustomCommandResult | undefined {
         //判断是否玩家
-        if (origin.sourceType != CustomCommandSource.Entity || origin.sourceEntity?.typeId != "minecraft:player") {
+        if (
+            origin.sourceType != CustomCommandSource.Entity ||
+            origin.sourceEntity?.typeId != "minecraft:player"
+        ) {
             return { message: "该指令只能由玩家执行", status: CustomCommandStatus.Failure };
         }
-        const ans = this.parser.parseSubCommand(command, args.flat(), origin.sourceEntity as Player, false);
+        const ans = this.parser.parseSubCommand(
+            command,
+            args.flat(),
+            origin.sourceEntity as Player,
+            false
+        );
         //执行失败
-        if (typeof ans == "string") return { message: JSON.stringify(args), status: CustomCommandStatus.Failure };
+        if (typeof ans == "string")
+            return { message: ans + JSON.stringify(args), status: CustomCommandStatus.Failure };
         return { status: CustomCommandStatus.Success };
     }
 

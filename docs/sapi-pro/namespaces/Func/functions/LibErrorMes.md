@@ -6,13 +6,17 @@
 
 # Function: LibErrorMes()
 
-> **LibErrorMes**(`text`): `void`
+> **LibErrorMes**(`message`, `e?`): `void`
 
 ## Parameters
 
-### text
+### message
 
 `string`
+
+### e?
+
+`unknown`
 
 ## Returns
 

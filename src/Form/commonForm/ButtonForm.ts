@@ -1,0 +1,104 @@
+import { Player } from "@minecraft/server";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
+import { translator, UniversalTranslator } from "../../Translate";
+import { SAPIProForm, SAPIProFormContext } from "../form";
+import { ButtonFormArgs, ButtonFormData, FuncButton } from "./commonFormInterface";
+import { isAdmin } from "../../func";
+
+/**通用按钮表单 */
+export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionFormData, U> {
+    private data: ButtonFormData<U>;
+
+    constructor(data: ButtonFormData<U>) {
+        this.data = data;
+    }
+
+    async beforeBuild(ctx: SAPIProFormContext<ActionFormData, U>) {
+        if (!this.data.validator) return;
+        return this.data.validator(ctx);
+    }
+
+    async builder(player: Player, args: U): Promise<ActionFormData> {
+        const form = new ActionFormData();
+        const t = translator.createUniversal(player);
+
+        this.buildHeader(form, t);
+        await this.runCustomGenerator(form, player, args, t);
+
+        const buttons = this.collectButtons(player, args, t);
+
+        for (const button of buttons) {
+            const iconPath = button.icon ? `textures/${button.icon}` : undefined;
+
+            form.button(t(button.label), iconPath);
+        }
+
+        // 注入给 handler 使用
+        args.buttons = buttons;
+
+        return form;
+    }
+
+    async handler(res: ActionFormResponse, context: SAPIProFormContext<ActionFormData, U>) {
+        const buttons = context.args.buttons as FuncButton<U>[];
+        const listButtons = buttons.filter((btn) => btn.func == undefined);
+
+        if (res.selection !== undefined) {
+            const button = buttons[res.selection];
+            if (!button) return;
+            if (button.func) {
+                //执行按钮的func
+                await button.func?.(context);
+            } else {
+                const idx = listButtons.indexOf(button);
+                //执行列表处理函数
+                await this.data.handler?.(
+                    context,
+                    { data: button.data, btnIndex: idx },
+                    res.selection
+                );
+            }
+        } else if (this.data.oncancel) {
+            await this.data.oncancel(res, context);
+        }
+    }
+
+    private buildHeader(form: ActionFormData, t: UniversalTranslator) {
+        if (this.data.title) form.title(t(this.data.title));
+        if (this.data.body) form.body(t(this.data.body));
+    }
+
+    private async runCustomGenerator(
+        form: ActionFormData,
+        player: Player,
+        args: U,
+        t: UniversalTranslator
+    ) {
+        if (!this.data.generator) return;
+        await this.data.generator(form, player, args, t);
+    }
+
+    private collectButtons(player: Player, args: U, t: UniversalTranslator): FuncButton<U>[] {
+        const result: FuncButton<U>[] = [];
+
+        // 静态按钮
+        if (this.data.buttons) {
+            for (const button of this.data.buttons) {
+                //检查权限
+                if (button.isAdmin && !isAdmin(player)) continue;
+                //检查自定义显隐函数
+                if (!(button.shouldShow?.(player, args) ?? true)) continue;
+                result.push(button);
+            }
+        }
+
+        // 动态按钮
+        const gen = this.data.buttonGenerator?.(player, args, t);
+
+        if (gen) {
+            result.push(...gen);
+        }
+
+        return result;
+    }
+}

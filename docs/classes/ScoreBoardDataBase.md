@@ -52,7 +52,7 @@
 
 ### type
 
-> **type**: `undefined` \| `"DP"` \| `"jSB"` \| `"cSB"`
+> **type**: [`DBTypes`](../type-aliases/DBTypes.md)
 
 #### Inherited from
 
@@ -88,11 +88,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 
@@ -103,6 +103,8 @@
 ### clear()
 
 > **clear**(): `void`
+
+清空计分板(删除并重建)
 
 #### Returns
 
@@ -128,17 +130,17 @@
 
 ### get()
 
-> **get**(`key`): `undefined` \| `number`
+> **get**(`key`): `number` \| `undefined`
 
 #### Parameters
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
-`undefined` \| `number`
+`number` \| `undefined`
 
 #### Overrides
 
@@ -148,7 +150,7 @@
 
 ### getObj()
 
-> **getObj**(`key`): `scoreboardObj`
+> **getObj**(`key`): [`scoreboardObj`](scoreboardObj.md)
 
 获取一个虚拟计分项对象
 
@@ -156,11 +158,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
-`scoreboardObj`
+[`scoreboardObj`](scoreboardObj.md)
 
 ***
 
@@ -184,9 +186,29 @@
 
 ***
 
+### isDisplayAtSlot()
+
+> **isDisplayAtSlot**(`DisplaySlotId`): `boolean`
+
+判断是否在正在指定Slot显示
+
+#### Parameters
+
+##### DisplaySlotId
+
+`DisplaySlotId`
+
+#### Returns
+
+`boolean`
+
+***
+
 ### keys()
 
 > **keys**(): `string`[]
+
+获取所有计分项
 
 #### Returns
 
@@ -198,11 +220,21 @@
 
 ***
 
+### participants()
+
+> **participants**(): `ScoreboardIdentity`[]
+
+#### Returns
+
+`ScoreboardIdentity`[]
+
+***
+
 ### resetAll()
 
 > **resetAll**(): `void`
 
-重置所有积分项
+重置所有积分项(调用命令)
 
 #### Returns
 
@@ -214,11 +246,13 @@
 
 > **rm**(`key`): `void`
 
+删除指定计分项
+
 #### Parameters
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 #### Returns
 
@@ -238,11 +272,11 @@
 
 ##### key
 
-`string` | `Player`
+`string` \| `Entity` \| `ScoreboardIdentity`
 
 ##### value
 
-`string` | `number`
+`string` \| `number`
 
 #### Returns
 
@@ -258,6 +292,8 @@
 
 > **setDisplaySlot**(`SlotId`): `void`
 
+设置显示位置
+
 #### Parameters
 
 ##### SlotId
@@ -272,7 +308,7 @@
 
 ### getDB()
 
-> `static` **getDB**(`name`): `undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+> `static` **getDB**(`name`): [`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Parameters
 
@@ -282,7 +318,7 @@
 
 #### Returns
 
-`undefined` \| [`DataBase`](DataBase.md)\<`any`\>
+[`DataBase`](DataBase.md)\<`any`\> \| `undefined`
 
 #### Inherited from
 

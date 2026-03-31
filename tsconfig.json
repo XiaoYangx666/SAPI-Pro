@@ -15,6 +15,9 @@
         "rootDir": "src",
         "allowJs": true
     },
+    "tsc-alias": {
+        "resolveFullPaths": true
+    },
     "include": ["./src"],
     "compileOnSave": false
 }

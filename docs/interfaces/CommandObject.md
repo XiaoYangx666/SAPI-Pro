@@ -18,7 +18,7 @@
 
 ### handler?
 
-> `optional` **handler**: [`commandHandler`](../type-aliases/commandHandler.md)\<[`ParsedParam`](ParsedParam.md)\>
+> `optional` **handler?**: [`commandHandler`](../type-aliases/commandHandler.md)\<[`ParsedParam`](ParsedParam.md)\>
 
 命令处理器
 
@@ -26,7 +26,7 @@
 
 ### isAdmin?
 
-> `optional` **isAdmin**: `boolean`
+> `optional` **isAdmin?**: `boolean`
 
 是否管理员命令,默认不是
 
@@ -34,13 +34,13 @@
 
 ### isClientCommand?
 
-> `optional` **isClientCommand**: `boolean`
+> `optional` **isClientCommand?**: `boolean`
 
 ***
 
 ### isHiden?
 
-> `optional` **isHiden**: `boolean`
+> `optional` **isHiden?**: `boolean`
 
 是否隐藏命令(不会显示在help中)
 
@@ -56,7 +56,7 @@
 
 ### paramBranches?
 
-> `optional` **paramBranches**: [`paramBranches`](../type-aliases/paramBranches.md)[]
+> `optional` **paramBranches?**: [`paramBranches`](../type-aliases/paramBranches.md)[]
 
 命令参数分支
 
@@ -64,7 +64,7 @@
 
 ### subCommands?
 
-> `optional` **subCommands**: `CommandObject`[]
+> `optional` **subCommands?**: `CommandObject`[]
 
 子命令列表
 
@@ -72,6 +72,6 @@
 
 ### validator?
 
-> `optional` **validator**: [`CommandValidator`](CommandValidator.md)
+> `optional` **validator?**: [`CommandValidator`](CommandValidator.md)
 
 命令验证器

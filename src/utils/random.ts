@@ -1,4 +1,5 @@
 export class RandomUtils {
+    private constructor() {}
     /** 返回 [0, max) 的随机整数 */
     static int(max: number): number {
         return Math.floor(Math.random() * max);

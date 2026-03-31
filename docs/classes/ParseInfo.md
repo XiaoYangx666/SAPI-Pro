@@ -10,7 +10,7 @@
 
 ### Constructor
 
-> **new ParseInfo**(`value`, `cnt`): `ParseInfo`
+> **new ParseInfo**(`value`, `cnt?`): `ParseInfo`
 
 #### Parameters
 
@@ -18,7 +18,7 @@
 
 [`parsedTypes`](../type-aliases/parsedTypes.md)
 
-##### cnt
+##### cnt?
 
 `number` = `1`
 
