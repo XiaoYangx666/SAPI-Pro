@@ -96,7 +96,7 @@ export class FormManagerClass {
     open<T extends formDataType, TArgs extends contextArgs>(
         player: Player,
         form: SAPIProForm<T, TArgs>,
-        args?: TArgs,
+        args?: NoInfer<TArgs>,
         delay = 0
     ) {
         const stack = formStackManager.resetStack(player);
@@ -152,4 +152,3 @@ export class FormManagerClass {
 }
 
 export const formManager = new FormManagerClass();
-formManager._bind();
