@@ -33,7 +33,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**打开表单 */
     push<T extends formDataType, TArgs extends contextArgs>(
         form: SAPIProForm<T, TArgs>,
-        args?: TArgs,
+        args?: NoInfer<TArgs>,
         delay = 0
     ) {
         this.willBuild = false;
@@ -65,7 +65,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**替换当前表单为新的命名表单 */
     replace<T extends formDataType, TArgs extends contextArgs>(
         form: SAPIProForm<T, TArgs>,
-        args?: TArgs,
+        args?: NoInfer<TArgs>,
         delay = 0
     ) {
         this.willBuild = false;
@@ -83,7 +83,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**清空堆栈，并打开表单 */
     offAll<T extends formDataType, TArgs extends contextArgs>(
         form: SAPIProForm<T, TArgs>,
-        args?: TArgs,
+        args?: NoInfer<TArgs>,
         delay = 0
     ) {
         this.willBuild = false;
