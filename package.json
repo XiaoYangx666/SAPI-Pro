@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.0-stable",
+    "version": "0.4.1-stable",
     "description": "A practical library for MCBE ScriptAPI",
     "main": "scripts/main.js",
     "types": "scripts/main.d.ts",
@@ -54,5 +54,6 @@
         "bedrock-edition",
         "ScriptApi",
         "library"
-    ]
+    ],
+    "sideEffects": false
 }

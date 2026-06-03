@@ -96,4 +96,32 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         this.stack.clear();
         this.pushNamed(name, args, delay);
     }
+    /**一直返回到指定页 */
+    until<T extends formDataType, TArgs extends contextArgs>(
+        form: SAPIProForm<T, TArgs>,
+        delay = 0
+    ) {
+        this.willBuild = false;
+        let top = this.stack.getTop();
+        while (top?._form && top._form !== form) {
+            this.stack.pop();
+            top = this.stack.getTop();
+        }
+        formManager._show(this.player, delay);
+    }
+    /**一直返回到指定页并打开新页 */
+    offUntil<T extends formDataType, TArgs extends contextArgs>(
+        form: SAPIProForm<T, TArgs>,
+        args?: NoInfer<TArgs>,
+        delay = 0
+    ) {
+        this.willBuild = false;
+        let top = this.stack.getTop();
+        while (top?._form && top._form !== form) {
+            this.stack.pop();
+            top = this.stack.getTop();
+        }
+        this.stack.push(args ?? {}, form as any);
+        formManager._show(this.player, delay);
+    }
 }

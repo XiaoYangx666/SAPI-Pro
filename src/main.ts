@@ -3,6 +3,7 @@ import { LibConfig, PackInfo } from "./Config";
 import { initCom } from "./System/ScriptCom";
 import { setLoggerNamespace } from "./utils/logger";
 import { gameDeferredRegistry } from "./Deferred";
+import { formManager } from "./Form/formManager";
 export * from "./Command/main";
 export * from "./DataBase/index";
 export * as Event from "./Event";
@@ -20,4 +21,5 @@ export function initSAPIPro(packInfo: PackInfo) {
         initCom();
         gameDeferredRegistry.bindAll();
     });
+    formManager._bind();
 }
