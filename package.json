@@ -16,6 +16,10 @@
     },
     "dependencies": {},
     "devDependencies": {
+        "@types/adm-zip": "^0.5.8",
+        "adm-zip": "^0.5.17",
+        "rimraf": "^6.1.3",
+        "tsc-alias": "^1.8.17",
         "typedoc": "^0.28.7",
         "typedoc-plugin-markdown": "^4.4.2"
     },
@@ -29,8 +33,11 @@
         }
     },
     "scripts": {
-        "build:nodeclare": "python3 build.py --declaration false",
-        "build": "python3 build.py --declaration true",
+        "clean": "rimraf build scripts",
+        "compile": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+        "package": "node build.ts",
+        "build": "npm run clean && npm run compile && npm run package",
+        "pack": "npm run compile && npm pack",
         "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
     },
     "files": [

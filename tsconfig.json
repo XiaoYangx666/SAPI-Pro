@@ -3,6 +3,7 @@
         "target": "esnext",
         "moduleResolution": "bundler",
         "module": "esnext",
+        "types": ["node"],
         "declaration": true,
         "noLib": false,
         "sourceMap": false,
@@ -11,10 +12,16 @@
         "preserveConstEnums": true,
         "strict": true,
         "noImplicitAny": true,
-        "outDir": "scripts",
-        "rootDir": "src",
-        "allowJs": true
+        "rootDir": "./",
+        "allowJs": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@test/*": ["./test/*"]
+        }
     },
-    "include": ["./src"],
+    "tsc-alias": {
+        "resolveFullPaths": true
+    },
+    "include": ["./src", "./test"],
     "compileOnSave": false
 }
