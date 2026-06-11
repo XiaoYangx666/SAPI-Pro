@@ -20,7 +20,7 @@ export interface CommonFormData<T extends formDataType, U extends contextArgs = 
 }
 
 //ButtonForm部分
-export interface FuncButton<U extends contextArgs, TData = unknown> {
+export interface FuncButton<U extends contextArgs, TData = void> {
     /**图标路径，从textures/后面开始输 */
     icon?: string;
     /**按钮文本(支持翻译) */
@@ -36,17 +36,19 @@ export interface FuncButton<U extends contextArgs, TData = unknown> {
 }
 
 export interface ButtonFormArgs extends contextArgs {
-    buttons?: FuncButton<this>[];
+    buttons?: FuncButton<this, any>[];
 }
 
 export interface ButtonFormData<
     U extends contextArgs = contextArgs,
-    TData = unknown,
+    TData = void,
 > extends CommonFormData<ActionFormData, U> {
     /**body */
     body?: TextType;
-    /**按钮列表 */
+    /**按钮列表(顶部的固定按钮) */
     buttons?: FuncButton<U, TData>[];
+    /**按钮列表(底部的固定按钮) */
+    footerButtons?: FuncButton<U, TData>[];
     /**按钮生成器 */
     buttonGenerator?: (
         player: Player,
@@ -57,7 +59,7 @@ export interface ButtonFormData<
     handler?: (
         ctx: SAPIProFormContext<ActionFormData, U>,
         /**按下的按钮 data为构造时附带的数据,btnIndex为排除func按钮后的下标 */
-        button: { data: TData; btnIndex: number },
+        button: [TData] extends [void] ? { btnIndex: number } : { data: TData; btnIndex: number },
         /**表单选择的下标 */
         index: number
     ) => Promise<void> | void;
