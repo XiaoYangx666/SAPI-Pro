@@ -6,7 +6,7 @@ export class PlayerFormStack {
     private stack: SAPIProFormContext<formDataType, any>[] = [];
     constructor(private readonly player: Player) {}
 
-    push(args: contextArgs, form?: SAPIProForm<formDataType>) {
+    push(args: contextArgs, form?: SAPIProForm<formDataType, any>) {
         const context = new SAPIProFormContext(args, this, form);
         this.stack.push(context);
         return context;
@@ -38,14 +38,6 @@ class FormContextStackManager {
         const playerStack = new PlayerFormStack(player);
         this.playerDataMap.set(player.id, playerStack);
         return playerStack;
-    }
-    push(player: Player, args: contextArgs) {
-        let stack = this.getStack(player) ?? this.resetStack(player);
-        stack.push(args);
-    }
-    pop(player: Player) {
-        const stack = this.getStack(player);
-        return stack?.pop();
     }
     /**获取top元素 */
     getTop(player: Player) {

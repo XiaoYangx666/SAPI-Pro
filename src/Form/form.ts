@@ -1,5 +1,11 @@
-import { formManager } from "./formManager";
-import { contextArgs, formBeforeBuild, FormBuilder, formDataType, formHandler } from "./interface";
+import {
+    contextArgs,
+    formBeforeBuild,
+    FormBuilder,
+    formDataType,
+    formHandler,
+    showData,
+} from "./interface";
 import { formStackManager, PlayerFormStack } from "./stackManager";
 
 export interface SAPIProForm<T extends formDataType, U extends contextArgs = contextArgs> {
@@ -15,7 +21,9 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**@internal 内部属性，勿改*/
     _form?: SAPIProForm<T, U>;
     /**@internal 内部属性，勿改 */
-    willBuild: boolean;
+    _willBuild: boolean;
+    /**@internal 内部属性，勿改 */
+    _showData?: showData;
 
     constructor(
         readonly args: U,
@@ -23,7 +31,8 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         form?: SAPIProForm<T, U>
     ) {
         this._form = form;
-        this.willBuild = true;
+        this._willBuild = true;
+        this._showData = undefined;
     }
 
     get player() {
@@ -36,30 +45,30 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         args?: NoInfer<TArgs>,
         delay = 0
     ) {
-        this.willBuild = false;
-        this.stack.push(args ?? {}, form as any);
-        formManager._show(this.player, delay);
+        this._willBuild = false;
+        this._showData = { delay };
+        this.stack.push(args ?? {}, form);
     }
     /**打开命名表单 */
     pushNamed(name: string, args?: contextArgs, delay = 0) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.push(args ?? {});
-        formManager._showNamed(this.player, name, delay);
+        this._showData = { delay, name };
     }
     /**返回上一个表单 */
     back(delay = 0) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.pop();
-        formManager._show(this.player, delay);
+        this._showData = { delay };
     }
     /**重新打开当前表单 */
     reopen(delay = 0) {
-        this.willBuild = false;
-        formManager._show(this.player, delay);
+        this._willBuild = false;
+        this._showData = { delay };
     }
     /**关闭所有表单 */
     close() {
-        this.willBuild = false;
+        this._willBuild = false;
         formStackManager.resetStack(this.player);
     }
     /**替换当前表单为新的命名表单 */
@@ -68,17 +77,17 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         args?: NoInfer<TArgs>,
         delay = 0
     ) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.pop();
         this.stack.push(args ?? {}, form as any);
-        formManager._show(this.player, delay);
+        this._showData = { delay };
     }
     /**替换当前表单为新的命名表单 */
     replaceNamed(name: string, args?: contextArgs, delay = 0) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.pop();
         this.stack.push(args ?? {});
-        formManager._showNamed(this.player, name, delay);
+        this._showData = { delay, name };
     }
     /**清空堆栈，并打开表单 */
     offAll<T extends formDataType, TArgs extends contextArgs>(
@@ -86,13 +95,13 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         args?: NoInfer<TArgs>,
         delay = 0
     ) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.clear();
         this.push(form, args, delay);
     }
     /**清空堆栈，并打开命名表单 */
     offAllNamed(name: string, args?: contextArgs, delay = 0) {
-        this.willBuild = false;
+        this._willBuild = false;
         this.stack.clear();
         this.pushNamed(name, args, delay);
     }
@@ -101,27 +110,28 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         form: SAPIProForm<T, TArgs>,
         delay = 0
     ) {
-        this.willBuild = false;
+        this._willBuild = false;
         let top = this.stack.getTop();
         while (top?._form && top._form !== form) {
             this.stack.pop();
             top = this.stack.getTop();
         }
-        formManager._show(this.player, delay);
+        this._showData = { delay };
     }
     /**一直返回到指定页并打开新页 */
     offUntil<T extends formDataType, TArgs extends contextArgs>(
-        form: SAPIProForm<T, TArgs>,
+        form: SAPIProForm<any, any>,
+        newForm: SAPIProForm<T, TArgs>,
         args?: NoInfer<TArgs>,
         delay = 0
     ) {
-        this.willBuild = false;
+        this._willBuild = false;
         let top = this.stack.getTop();
         while (top?._form && top._form !== form) {
             this.stack.pop();
             top = this.stack.getTop();
         }
-        this.stack.push(args ?? {}, form as any);
-        formManager._show(this.player, delay);
+        this.stack.push(args ?? {}, newForm);
+        this._showData = { delay };
     }
 }

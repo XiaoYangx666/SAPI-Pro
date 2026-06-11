@@ -26,8 +26,8 @@ export class CommonForm {
     private constructor() {}
 
     /**常用的按钮表单 */
-    static ButtonForm<U extends ButtonFormArgs>(data: ButtonFormData<U>) {
-        return new ButtonForm<U>(data);
+    static ButtonForm<U extends ButtonFormArgs, TData = void>(data: ButtonFormData<U, TData>) {
+        return new ButtonForm<U, TData>(data);
     }
     /**
      * 一个简单的提示窗口，仅含有两个按钮，

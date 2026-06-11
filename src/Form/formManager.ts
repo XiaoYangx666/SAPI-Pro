@@ -2,7 +2,7 @@ import { Player, ScriptEventCommandMessageAfterEvent, system } from "@minecraft/
 import { LibConfig } from "../Config";
 import { ScriptEventBus, intervalBus } from "../Event";
 import { LibErrorMes, getPlayerById } from "../func";
-import { SAPIProForm } from "./form";
+import { SAPIProForm, SAPIProFormContext } from "./form";
 import { contextArgs, formDataType, openFormData } from "./interface";
 import { formStackManager } from "./stackManager";
 
@@ -51,26 +51,48 @@ export class FormManagerClass {
         return form;
     }
 
+    /**延迟显示form
+     * @internal
+     */
+    _showDelay(player: Player, delay = 0) {
+        system.runTimeout(() => {
+            this._show(player);
+        }, delay);
+    }
+
     /**显示form
      * @internal 不要调用
      */
-    _show(player: Player, delay = 0) {
-        system.runTimeout(async () => {
-            const context = formStackManager.getTop(player);
-            if (!context?._form) return;
-            const form = context._form;
-            //重置
-            context.willBuild = true;
-            if (form.beforeBuild) {
-                await form.beforeBuild(context);
-            }
-            //如果不build了就返回
-            if (!context.willBuild) return;
-            const buildForm = await form.builder(context.player, context.args);
-            buildForm.show(player).then((response) => {
-                form.handler(response, context);
-            });
-        }, delay);
+    async _show(player: Player) {
+        const context = formStackManager.getTop(player);
+        if (!context?._form) return;
+        const form = context._form;
+        //重置
+        context._willBuild = true;
+        if (form.beforeBuild) {
+            await form.beforeBuild(context);
+        }
+        //如果不build了就返回
+        if (!context._willBuild) {
+            this._handleShow(context);
+            return;
+        }
+        const builtForm = await form.builder(context.player, context.args);
+        const response = await builtForm.show(player);
+
+        await form.handler(response, context);
+        this._handleShow(context);
+    }
+
+    _handleShow(context: SAPIProFormContext<formDataType, any>) {
+        const showData = context._showData;
+        if (!showData) return;
+        if (showData.name) {
+            this._showNamed(context.player, showData.name, showData.delay ?? 0);
+        } else {
+            this._showDelay(context.player, showData.delay);
+        }
+        context._showData = undefined;
     }
     /**显示具名form
      * @internal 不要调用
@@ -81,7 +103,7 @@ export class FormManagerClass {
             if (!context) return;
             const form = this.getForm(name);
             context._form = form as any;
-            this._show(player, delay);
+            this._showDelay(player, delay);
         } catch (err) {
             LibErrorMes("展示具名表单错误", err);
         }
@@ -101,7 +123,7 @@ export class FormManagerClass {
     ) {
         const stack = formStackManager.resetStack(player);
         stack.push(args ?? {}, form as any);
-        this._show(player, delay);
+        this._showDelay(player, delay);
     }
 
     /**打开指定名字的表单，需要先注册
