@@ -4,15 +4,9 @@
 
 [sapi-pro](../globals.md) / commandHandler
 
-# Type Alias: commandHandler\<T\>
+# Type Alias: commandHandler
 
-> **commandHandler**\<`T`\> = (`player`, `params`) => `void`
-
-## Type Parameters
-
-### T
-
-`T` = [`ParsedParam`](../interfaces/ParsedParam.md)
+> **commandHandler** = (`player`, `params`) => `void`
 
 ## Parameters
 
@@ -22,7 +16,7 @@
 
 ### params
 
-`T`
+`any`
 
 ## Returns
 

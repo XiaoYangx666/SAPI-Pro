@@ -46,7 +46,7 @@ pcommand.registerCommand(exampleCmd); //注册命令
 
 #### handler?:commandHandler
 
-`(player: Player, params: Record<string,any>) => void;`
+`(player: Player, params: any) => void;`
 其中，handler 是一个回调函数，包含两个参数`player,param`，player 为执行命令的玩家，param 是解析后的参数对象，如果命令解析成功，那么 param 里会有成功解析的参数，如上代码中,使用 `param.Name`获取了参数值，而如果没有解析成功，则不会调用命令处理函数。
 
 此外，如果有多个分支，命令可能进入不同分支，从而解析的参数也不同，因此建议在使用参数前先判断是否存在，再根据参数存在情况，选择不同处理方式。
@@ -54,9 +54,9 @@ pcommand.registerCommand(exampleCmd); //注册命令
 #### validator?:CommandValidator
 
 `
-CommandValidator:(player: Player)=> true | string;`
+CommandValidator:(player: Player)=> void | string | RawText;`
 
-这是命令验证器，验证命令是否应该执行。应该执行则应返回 true,否则应该返回错误提示。
+这是命令验证器，验证命令是否应该执行。应该执行则**无需返回值**，否则应返回错误提示（字符串或 RawMessage）。
 如果命令验证不通过，则所有子命令及参数都不会被解析，也不会被执行。
 
 #### 示例
@@ -82,7 +82,7 @@ tpaCommand.addParam({
     validator: (value: Player, player) => {
         if (value == player) return "§3[传送系统]§r你不能向自己发送请求";
         if (getAllPlayers().length < 1) return "§3[传送系统]§r无玩家可供传送";
-        return true;
+        // 验证通过无需返回值
     },
 });
 pcommand.registerCommand(tpaCommand); //注册命令
@@ -252,7 +252,7 @@ const spCommand: CommandObject = {
         FormManager.open(player, "sp.main", {}, 10);
     },
     validator: (player) => {
-        return spManager.isLoaded() ? true : "假人未初始化，请先初始化";
+        return spManager.isLoaded() ? undefined : "假人未初始化，请先初始化";
     },
     paramBranches: [
         {
@@ -288,7 +288,7 @@ const spCommand: CommandObject = {
                 //省略
             },
             validator: (player) => {
-                return spManager.isLoaded() ? "已经初始化" : true;
+                return spManager.isLoaded() ? "已经初始化" : undefined;
             },
         },
         {

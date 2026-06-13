@@ -23,7 +23,7 @@ const spCommand: CommandObject = {
         formManager.openNamed(player, "sp.main", {}, 10);
     },
     validator: (player) => {
-        if (spManager.isLoaded()) return true;
+        if (spManager.isLoaded()) return;
         formManager.openNamed(player, "sp.main", {}, 10);
         return "假人未初始化，请先初始化";
     },
@@ -62,7 +62,7 @@ const spCommand: CommandObject = {
                 });
             },
             validator: (player) => {
-                return spManager.isLoaded() ? "已经初始化" : true;
+                return spManager.isLoaded() ? "已经初始化" : undefined;
             },
         },
         {
@@ -139,7 +139,7 @@ const spCommand: CommandObject = {
                             if (value > 36 || value < 0) {
                                 return "slotId必须在0-36之间";
                             }
-                            return true;
+                            // 通过则无需返回值
                         },
                     },
                 ],
@@ -169,7 +169,7 @@ const spCommand: CommandObject = {
                             if (value > 36 || value < 0) {
                                 return "slotId必须在0-36之间";
                             }
-                            return true;
+                            // 通过则无需返回值
                         },
                     },
                 ],

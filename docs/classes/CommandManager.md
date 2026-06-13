@@ -10,13 +10,17 @@
 
 ### Constructor
 
-> **new CommandManager**(`parser`): `CommandManager`
+> **new CommandManager**(`parser`, `nativeParser`): `CommandManager`
 
 #### Parameters
 
 ##### parser
 
 `CommandParser`
+
+##### nativeParser
+
+`NativeCommandParser`
 
 #### Returns
 
@@ -26,7 +30,7 @@
 
 ### commands
 
-> **commands**: `Map`\<`string`, [`Command`](Command.md)\>
+> `readonly` **commands**: `Map`\<`string`, [`Command`](Command.md)\>
 
 ***
 
@@ -38,7 +42,7 @@
 
 ### nativeCommands
 
-> **nativeCommands**: [`Command`](Command.md)[] = `[]`
+> `readonly` **nativeCommands**: [`Command`](Command.md)[] = `[]`
 
 ***
 
@@ -191,27 +195,3 @@
 #### Returns
 
 [`cancel`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#cancel) \| [`skipsend`](../sapi-pro/namespaces/Event/enumerations/chatOpe.md#skipsend) \| `undefined`
-
-***
-
-### runNativeCommand()
-
-> **runNativeCommand**(`command`, `origin`, ...`args`): `CustomCommandResult` \| `undefined`
-
-#### Parameters
-
-##### command
-
-[`Command`](Command.md)
-
-##### origin
-
-`CustomCommandOrigin`
-
-##### args
-
-...`any`[]
-
-#### Returns
-
-`CustomCommandResult` \| `undefined`
