@@ -1,7 +1,6 @@
 import { world } from "@minecraft/server";
 import { LibConfig, PackInfo } from "./Config";
 import { initCom } from "./System/ScriptCom";
-import { initLangCmd } from "./main";
 import { setLoggerNamespace } from "./utils/logger";
 import { gameDeferredRegistry } from "./Deferred";
 import { formManager } from "./Form/formManager";
@@ -17,7 +16,6 @@ export * from "./Translate/index";
 /**库初始化 */
 export function initSAPIPro(packInfo: PackInfo) {
     LibConfig.regPackInfo(packInfo);
-    initLangCmd();
     setLoggerNamespace(LibConfig.packInfo.nameSpace);
     world.afterEvents.worldLoad.subscribe(() => {
         initCom();

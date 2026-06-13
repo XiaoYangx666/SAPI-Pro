@@ -1,15 +1,11 @@
-import { Command, CommandObject, pcommand } from "../Command/main";
+import { CommandObject } from "../Command/main";
 import { formManager } from "../Form/formManager";
 import { languageNames } from "./languages";
-import { langCmdText } from "./ui_lang";
 import { translator } from "./translator";
 import { LangSettingForm } from "./ui";
+import { langCmdText } from "./ui_lang";
 
-export function initLangCmd() {
-    pcommand.registerCommand(Command.fromObject(langCmd));
-}
-
-const langCmd: CommandObject = {
+export const langCmd: CommandObject = {
     name: "lang",
     explain: "open language setting form",
     handler: (p) => {
