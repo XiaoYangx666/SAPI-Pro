@@ -135,25 +135,39 @@ const spCreate: SAPIProForm<ModalFormData> = {
 `args:U`
 获取当前表单的上下文参数，一般是上个表单传递的（泛型 U 提供了完整类型推断）
 
-#### 方法(此处只介绍几种)
+#### 导航方法
 
-`push(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
+`push(form, args?, delay?)`
 打开新表单，并加入堆栈
 
-`pushNamed(name: string, args?: contextArgs, delay = 0)`
+`pushNamed(name, args?, delay?)`
 打开具名表单
 
-`back(delay = 0)`
+`back(delay?)`
 返回上一层
 
-`reopen(delay = 0)`
+`reopen(delay?)`
 重新打开当前表单（刷新）
 
-`replace(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
+`replace(form, args?, delay?)`
 替换当前表单
 
-`offAll(form: SAPIProForm<T, TArgs>, args?: TArgs, delay = 0)`
+`replaceNamed(name, args?, delay?)`
+替换当前表单为具名表单
+
+`offAll(form, args?, delay?)`
 清空堆栈，打开表单
+
+`offAllNamed(name, args?, delay?)`
+清空堆栈，打开具名表单
+
+`until(form, delay?)`
+一直返回到指定页（在堆栈中向上查找，弹出目标之上的所有表单）
+
+`offUntil(form, newForm, args?, delay?)`
+一直返回到指定页并在其上方打开新表单
+
+> 在 handler 中可以多次调用导航方法，表单管理器会在 handler 执行完毕后统一处理。
 
 ---
 
@@ -181,18 +195,25 @@ interface CommonFormData<T extends formDataType, U extends contextArgs = context
 ButtonForm 是最常用的组件，支持静态按钮、动态生成列表以及下标索引处理。
 
 ```ts
-ButtonForm<U>(data: ButtonFormData<U>): ButtonForm<U>;
+CommonForm.ButtonForm<U, TData>(data: ButtonFormData<U, TData>): ButtonForm<U, TData>;
 ```
+
+- `U`: 上下文参数类型
+- `TData`: 按钮附带数据类型（默认 `void`，不携带额外数据时省略）
 
 参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
 
 #### 按钮处理逻辑
 
-`ButtonForm` 的按钮由两部分组成：
+`ButtonForm` 的按钮由三部分组成：
 
-- 静态按钮 (buttons): 在数组中定义的按钮。如果带有 func 属性，点击后会直接触发该回调，不进入全局 handler。
+- 静态按钮 (buttons): 在数组中定义的固定按钮，位于顶部。如果带有 func 属性，点击后会直接触发该回调，不进入全局 handler。
 
-- 动态按钮 (buttonGenerator): 每次构建表单时动态生成的按钮列表。
+- 底部固定按钮 (footerButtons): 与 buttons 相同，但渲染在按钮列表底部。
+
+- 动态按钮 (buttonGenerator): 每次构建表单时动态生成的按钮列表，位于底部固定按钮之后。
+
+三种按钮按照 `buttons → footerButtons → buttonGenerator` 的顺序排列。
 
 #### buttons 静态按钮
 
@@ -243,7 +264,7 @@ buttonGenerator: (player, args, t) => Iterable<FuncButton<U, TData>>;
 ##### 示例
 
 ```typescript
-const DbInfoForm = new ButtonForm<{
+const DbInfoForm = CommonForm.ButtonForm<{
     db: DataBase<any>;
     keys?: string[];
     participants?: ScoreboardIdentity[];
@@ -298,6 +319,54 @@ const DbInfoForm = new ButtonForm<{
 ```
 
 例子中使用 buttonGenerator 来直接生成动态的key按钮，并通过buttons添加了静态按钮。
+
+#### handler 参数类型与 TData
+
+`handler` 的第二个参数 `button` 类型会根据 `TData` 自动变化：
+
+- 当不传 `TData`（默认 `void`）：`{ btnIndex: number }`
+- 当指定 `TData` 时：`{ data: TData; btnIndex: number }`
+
+```typescript
+// 不带 TData — button 只有 btnIndex
+CommonForm.ButtonForm({
+    buttons: [{ label: "选项A" }],
+    handler(ctx, btn) {
+        // btn 类型: { btnIndex: number }
+        console.log(btn.btnIndex);
+    },
+});
+
+// 带 TData — button 包含 data 和 btnIndex
+CommonForm.ButtonForm<ButtonFormArgs, string>({
+    buttonGenerator: () => [{ label: "opt1", data: "value1" }],
+    handler(ctx, btn) {
+        // btn 类型: { data: string; btnIndex: number }
+        console.log(btn.data);
+    },
+});
+```
+
+#### footerButtons 底部固定按钮
+
+`footerButtons` 与 `buttons` 属性相同，用于在按钮列表底部渲染固定按钮，适合放置"返回"、"刷新"等全局操作。渲染顺序为 `buttons → footerButtons → buttonGenerator`。
+
+```typescript
+CommonForm.ButtonForm({
+    title: "玩家管理",
+    buttons: [
+        { label: "踢出", func: (ctx) => ctx.push(kickForm) },
+        { label: "封禁", func: (ctx) => ctx.push(banForm) },
+    ],
+    footerButtons: [
+        { icon: "ui/refresh_light", label: "刷新列表", func: (ctx) => ctx.reopen() },
+        { icon: "ui/back_light", label: "返回", func: (ctx) => ctx.back() },
+    ],
+    buttonGenerator: (player, args, t) => {
+        return onlinePlayers.map((p) => ({ label: p.name }));
+    },
+});
+```
 
 ### CommonForm.BodyInfoForm
 

@@ -110,7 +110,25 @@ type DPValueTypes = string | number | boolean | Vector3;
 ### 构造函数
 
 ```ts
-constructor(name: string)
+constructor(name: string, source: DPSource = world)
+```
+
+第二个参数 `source` 支持 `World`、`Entity`、`ItemStack`，默认为 `world`。
+
+---
+
+### DPSource 接口
+
+用于抽象 DynamicProperty 操作的数据源，支持世界、实体和物品堆。
+
+```ts
+interface DPSource {
+    setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void;
+    getDynamicProperty(identifier: string): boolean | number | string | Vector3 | undefined;
+    getDynamicPropertyIds(): string[];
+    clearDynamicProperties(): void;
+    getDynamicPropertyTotalByteCount(): number;
+}
 ```
 
 ---
