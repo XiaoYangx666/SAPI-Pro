@@ -48,7 +48,7 @@ export const langCmd: CommandObject = {
             name: "set",
             explain: "set language",
             paramBranches: [{ name: "lang", type: "enum", enums: Object.keys(languageNames) }],
-            handler: (p, parm) => {
+            handler(p, parm: { lang: string }) {
                 const id = translator.getLangIdByKey(parm.lang);
                 if (id == undefined) return;
                 try {

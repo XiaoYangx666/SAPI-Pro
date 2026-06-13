@@ -25,11 +25,13 @@
         "rimraf": "^6.1.3",
         "tsc-alias": "^1.8.17",
         "typedoc": "^0.28.7",
-        "typedoc-plugin-markdown": "^4.4.2"
+        "typedoc-plugin-markdown": "^4.4.2",
+        "vitest": "^4.1.8"
     },
     "scripts": {
         "build:nodeclare": "python3 build.py --declaration false",
         "clean": "rimraf build scripts",
+        "dev": "tsgo -p tsconfig.build.json -w",
         "compile": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
         "package": "node tools/build.ts",
         "build": "npm run clean && npm run compile && npm run package",

@@ -1,11 +1,30 @@
-import { Player, Vector3 } from "@minecraft/server";
+import {
+    BlockType,
+    Entity,
+    EntityType,
+    ItemType,
+    Player,
+    RawMessage,
+    RawText,
+    Vector3,
+} from "@minecraft/server";
 import { paramTypes } from "./parser/ParamTypes";
 
 export interface ParsedParam {
     [key: string]: any;
 }
-export type commandHandler<T = ParsedParam> = (player: Player, params: T) => void;
-export type parsedTypes = number | boolean | string | Player | Vector3;
+export type commandHandler = (player: Player, params: any) => void;
+export type parsedTypes =
+    | number
+    | boolean
+    | string
+    | Player
+    | Vector3
+    | BlockType
+    | ItemType
+    | EntityType
+    | Player[]
+    | Entity[];
 
 export type paramBranches = ParamObject[] | ParamObject;
 export interface CommandObject {
@@ -28,15 +47,12 @@ export interface CommandObject {
     isClientCommand?: boolean;
 }
 
-export interface CommandValidator {
-    /**命令验证器，返回true或失败提示 */
-    (player: Player): true | string;
-}
+/**命令验证器，返回true或失败提示 */
+export type CommandValidator = (player: Player) => void | string | RawText;
 
-export interface ParamValidator {
-    /**参数验证器，返回true或失败提示 */
-    (value: any, player: Player): true | ParseError | string;
-}
+/**参数验证器，返回true或失败提示 */
+export type ParamValidator = (value: any, player: Player) => void | ParseError | string | RawText;
+
 export interface ParamObject {
     /**参数名 */
     name: string;
@@ -69,12 +85,17 @@ export class ParseInfo {
 }
 
 export class ParseError {
-    msg?: string;
+    msg?: string | RawText;
     onlymsg?: boolean;
     index: number;
     /**深度相同时是否允许被替换 */
     canReplace: boolean;
-    constructor(msg?: string, onlymsg?: boolean, index: number = 0, canReplace: boolean = true) {
+    constructor(
+        msg?: string | RawText,
+        onlymsg?: boolean,
+        index: number = 0,
+        canReplace: boolean = true
+    ) {
         this.msg = msg;
         this.onlymsg = onlymsg;
         this.index = index;
