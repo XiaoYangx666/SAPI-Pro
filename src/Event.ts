@@ -6,7 +6,7 @@ import {
     world,
 } from "@minecraft/server";
 import { LibErrorMes } from "./func";
-import { RandomUtils } from "./utils/random";
+import { RandomUtils } from "./utils/main";
 
 export enum chatOpe {
     /**捕获消息取消发送 */
