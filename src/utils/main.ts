@@ -1,4 +1,4 @@
-export * from "./random";
+export * as RandomUtils from "./random";
 export * from "./vector";
 export * from "./vanila-data";
 export * from "./chunkUtils";
