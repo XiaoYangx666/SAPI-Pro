@@ -1,6 +1,7 @@
 import {
     DisplaySlotId,
     Entity,
+    Player,
     ScoreboardIdentity,
     ScoreboardObjective,
     system,
@@ -39,6 +40,16 @@ export abstract class DataBase<T> {
         return Object.values(this.DBMap);
     }
 }
+
+/**抽象DynamicProperty类，支持实体和世界 */
+export interface DPSource {
+    setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void;
+    getDynamicProperty(identifier: string): boolean | number | string | Vector3 | undefined;
+    getDynamicPropertyIds(): string[];
+    clearDynamicProperties(): void;
+    getDynamicPropertyTotalByteCount(): number;
+}
+
 export class DPDataBase extends DataBase<DPValueTypes> {
     private static ListLenMark = "arrlen";
     private static ListMark = "arr";
@@ -46,9 +57,11 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private keyPrefix: string; //前缀
     private readonly re: RegExp;
     private readonly logger: Logger;
+    private readonly source: DPSource;
 
-    constructor(name: string) {
+    constructor(name: string, source: DPSource = world) {
         super(name, "DP");
+        this.source = source;
         this.keyPrefix = this.name;
         this.logger = new Logger(`${DPDataBase.name}_${name}`);
         this.re = new RegExp(`^${this.keyPrefix}\.([^_]+)_(?:$|${DPDataBase.ListLenMark})`);
@@ -66,7 +79,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
             const splitStrings = splitString(value, true);
             this.setList(key, splitStrings);
         } else {
-            world.setDynamicProperty(this.getKey(key), value);
+            this.source.setDynamicProperty(this.getKey(key), value);
         }
     }
 
@@ -80,7 +93,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
             const splitStrings = await splitString(value);
             this.setList(key, splitStrings);
         } else {
-            world.setDynamicProperty(this.getKey(key), value);
+            this.source.setDynamicProperty(this.getKey(key), value);
         }
     }
 
@@ -89,7 +102,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         if (this.getListLen(key) != undefined) {
             value = this.getLargeString(key);
         } else {
-            value = world.getDynamicProperty(this.getKey(key));
+            value = this.source.getDynamicProperty(this.getKey(key));
         }
         return value as T;
     }
@@ -98,12 +111,12 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         if (this.getListLen(key) != undefined) {
             this.rmList(key);
         } else {
-            world.setDynamicProperty(this.getKey(key));
+            this.source.setDynamicProperty(this.getKey(key));
         }
     }
     /**获取所有键，包括list的的键,并保留DP前缀 */
     getrealKeys() {
-        return world.getDynamicPropertyIds().filter((t) => t.startsWith(this.keyPrefix));
+        return this.source.getDynamicPropertyIds().filter((t) => t.startsWith(this.keyPrefix));
     }
     /**获取所有键 */
     keys() {
@@ -150,7 +163,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     clear() {
         const keys = this.getrealKeys();
         for (let key of keys) {
-            world.setDynamicProperty(key);
+            this.source.setDynamicProperty(key);
         }
     }
     private getLargeString(key: string) {
@@ -158,17 +171,17 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     }
     private setList(key: string, list: string[]) {
         const lenKey = this.getKey(key, DPDataBase.ListLenMark);
-        const oldLength = world.getDynamicProperty(lenKey);
+        const oldLength = this.source.getDynamicProperty(lenKey);
         //设置数组长度
-        world.setDynamicProperty(lenKey, list.length);
+        this.source.setDynamicProperty(lenKey, list.length);
         //设置数组每一项
         for (let i = 0; i < list.length; i++) {
-            world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i), list[i]);
+            this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i), list[i]);
         }
         //如果oldLength大于数组长度，要删除多余的
         if (typeof oldLength == "number" && oldLength > list.length) {
             for (let i = list.length; i < oldLength; i++) {
-                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
+                this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
         }
     }
@@ -177,7 +190,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         if (length == undefined) return;
         const data: string[] = new Array(length);
         for (let i = 0; i < length; i++) {
-            const part = world.getDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
+            const part = this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             if (part == undefined) {
                 this.logger.error(`获取数组${key}的第${i}项出错`);
                 return undefined;
@@ -188,7 +201,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     }
     private getListLen(key: string) {
         const lenKey = this.getKey(key, DPDataBase.ListLenMark);
-        const length = world.getDynamicProperty(lenKey);
+        const length = this.source.getDynamicProperty(lenKey);
         if (typeof length === "number") {
             return length;
         }
@@ -197,10 +210,10 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         const length = this.getListLen(key);
         if (length != undefined) {
             for (let i = 0; i < length; i++) {
-                world.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
+                this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
         }
-        world.setDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
+        this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
     }
 
     //静态方法
