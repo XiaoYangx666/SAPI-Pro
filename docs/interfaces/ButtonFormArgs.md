@@ -18,4 +18,4 @@
 
 ### buttons?
 
-> `optional` **buttons?**: [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`, `unknown`\>[]
+> `optional` **buttons?**: [`FuncButton`](FuncButton.md)\<`ButtonFormArgs`, `any`\>[]

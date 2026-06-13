@@ -14,13 +14,17 @@
 
 ### Constructor
 
-> **new DPDataBase**(`name`): `DPDataBase`
+> **new DPDataBase**(`name`, `source?`): `DPDataBase`
 
 #### Parameters
 
 ##### name
 
 `string`
+
+##### source?
+
+[`DPSource`](../interfaces/DPSource.md) = `world`
 
 #### Returns
 

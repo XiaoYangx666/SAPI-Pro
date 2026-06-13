@@ -18,7 +18,7 @@
 
 ### TData
 
-`TData` = `unknown`
+`TData` = `void`
 
 ## Properties
 
@@ -60,7 +60,15 @@ body
 
 > `optional` **buttons?**: [`FuncButton`](FuncButton.md)\<`U`, `TData`\>[]
 
-按钮列表
+按钮列表(顶部的固定按钮)
+
+***
+
+### footerButtons?
+
+> `optional` **footerButtons?**: [`FuncButton`](FuncButton.md)\<`U`, `TData`\>[]
+
+按钮列表(底部的固定按钮)
 
 ***
 
@@ -90,15 +98,9 @@ body
 
 ##### button
 
+\[`TData`\] *extends* \[`void`\] ? `object` : `object`
+
 按下的按钮 data为构造时附带的数据,btnIndex为排除func按钮后的下标
-
-###### btnIndex
-
-`number`
-
-###### data
-
-`TData`
 
 ##### index
 

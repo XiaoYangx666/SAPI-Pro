@@ -2,9 +2,9 @@
 
 ***
 
-[sapi-pro](../globals.md) / FieldParseError
+[sapi-pro](../globals.md) / ButtonFormNoDataError
 
-# Class: FieldParseError
+# Class: ButtonFormNoDataError
 
 ## Extends
 
@@ -14,17 +14,13 @@
 
 ### Constructor
 
-> **new FieldParseError**(`message`, `translation`, `options?`): `FieldParseError`
+> **new ButtonFormNoDataError**(`message?`, `options?`): `ButtonFormNoDataError`
 
 #### Parameters
 
-##### message
+##### message?
 
 `string`
-
-##### translation
-
-[`LangText`](../type-aliases/LangText.md)
 
 ##### options?
 
@@ -32,7 +28,7 @@
 
 #### Returns
 
-`FieldParseError`
+`ButtonFormNoDataError`
 
 #### Overrides
 
@@ -77,12 +73,6 @@
 #### Inherited from
 
 `Error.stack`
-
-***
-
-### translation
-
-> **translation**: [`LangText`](../type-aliases/LangText.md)
 
 ***
 
