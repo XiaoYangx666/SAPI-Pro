@@ -1,33 +1,43 @@
+import { LibConfig } from "@/Config";
 import {
     CustomCommandOrigin,
     CustomCommandResult,
     CustomCommandSource,
     CustomCommandStatus,
     Player,
+    StartupEvent,
     system,
 } from "@minecraft/server";
-import { LibConfig } from "../Config";
 import { Command } from "./commandClass";
-import { CommandParser } from "./parser/parser";
+import { NativeCommandParser } from "./parser/nativeParser";
 
 //命令管理类
 export class CommandManager {
-    commands: Map<string, Command>;
-    nativeCommands: Command[] = [];
+    readonly commands: Map<string, Command>;
+    readonly nativeCommands: Command[] = [];
     testMode = false;
 
-    constructor(private readonly parser: CommandParser) {
+    constructor(private readonly nativeParser: NativeCommandParser) {
         this.commands = new Map();
         //注册原生指令
-        system.beforeEvents.startup.subscribe((t) => {
-            this.nativeCommands.forEach((cmd) => {
-                t.customCommandRegistry.registerCommand(
-                    cmd.toNative(LibConfig.packInfo.nameSpace),
-                    (origin: CustomCommandOrigin, ...args: any[]) => {
-                        return this.runNativeCommand(cmd, origin, args);
-                    }
-                );
-            });
+        system.beforeEvents.startup.subscribe(this.registerNativeCommands.bind(this));
+    }
+
+    /**注册所有原生命令 */
+    private registerNativeCommands(t: StartupEvent) {
+        this.nativeCommands.forEach((cmd) => {
+            const nativeData = cmd.toNative(LibConfig.packInfo.nameSpace);
+            // 1. 自动遍历并注册属于该命令的所有 Enum
+            for (const [enumName, enumValues] of Object.entries(nativeData.enums)) {
+                t.customCommandRegistry.registerEnum(enumName, enumValues);
+            }
+            // 2. 注册主命令
+            t.customCommandRegistry.registerCommand(
+                nativeData.cmd,
+                (origin: CustomCommandOrigin, ...args: any[]) => {
+                    return this.runNativeCommand(cmd, origin, args);
+                }
+            );
         });
     }
 
@@ -39,7 +49,7 @@ export class CommandManager {
     runNativeCommand(
         command: Command,
         origin: CustomCommandOrigin,
-        ...args: any[]
+        args: any[]
     ): CustomCommandResult | undefined {
         //判断是否玩家
         if (
@@ -48,15 +58,8 @@ export class CommandManager {
         ) {
             return { message: "该指令只能由玩家执行", status: CustomCommandStatus.Failure };
         }
-        const ans = this.parser.parseSubCommand(
-            command,
-            args.flat(),
-            origin.sourceEntity as Player,
-            false
-        );
+        const ans = this.nativeParser.parseAndExecute(command, origin.sourceEntity as Player, args);
         //执行失败
-        if (typeof ans == "string")
-            return { message: ans + JSON.stringify(args), status: CustomCommandStatus.Failure };
-        return { status: CustomCommandStatus.Success };
+        return ans;
     }
 }

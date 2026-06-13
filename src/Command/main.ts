@@ -1,11 +1,10 @@
 import { CommandManager } from "./manager";
-import { CommandParser } from "./parser/parser";
+import { NativeCommandParser } from "./parser/nativeParser";
 
 //初始化
 function initCommandSystem() {
-    const parser = new CommandParser();
-    const pcommand = new CommandManager(parser);
-    parser.init(pcommand);
+    const nativeParser = new NativeCommandParser();
+    const pcommand = new CommandManager(nativeParser);
     return pcommand;
 }
 
