@@ -31,10 +31,11 @@
         "build:nodeclare": "python3 build.py --declaration false",
         "clean": "rimraf build scripts",
         "compile": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-        "package": "node build.ts",
+        "package": "node tools/build.ts",
         "build": "npm run clean && npm run compile && npm run package",
         "pack": "npm run compile && npm pack",
-        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
+        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources",
+        "skills": "node tools/cp_skill.ts"
     },
     "files": [
         "scripts"
