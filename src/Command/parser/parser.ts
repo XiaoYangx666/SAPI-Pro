@@ -44,7 +44,10 @@ export class CommandParser {
         if (command && command.isClientCommand) return chatOpe.skipsend;
         if (!command || (command.isAdmin && !isAdmin(player))) {
             if (!this.manager.testMode)
-                player.sendMessage({ translate: "commands.generic.unknown", with: [name] });
+                player.sendMessage([
+                    { text: "§c" },
+                    { translate: "commands.generic.unknown", with: [name] },
+                ]);
             return chatOpe.cancel;
         }
         //命中，解析命令

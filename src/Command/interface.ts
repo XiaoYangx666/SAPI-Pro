@@ -4,7 +4,6 @@ import {
     EntityType,
     ItemType,
     Player,
-    RawMessage,
     RawText,
     Vector3,
 } from "@minecraft/server";
