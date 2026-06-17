@@ -30,7 +30,6 @@ sapi-pro 分为 beta版和stable版。
 - beta版：全功能，需要ScriptAPI beta版本
 - stable版: 缺失部分功能，需要ScriptAPI稳定版
 
-
 # SAPI-Pro开发基本步骤
 
 1. 检查项目根目录结构，是否已有文件，是否已安装saip-pro
@@ -40,10 +39,10 @@ sapi-pro 分为 beta版和stable版。
 
 我按 **skill.md 用途** 重写了一版，目标是让 Agent 快速掌握规则，而不是作为开发教程。重点保留：
 
-* 版本约束
-* API 查询行为
-* 执行权限
-* 性能和成就坑
+- 版本约束
+- API 查询行为
+- 执行权限
+- 性能和成就坑
 
 去掉大量解释。
 
@@ -64,20 +63,19 @@ sapi-pro 项目通常使用：
 - `@minecraft/server`
 - `@minecraft/server-ui`
 
-
 ## ScriptAPI 版本
 
 ScriptAPI 分为 stable 和 beta。
 
 - beta：
-  - API 更多
-  - 需要开启测试版 API
-  - 不支持成就
+    - API 更多
+    - 需要开启测试版 API
+    - 不支持成就
 
 - stable：
-  - API 较少
-  - 不需要实验选项
-  - 支持成就
+    - API 较少
+    - 不需要实验选项
+    - 支持成就
 
 规则：
 
@@ -89,9 +87,9 @@ ScriptAPI 分为 stable 和 beta。
 
 ```json
 {
-  "overrides": {
-    "@minecraft/server": "xxx"
-  }
+    "overrides": {
+        "@minecraft/server": "xxx"
+    }
 }
 ```
 
@@ -123,19 +121,19 @@ MC API 以项目 `node_modules` 中实际安装的类型定义为准。
 
 禁止：
 
-* 依赖记忆中的 API
-* 扫描整个 `.d.ts` 文件
-* 无目的浏览 ScriptAPI 类型定义
+- 依赖记忆中的 API
+- 扫描整个 `.d.ts` 文件
+- 无目的浏览 ScriptAPI 类型定义
 
 允许：
 
-* 确认已知 API 的参数、返回值
-* 确认某功能是否可以通过 ScriptAPI 实现
+- 确认已知 API 的参数、返回值
+- 确认某功能是否可以通过 ScriptAPI 实现
 
 查询时：
 
-* 按类名或关键词搜索
-* 只读取相关部分
+- 按类名或关键词搜索
+- 只读取相关部分
 
 常用搜索：
 
@@ -160,12 +158,12 @@ export class System
 ```
 
 事件：
+
 ```
 WorldBeforeEvents
 WorldAfterEvents
 StartupEvent
 ```
-
 
 ## Script Execution Privilege
 
@@ -175,11 +173,11 @@ ScriptAPI 根据执行环境限制 API。
 
 常见：
 
-* `beforeEvents`
+- `beforeEvents`
 
 限制：
 
-* 不能修改世界状态
+- 不能修改世界状态
 
 需要修改时：
 
@@ -189,34 +187,32 @@ system.run(() => {
 });
 ```
 
-
 ### Early execution
 
 常见：
 
-* `system.beforeEvents.startup`
+- `system.beforeEvents.startup`
 
 限制：
 
-* 脚本刚加载时执行
-* 大部分世界数据不可访问
+- 脚本刚加载时执行
+- 大部分世界数据不可访问
 
 不要在此阶段访问：
 
-* 玩家
-* 实体
-* 区块
-* 世界运行时数据
+- 玩家
+- 实体
+- 区块
+- 世界运行时数据
 
 sapi-pro 可使用 `deferred` 延迟初始化依赖运行时的数据。
-
 
 ### Default execution
 
 常见：
 
-* `afterEvents`
-* `system.run`
+- `afterEvents`
+- `system.run`
 
 正常执行环境，可使用大部分 API。
 
@@ -233,7 +229,7 @@ system.runJob(generator);
 结合：
 
 ```ts
-function* generator(){}
+function* generator() {}
 ```
 
 分批执行。
@@ -242,8 +238,8 @@ function* generator(){}
 
 需要支持成就：
 
-* 使用 stable ScriptAPI
-* manifest 添加：
+- 使用 stable ScriptAPI
+- manifest 添加：
 
 ```json
 {
@@ -262,3 +258,19 @@ Minecraft 游戏内文本不支持大部分 Emoji（如：✅ ❌ 🤣 🎉等�
 生成玩家可见文本时，优先使用 Minecraft 支持的符号和颜色代码。
 
 禁止使用 Emoji 作为按钮、提示、标题中的状态图标。
+
+## 颜色字符
+
+基岩版可以使用 § 来进行文本上色
+可用范围为：
+
+- 0-9
+- a,b,c,d,e,f
+- g #DDD605,h #E3D4D1,i #CECACA,j #443A3B,m #971607,n #B4684D,p #DEB12D,q #11A036,s #2CBAA8,t #21497B,u #9A5CC6,v #EB7114,w #8CB3FF
+- k(随机),l(粗体),o(斜体),r(重置)
+
+颜色使用:
+
+- 表单按钮背景色为( #C6C6C6)，按钮上的文字应使用深色系
+- 表单背景为半透明黑，表单body文字应使用浅色系
+- 聊天文本背景、title背景为半透明黑，文字应使用浅色系

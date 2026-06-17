@@ -50,12 +50,12 @@ Stable API：
 
 1. 确保sapi-kit已安装
 2. 确认项目要使用的的ScriptAPI版本，稳定版or Beta版，可咨询用户
-3. 根据选定版本，获取相关包的最新版本列表
+3. 根据选定版本，使用对应的标签
     1. 使用beta版本API
-        - `npm view @minecraft/server versions | grep stable | tail -10`(仅linux)
-        - `npm view @minecraft/server-ui versions | grep stable | tail -10`(仅linux)
+        - `npm i @minecraft/server@beta`
+        - `npm i @minecraft/server-ui@beta`
     2. 使用稳定版本API
-       无需获取，latest标签对应的是最新稳定版
+        - `npm i @minecraft/server@latest`
 4. 安装指定版本的@minecraft包和sapi-pro包
 5. 创建manifest.json
     - 如果使用稳定版，则依赖直接写对应的版本号
