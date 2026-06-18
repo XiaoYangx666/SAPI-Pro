@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Requires-SAPI%202.6.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.10+-green)
+![Requires](https://img.shields.io/badge/Requires-SAPI%202.8.-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.30+-green)
 
 > The stable branch is dedicated to the stable API and has some features removed (the documentation is for reference only).
 

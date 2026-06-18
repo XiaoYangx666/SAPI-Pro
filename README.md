@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.6.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.10+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.8.0-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.30+-green)
 
 > stable 分支是专供稳定版 api 使用的，去掉了部分功能(文档仅供参考)
 

@@ -25,18 +25,18 @@
         "vitest": "^4.1.8"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.6.0",
-        "@minecraft/server-ui": "^2.0.0"
+        "@minecraft/server": "^2.8.0",
+        "@minecraft/server-ui": "^2.1.0"
     },
     "overrides": {
         "@minecraft/server-ui": {
-            "@minecraft/server": "2.6.0"
+            "@minecraft/server": "2.8.0"
         }
     },
     "scripts": {
         "clean": "rimraf build scripts",
         "dev": "tsgo -p tsconfig.build.json -w",
-        "compile": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+        "compile": "rimraf scripts && tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
         "package": "node build.ts",
         "build": "npm run clean && npm run compile && npm run package",
         "pack": "npm run compile && npm pack",
