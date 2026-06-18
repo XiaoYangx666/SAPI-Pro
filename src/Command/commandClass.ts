@@ -199,7 +199,7 @@ export class Command {
                 ? `${nameSpace}:${this.name}_${t.name}_${enumIndex++}`
                 : undefined;
 
-            const param: CustomCommandParameter = {
+            const param: CustomCommandParameter & { enumName?: string } = {
                 name: t.name,
                 type: NativeTypeMapping[t.type],
             };
