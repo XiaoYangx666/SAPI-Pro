@@ -6,10 +6,13 @@ import { ButtonFormArgs, ButtonFormData, FuncButton } from "./commonFormInterfac
 import { isAdmin } from "../../func";
 
 /**通用按钮表单 */
-export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionFormData, U> {
-    private data: ButtonFormData<U>;
+export class ButtonForm<U extends ButtonFormArgs, TData = void> implements SAPIProForm<
+    ActionFormData,
+    U
+> {
+    private data: ButtonFormData<U, TData>;
 
-    constructor(data: ButtonFormData<U>) {
+    constructor(data: ButtonFormData<U, TData>) {
         this.data = data;
     }
 
@@ -40,7 +43,7 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
     }
 
     async handler(res: ActionFormResponse, context: SAPIProFormContext<ActionFormData, U>) {
-        const buttons = context.args.buttons as FuncButton<U>[];
+        const buttons = context.args.buttons as FuncButton<U, TData>[];
         const listButtons = buttons.filter((btn) => btn.func == undefined);
 
         if (res.selection !== undefined) {
@@ -54,7 +57,7 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
                 //执行列表处理函数
                 await this.data.handler?.(
                     context,
-                    { data: button.data, btnIndex: idx },
+                    { data: button.data, btnIndex: idx } as any,
                     res.selection
                 );
             }
@@ -78,8 +81,12 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
         await this.data.generator(form, player, args, t);
     }
 
-    private collectButtons(player: Player, args: U, t: UniversalTranslator): FuncButton<U>[] {
-        const result: FuncButton<U>[] = [];
+    private collectButtons(
+        player: Player,
+        args: U,
+        t: UniversalTranslator
+    ): FuncButton<U, TData>[] {
+        const result: FuncButton<U, TData>[] = [];
 
         // 静态按钮
         if (this.data.buttons) {
@@ -95,10 +102,28 @@ export class ButtonForm<U extends ButtonFormArgs> implements SAPIProForm<ActionF
         // 动态按钮
         const gen = this.data.buttonGenerator?.(player, args, t);
 
+        //底部静态按钮
+        if (this.data.footerButtons) {
+            for (const button of this.data.footerButtons) {
+                //检查权限
+                if (button.isAdmin && !isAdmin(player)) continue;
+                //检查自定义显隐函数
+                if (!(button.shouldShow?.(player, args) ?? true)) continue;
+                result.push(button);
+            }
+        }
+
         if (gen) {
             result.push(...gen);
         }
 
         return result;
+    }
+}
+
+export class ButtonFormNoDataError extends Error {
+    constructor(message?: string, options?: ErrorOptions) {
+        super(message, options);
+        this.name = ButtonFormNoDataError.name;
     }
 }

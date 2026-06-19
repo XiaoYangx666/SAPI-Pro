@@ -42,7 +42,7 @@
 
 ##### validator?
 
-[`CommandValidator`](../interfaces/CommandValidator.md)
+[`CommandValidator`](../type-aliases/CommandValidator.md)
 
 命令验证器
 
@@ -114,7 +114,7 @@
 
 ### validator?
 
-> `optional` **validator?**: [`CommandValidator`](../interfaces/CommandValidator.md)
+> `optional` **validator?**: [`CommandValidator`](../type-aliases/CommandValidator.md)
 
 ## Methods
 
@@ -208,29 +208,43 @@
 
 ***
 
-### getFlatBranch()
+### setHandler()
 
-> **getFlatBranch**(): `object`
+> **setHandler**(`handler`): `Command`
 
-获取一条参数
+#### Parameters
+
+##### handler
+
+[`commandHandler`](../type-aliases/commandHandler.md)
 
 #### Returns
 
-`object`
+`Command`
 
-##### mandatory
+***
 
-> **mandatory**: `CustomCommandParameter`[] = `branch`
+### setValidator()
 
-##### optional
+> **setValidator**(`validator`): `Command`
 
-> **optional**: `CustomCommandParameter`[]
+#### Parameters
+
+##### validator
+
+[`CommandValidator`](../type-aliases/CommandValidator.md)
+
+#### Returns
+
+`Command`
 
 ***
 
 ### toNative()
 
-> **toNative**(`nameSpace`): `CustomCommand`
+> **toNative**(`nameSpace`): `object`
+
+转换为原生命令以便注册(内部调用)
 
 #### Parameters
 
@@ -240,7 +254,39 @@
 
 #### Returns
 
-`CustomCommand`
+`object`
+
+##### cmd
+
+> **cmd**: `object`
+
+###### cmd.cheatsRequired
+
+> **cheatsRequired**: `boolean` = `false`
+
+###### cmd.description
+
+> **description**: `string`
+
+###### cmd.mandatoryParameters
+
+> **mandatoryParameters**: `CustomCommandParameter`[] = `branch.mandatory`
+
+###### cmd.name
+
+> **name**: `string`
+
+###### cmd.optionalParameters
+
+> **optionalParameters**: `CustomCommandParameter`[] = `branch.optional`
+
+###### cmd.permissionLevel
+
+> **permissionLevel**: `CommandPermissionLevel`
+
+##### enums
+
+> **enums**: `Record`\<`string`, `string`[]\> = `branch.enums`
 
 ***
 

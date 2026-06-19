@@ -1,15 +1,11 @@
-import { Command, CommandObject, pcommand } from "../Command/main";
+import { CommandObject } from "../Command/main";
 import { formManager } from "../Form/formManager";
 import { languageNames } from "./languages";
-import { langCmdText } from "./ui_lang";
 import { translator } from "./translator";
 import { LangSettingForm } from "./ui";
+import { langCmdText } from "./ui_lang";
 
-export function initLangCmd() {
-    pcommand.registerCommand(Command.fromObject(langCmd));
-}
-
-const langCmd: CommandObject = {
+export const langCmd: CommandObject = {
     name: "lang",
     explain: "open language setting form",
     handler: (p) => {
@@ -52,7 +48,7 @@ const langCmd: CommandObject = {
             name: "set",
             explain: "set language",
             paramBranches: [{ name: "lang", type: "enum", enums: Object.keys(languageNames) }],
-            handler: (p, parm) => {
+            handler(p, parm: { lang: string }) {
                 const id = translator.getLangIdByKey(parm.lang);
                 if (id == undefined) return;
                 try {

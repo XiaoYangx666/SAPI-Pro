@@ -4,7 +4,7 @@
 
 ## 工具类
 
-#### [RandomUtils](../docs/classes/RandomUtils.md)
+#### [RandomUtils](../docs/sapi-pro/namespaces/RandomUtils/README.md)
 
 ```typescript
 import { RandomUtils } from "sapi-pro";

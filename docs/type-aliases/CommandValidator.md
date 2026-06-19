@@ -4,9 +4,9 @@
 
 [sapi-pro](../globals.md) / CommandValidator
 
-# Interface: CommandValidator()
+# Type Alias: CommandValidator
 
-> **CommandValidator**(`player`): `string` \| `true`
+> **CommandValidator** = (`player`) => `void` \| `string` \| `RawText`
 
 命令验证器，返回true或失败提示
 
@@ -18,4 +18,4 @@
 
 ## Returns
 
-`string` \| `true`
+`void` \| `string` \| `RawText`

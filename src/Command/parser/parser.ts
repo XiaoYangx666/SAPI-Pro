@@ -1,4 +1,5 @@
-import { Player, system } from "@minecraft/server";
+import { isRawMessage } from "@/Translate/translator";
+import { Player, RawMessage, system } from "@minecraft/server";
 import { LibConfig } from "../../Config";
 import { chatOpe } from "../../Event";
 import { isAdmin, LibErrorMes } from "../../func";
@@ -15,14 +16,14 @@ interface paramParseNode {
 }
 
 interface errorRecord {
-    msg: string;
+    msg: RawMessage | string;
     index: number;
     canReplace: boolean;
 }
 
 //命令解析类
 export class CommandParser {
-    private manager?: CommandManager;
+    private manager!: CommandManager;
 
     init(manager: CommandManager) {
         this.manager = manager;
@@ -31,16 +32,22 @@ export class CommandParser {
     /**直接解析一条命令 */
     parseCommand(input: string, player: Player) {
         //使用正则分割字符串
-        const paramStrings: string[] = [...input.matchAll(/@?(?:"(?:[^"]*)"|(?:[^\s]+))/g)].map((t) => t[0]);
+        const paramStrings: string[] = Array.from(
+            input.matchAll(/@?(?:"(?:[^"]*)"|(?:[^\s]+))/g),
+            (t) => t[0]
+        );
         const [name, ...params] = paramStrings;
-        const command = this.manager?.commands.get(name);
+        const command = this.manager.commands.get(name);
 
         if (!LibConfig.isHost && (!command || command.name == "help")) return chatOpe.skipsend; //不是主机，就不能操作命令
         //如果是客户端命令，则让客户端自己处理
         if (command && command.isClientCommand) return chatOpe.skipsend;
         if (!command || (command.isAdmin && !isAdmin(player))) {
-            if (!this.manager?.testMode)
-                player.sendMessage(`§c未知的命令: ${name ?? ""}。请检查命令是否存在以及你是否有权限执行它。`);
+            if (!this.manager.testMode)
+                player.sendMessage([
+                    { text: "§c" },
+                    { translate: "commands.generic.unknown", with: [name] },
+                ]);
             return chatOpe.cancel;
         }
         //命中，解析命令
@@ -67,47 +74,51 @@ export class CommandParser {
         const [subCommand, current] = this.findCommand(command, paramStrings);
         //权限判断
         if (subCommand.isAdmin && !isAdmin(player)) {
-            return this.ErrorMessage(
+            return this.dispatchError(
                 player,
-                command,
-                paramStrings[current],
-                paramStrings,
-                current,
                 showError,
-                "权限不足，无法执行此命令"
+                this.buildSyntaxError(
+                    command,
+                    paramStrings[current],
+                    paramStrings,
+                    current,
+                    "权限不足，无法执行此命令"
+                )
             );
         }
         //执行命令验证器
         if (subCommand.validator != undefined) {
             const validationResult = subCommand.validator(player);
-            if (validationResult !== true) {
-                return this.ErrorMes(player, validationResult, showError);
+            if (validationResult !== undefined) {
+                return this.dispatchError(player, showError, validationResult);
             }
         }
-        const params = this.parseParams(command, subCommand, paramStrings, current, player, showError);
-        if (typeof params == "string") {
-            return this.ErrorMes(player, params, showError);
+        const params = this.parseParams(command, subCommand, paramStrings, current, player);
+        if (typeof params == "string" || isRawMessage(params)) {
+            return this.dispatchError(player, showError, params);
         }
         if (params !== undefined) {
             //没有handler说明不需要参数或逻辑在子命令里，但返回了参数，则说明多了
             if (!subCommand.handler) {
-                return this.ErrorMessage(
+                return this.dispatchError(
                     player,
-                    command,
-                    paramStrings[current],
-                    paramStrings,
-                    current,
                     showError,
-                    "子命令错误"
+                    this.buildSyntaxError(
+                        command,
+                        paramStrings[current],
+                        paramStrings,
+                        current,
+                        "子命令错误"
+                    )
                 );
             }
-            if (this.manager?.testMode) return true;
+            if (this.manager.testMode) return;
             try {
                 system.run(() => {
                     subCommand.handler!(player, params);
                 });
 
-                return true;
+                return;
             } catch (e) {
                 LibErrorMes("Command Run Error at" + command.name, e);
             }
@@ -119,14 +130,13 @@ export class CommandParser {
         subCommand: Command,
         params: string[],
         current: number,
-        player: Player,
-        showError = true
+        player: Player
     ) {
         const paramStrings = params.slice(current);
         //没有参数则返回
         if (subCommand.paramBranches.length == 0) {
             if (paramStrings.length != 0)
-                return this.BuildErrorMessage(command, paramStrings[0], params, current, "多余参数");
+                return this.buildSyntaxError(command, paramStrings[0], params, current, "多余参数");
             return {};
         }
         //转换后参数对象
@@ -141,7 +151,11 @@ export class CommandParser {
                 if (value != undefined) parsedParamDict[param.name] = value;
             }
         };
-        const updateError = (index: number, error: string, canReplace: boolean = false) => {
+        const updateError = (
+            index: number,
+            error: RawMessage | string,
+            canReplace: boolean = false
+        ) => {
             if ((paramError.canReplace && paramError.index == index) || paramError.index < index) {
                 paramError = {
                     index: index,
@@ -162,7 +176,11 @@ export class CommandParser {
                     if (paramDef.default) T.parsed = paramDef.default;
                     return true;
                 } else {
-                    return new ParseError("缺少参数", false, T.index + req - paramStrings.length + 1);
+                    return new ParseError(
+                        "缺少参数",
+                        false,
+                        T.index + req - paramStrings.length + 1
+                    );
                 }
             }
             // 先用正则匹配
@@ -170,7 +188,8 @@ export class CommandParser {
             let regexArray: RegExpMatchArray | null = null;
             if (parser.regex) {
                 regexArray = ReqParams.join(" ").match(parser.regex);
-                if (!regexArray) return new ParseError(parser.regexError ?? "regexError", false, 0, true);
+                if (!regexArray)
+                    return new ParseError(parser.regexError ?? "regexError", false, 0, true);
             }
             //转换参数
             const parsed = parser.parser(regexArray ?? ReqParams, {
@@ -185,7 +204,7 @@ export class CommandParser {
             // 执行自定义验证器
             if (paramDef.validator) {
                 const validationResult = paramDef.validator(parsed.value, player);
-                if (validationResult !== true) {
+                if (validationResult !== undefined) {
                     return validationResult instanceof ParseError
                         ? validationResult
                         : new ParseError(validationResult, true);
@@ -205,7 +224,7 @@ export class CommandParser {
                     if (index + 1 < paramStrings.length) {
                         updateError(
                             index,
-                            this.BuildErrorMessage(
+                            this.buildSyntaxError(
                                 command,
                                 params[current + index + 1],
                                 params,
@@ -227,7 +246,7 @@ export class CommandParser {
                 } else {
                     updateError(
                         index + checkResult.index,
-                        this.BuildErrorMessage(
+                        this.buildSyntaxError(
                             command,
                             paramStrings[index + checkResult.index],
                             params,
@@ -259,38 +278,34 @@ export class CommandParser {
         return success ? parsedParamDict : paramError.msg;
     }
 
-    ErrorMessage(
-        player: Player,
+    buildSyntaxError(
         command: Command,
-        value: string,
+        value: string | undefined,
         params: string[],
         current: number,
-        showError: boolean,
-        tip?: string | undefined
-    ) {
-        if (this.manager?.testMode) return;
-        const msg = "§c" + this.BuildErrorMessage(command, value, params, current, tip);
-        if (!showError) return msg;
-        player.sendMessage(msg);
+        tip?: string | RawMessage
+    ): RawMessage {
+        const part1 = `.${command.name} ${params.slice(0, current).join(" ")}`;
+        const part2 = value ?? "";
+        const part3 = `${params.slice(current + 1).join(" ")}”`;
+        const rawtexts: RawMessage[] = [
+            { translate: "commands.generic.syntax", with: [part1, part2, part3] },
+        ];
+        if (typeof tip == "string") {
+            rawtexts.push({ text: `(${tip})` });
+        } else if (isRawMessage(tip)) {
+            rawtexts.push(tip);
+        }
+        return { rawtext: rawtexts };
     }
 
-    private BuildErrorMessage(
-        command: Command,
-        value: string,
-        params: string[],
-        current: number,
-        tip?: string | undefined
-    ) {
-        return (
-            `语法错误：意外的“${value ?? ""}”：出现在“.${command.name} ${params.slice(0, current).join(" ")} >>${
-                value ?? ""
-            }<< ${params.slice(current + 1).join(" ")}”` + (tip ? `(${tip})` : "")
-        );
-    }
-
-    private ErrorMes(player: Player, msg: string, showError: boolean) {
+    /** 统一的错误分发器：负责判定 testMode、showError 并添加 §c 颜色前缀 */
+    dispatchError(player: Player, showError: boolean, errorMsg: RawMessage | string) {
         if (this.manager?.testMode) return;
-        if (!showError) return "§c" + msg;
-        player.sendMessage("§c" + msg);
+        const formattedMsg: RawMessage = {
+            rawtext: [{ text: "§c" }, typeof errorMsg == "string" ? { text: errorMsg } : errorMsg],
+        };
+        if (!showError) return formattedMsg;
+        player.sendMessage(formattedMsg);
     }
 }

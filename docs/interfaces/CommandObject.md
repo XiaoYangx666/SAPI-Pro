@@ -18,7 +18,7 @@
 
 ### handler?
 
-> `optional` **handler?**: [`commandHandler`](../type-aliases/commandHandler.md)\<[`ParsedParam`](ParsedParam.md)\>
+> `optional` **handler?**: [`commandHandler`](../type-aliases/commandHandler.md)
 
 命令处理器
 
@@ -72,6 +72,6 @@
 
 ### validator?
 
-> `optional` **validator?**: [`CommandValidator`](CommandValidator.md)
+> `optional` **validator?**: [`CommandValidator`](../type-aliases/CommandValidator.md)
 
 命令验证器

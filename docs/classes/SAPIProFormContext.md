@@ -52,19 +52,29 @@
 
 ***
 
-### args
+### \_showData?
 
-> `readonly` **args**: `U`
-
-***
-
-### willBuild
-
-> **willBuild**: `boolean`
+> `optional` **\_showData?**: [`showData`](../type-aliases/showData.md)
 
 **`Internal`**
 
 内部属性，勿改
+
+***
+
+### \_willBuild
+
+> **\_willBuild**: `boolean`
+
+**`Internal`**
+
+内部属性，勿改
+
+***
+
+### args
+
+> `readonly` **args**: `U`
 
 ## Accessors
 
@@ -134,7 +144,7 @@
 
 ##### args?
 
-`TArgs`
+`NoInfer`\<`TArgs`\>
 
 ##### delay?
 
@@ -172,6 +182,46 @@
 
 ***
 
+### offUntil()
+
+> **offUntil**\<`T`, `TArgs`\>(`form`, `newForm`, `args?`, `delay?`): `void`
+
+一直返回到指定页并打开新页
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
+
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
+#### Parameters
+
+##### form
+
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`any`, `any`\>
+
+##### newForm
+
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
+
+##### args?
+
+`NoInfer`\<`TArgs`\>
+
+##### delay?
+
+`number` = `0`
+
+#### Returns
+
+`void`
+
+***
+
 ### push()
 
 > **push**\<`T`, `TArgs`\>(`form`, `args?`, `delay?`): `void`
@@ -196,7 +246,7 @@
 
 ##### args?
 
-`TArgs`
+`NoInfer`\<`TArgs`\>
 
 ##### delay?
 
@@ -276,7 +326,7 @@
 
 ##### args?
 
-`TArgs`
+`NoInfer`\<`TArgs`\>
 
 ##### delay?
 
@@ -303,6 +353,38 @@
 ##### args?
 
 [`contextArgs`](../interfaces/contextArgs.md)
+
+##### delay?
+
+`number` = `0`
+
+#### Returns
+
+`void`
+
+***
+
+### until()
+
+> **until**\<`T`, `TArgs`\>(`form`, `delay?`): `void`
+
+一直返回到指定页
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* [`formDataType`](../type-aliases/formDataType.md)
+
+##### TArgs
+
+`TArgs` *extends* [`contextArgs`](../interfaces/contextArgs.md)
+
+#### Parameters
+
+##### form
+
+[`SAPIProForm`](../interfaces/SAPIProForm.md)\<`T`, `TArgs`\>
 
 ##### delay?
 

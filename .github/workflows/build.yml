@@ -4,28 +4,23 @@ on:
     push:
         tags:
             - "v*"
+    pull_request:
     workflow_dispatch:
-
 jobs:
     build:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: "22"
-
-            - name: Setup Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
+                  node-version: "24"
 
             - name: Install Node dependencies
-              run: npm install
+              run: npm ci
 
             - name: build
               run: npm run build

@@ -45,3 +45,5 @@ export type formHandler<T extends formDataType, TArgs extends contextArgs> = (
     response: formResponseType<T>,
     context: SAPIProFormContext<T, TArgs>
 ) => void | Promise<void>;
+
+export type showData = { delay: number; name?: string };

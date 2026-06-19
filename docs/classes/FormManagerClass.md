@@ -32,14 +32,50 @@
 
 ***
 
+### \_handleShow()
+
+> **\_handleShow**(`context`): `void`
+
+#### Parameters
+
+##### context
+
+[`SAPIProFormContext`](SAPIProFormContext.md)\<[`formDataType`](../type-aliases/formDataType.md), `any`\>
+
+#### Returns
+
+`void`
+
+***
+
 ### \_show()
 
-> **\_show**(`player`, `delay?`): `void`
+> **\_show**(`player`): `Promise`\<`void`\>
 
 **`Internal`**
 
 显示form
  不要调用
+
+#### Parameters
+
+##### player
+
+`Player`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### \_showDelay()
+
+> **\_showDelay**(`player`, `delay?`): `void`
+
+**`Internal`**
+
+延迟显示form
 
 #### Parameters
 
@@ -140,7 +176,7 @@
 
 ##### args?
 
-`TArgs`
+`NoInfer`\<`TArgs`\>
 
 初始参数
 

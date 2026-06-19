@@ -48,7 +48,7 @@
 
 ### ButtonForm()
 
-> `static` **ButtonForm**\<`U`\>(`data`): [`ButtonForm`](ButtonForm.md)\<`U`\>
+> `static` **ButtonForm**\<`U`, `TData`\>(`data`): [`ButtonForm`](ButtonForm.md)\<`U`, `TData`\>
 
 常用的按钮表单
 
@@ -58,15 +58,19 @@
 
 `U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
 
+##### TData
+
+`TData` = `void`
+
 #### Parameters
 
 ##### data
 
-[`ButtonFormData`](../interfaces/ButtonFormData.md)\<`U`\>
+[`ButtonFormData`](../interfaces/ButtonFormData.md)\<`U`, `TData`\>
 
 #### Returns
 
-[`ButtonForm`](ButtonForm.md)\<`U`\>
+[`ButtonForm`](ButtonForm.md)\<`U`, `TData`\>
 
 ***
 

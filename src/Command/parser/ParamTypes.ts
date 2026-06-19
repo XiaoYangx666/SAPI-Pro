@@ -1,4 +1,10 @@
-import { CustomCommandParamType, Player } from "@minecraft/server";
+import {
+    BlockTypes,
+    CustomCommandParamType,
+    EntityTypes,
+    ItemTypes,
+    Player,
+} from "@minecraft/server";
 import { getAllPlayers } from "../../func";
 import { RandomUtils, Vector3Utils } from "../../utils/main";
 import { ParamDefinition, ParseError, ParseInfo } from "../interface";
@@ -12,18 +18,30 @@ export enum paramTypes {
     target,
     position,
     string,
+    itemType,
+    blockType,
+    /**仅支持原生命令使用 */
+    player,
+    /**仅支持原生命令使用 */
+    entity,
+    entityType,
 }
 
 /** 类型映射*/
 export const NativeTypeMapping: Record<keyof typeof paramTypes, CustomCommandParamType> = {
-    flag: CustomCommandParamType.String,
+    flag: CustomCommandParamType.Enum,
     boolean: CustomCommandParamType.Boolean,
-    enum: CustomCommandParamType.String,
+    enum: CustomCommandParamType.Enum,
     int: CustomCommandParamType.Integer,
     float: CustomCommandParamType.Float,
-    target: CustomCommandParamType.String,
+    target: CustomCommandParamType.PlayerSelector,
+    player: CustomCommandParamType.PlayerSelector,
     position: CustomCommandParamType.Location,
     string: CustomCommandParamType.String,
+    itemType: CustomCommandParamType.ItemType,
+    blockType: CustomCommandParamType.BlockType,
+    entity: CustomCommandParamType.EntitySelector,
+    entityType: CustomCommandParamType.EntityType,
 };
 
 interface parserContext {
@@ -64,7 +82,7 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
                 ? new ParseError("参数不是浮点类型")
                 : new ParseInfo(parsedFloat);
         },
-        regex: new RegExp(/^-?( [1-9]\d*\.?\d*)|(0\.\d*[1-9])$/),
+        regex: new RegExp(/^-?(\d+(\.\d*)?|\.\d+)$/),
     },
     boolean: {
         parser(value) {
@@ -75,7 +93,13 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
     },
     target: {
         parser(name, ctx) {
-            if (!name) return new ParseError("没有与选择器匹配的目标", true, 0, false);
+            if (!name)
+                return new ParseError(
+                    { rawtext: [{ translate: "commands.generic.noTargetMatch" }] },
+                    true,
+                    0,
+                    false
+                ); //没有与选择器匹配的目标
             let name1 = name[1] ?? name[2];
             let target: Player | undefined;
             switch (name1) {
@@ -91,7 +115,12 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
             }
             return target
                 ? new ParseInfo(target)
-                : new ParseError("没有与选择器匹配的目标", true, 0, false);
+                : new ParseError(
+                      { rawtext: [{ translate: "commands.generic.noTargetMatch" }] },
+                      true,
+                      0,
+                      false
+                  );
         },
         regex: new RegExp(/^@?(?:"([^"]*)"|((?![\d]+$)[^\s]+))$/),
         regexError: "目标格式错误",
@@ -148,6 +177,36 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
             return param.name == value[0]
                 ? new ParseInfo(param.name)
                 : new ParseError("符号不匹配", false, 0, true);
+        },
+    },
+    itemType: {
+        parser(value) {
+            const typeId = value[0].includes(":") ? value[0] : "minecraft:" + value[0];
+            const type = ItemTypes.get(typeId);
+            return type ? new ParseInfo(type) : new ParseError(`物品类型不存在`);
+        },
+    },
+    blockType: {
+        parser(value) {
+            const typeId = value[0].includes(":") ? value[0] : "minecraft:" + value[0];
+            const type = BlockTypes.get(typeId);
+            return type ? new ParseInfo(type) : new ParseError("方块类型不存在");
+        },
+    },
+    player: {
+        parser(value, ctx) {
+            return new ParseError("不支持解析此类型");
+        },
+    },
+    entity: {
+        parser(value, ctx) {
+            return new ParseError("不支持解析此类型");
+        },
+    },
+    entityType: {
+        parser(value) {
+            const type = EntityTypes.get(value[0] as any);
+            return type ? new ParseInfo(type) : new ParseError("实体类型不存在");
         },
     },
 };

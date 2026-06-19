@@ -16,7 +16,7 @@
 
 ##### msg?
 
-`string`
+`string` \| `RawText`
 
 ##### onlymsg?
 
@@ -52,7 +52,7 @@
 
 ### msg?
 
-> `optional` **msg?**: `string`
+> `optional` **msg?**: `string` \| `RawText`
 
 ***
 

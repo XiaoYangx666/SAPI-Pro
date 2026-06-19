@@ -14,7 +14,7 @@
 
 ### TData
 
-`TData` = `unknown`
+`TData` = `void`
 
 ## Properties
 

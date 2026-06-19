@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Requires-SAPI%202.7.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.10+-green)
+![Requires](https://img.shields.io/badge/Requires-SAPI%202.9.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.30+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
@@ -17,6 +17,7 @@
     - [Multi-language Support](#multi-language-support)
 - [Example Behavior Packs](#example-behavior-packs)
 - [Reference Documentation](#reference-documentation)
+- [SKILL (AI-Assisted Development)](#skill-ai-assisted-development)
 - [Support & Contribution](#support--contribution)
 
 ---
@@ -235,6 +236,12 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 ## Reference Documentation
 
 [SAPI-Pro Reference Documentation](./tutorial/README.md)
+
+## SKILL (AI-Assisted Development)
+
+This project provides a `sapi-pro-dev` Skill for AI coding assistants that support the Skill mechanism (e.g., Claude Code), helping AI understand SAPI-Pro's project structure and development conventions.
+
+Skill source: [skills/sapi-pro-dev/SKILL.md](./skills/sapi-pro-dev/SKILL.md)
 
 ## Support & Contribution
 

@@ -12,8 +12,16 @@ interface helpCommandParam {
 }
 export class CommandHelp {
     private readonly helpCommand: Command;
-    constructor(private readonly pcommand: CommandManager, private readonly parser: CommandParser) {
-        this.helpCommand = new Command("help", "提供.命令帮助/命令列表", false, this.commandHelp.bind(this));
+    constructor(
+        private readonly pcommand: CommandManager,
+        private readonly parser: CommandParser
+    ) {
+        this.helpCommand = new Command(
+            "help",
+            "提供.命令帮助/命令列表",
+            false,
+            this.commandHelp.bind(this)
+        );
         this.helpCommand.addParamBranches([
             {
                 name: "page",
@@ -33,14 +41,16 @@ export class CommandHelp {
         if (args.commandName) {
             const commandObj = this.pcommand.getCommandInfo(args.commandName);
             if (commandObj == undefined)
-                return this.parser.ErrorMessage(
+                return this.parser.dispatchError(
                     player,
-                    this.helpCommand,
-                    args.commandName,
-                    [args.commandName],
-                    0,
                     true,
-                    "命令不存在"
+                    this.parser.buildSyntaxError(
+                        this.helpCommand,
+                        args.commandName,
+                        [args.commandName],
+                        0,
+                        "命令不存在"
+                    )
                 );
             this.handleCommandHelp(player, commandObj);
         }
@@ -57,7 +67,7 @@ export class CommandHelp {
         for (let i = page * pagelimit; i < (page + 1) * pagelimit && i < commands.length; i++) {
             const command = this.pcommand.getCommandInfo(commands[i]) as Command;
             const color = command.isAdmin ? "§6" : "";
-            text += `§f${color}.${commands[i]}§r:${limittext(command.explain, 20)}\n`;
+            text += `§f${color}.${commands[i]}§r: ${limittext(command.explain, 20)}\n`;
         }
         text += `§2小提示:输入.help <命令>可以查看命令详细帮助`;
         player.sendMessage(text);
@@ -76,7 +86,11 @@ const EnterParam: enterNodeFunc<ParamDefinition> = (T, ctx, stack) => {
     if (!T.subParams) {
         const priorStr = stack.map((t) => paramFormat(t[0])).join(" ");
         ctx.usageList.push(
-            priorStr + (priorStr ? " " : "") + paramFormat(T) + "§r" + (T.explain ? T.explain : ctx.cmdexplain)
+            priorStr +
+                (priorStr ? " " : "") +
+                paramFormat(T) +
+                "§r " +
+                (T.explain ? T.explain : ctx.cmdexplain)
         );
     }
 };
@@ -88,7 +102,9 @@ const enterCommand: enterNodeFunc<Command> = (T, ctx, stack) => {
         //即为:所有参数为可选∩(没有子命令∪有处理函数)
         if (
             (T.handler || T.subCommands.length == 0) &&
-            T.paramBranches.every((t) => (t instanceof Array ? t.every((tt) => tt.optional) : t.optional))
+            T.paramBranches.every((t) =>
+                t instanceof Array ? t.every((tt) => tt.optional) : t.optional
+            )
         ) {
             ctx.usageList.push(
                 `${T.isAdmin || ctx.command.isAdmin ? "§6" : ""}${priorStr}${priorStr.length ? " " : ""}${T.name} §r${

@@ -12,7 +12,7 @@ export const defaultPackInfo: PackInfo = {
 
 class LibConfigClass {
     /**库版本 */
-    version = 0.4;
+    version = 0.41;
     /**是否是beta版库 */
     isBeta = true;
     /**是否是主行为包 */

@@ -1,6 +1,18 @@
-import { CommandPermissionLevel, CustomCommand, CustomCommandParameter } from "@minecraft/server";
-import { commandHandler, CommandObject, CommandValidator, paramBranches, ParamDefinition } from "./interface";
+import {
+    CommandPermissionLevel,
+    CustomCommand,
+    CustomCommandParameter,
+    CustomCommandParamType,
+} from "@minecraft/server";
+import {
+    commandHandler,
+    CommandObject,
+    CommandValidator,
+    paramBranches,
+    ParamDefinition,
+} from "./interface";
 import { NativeTypeMapping, paramTypes } from "./parser/ParamTypes";
+import { LibConfig } from "@/Config";
 
 export class Command {
     name: string;
@@ -38,6 +50,16 @@ export class Command {
         this.validator = validator;
         this.isHidden = isHidden;
         this.isClientCommand = isClient;
+    }
+
+    setHandler(handler: commandHandler) {
+        this.handler = handler;
+        return this;
+    }
+
+    setValidator(validator: CommandValidator) {
+        this.validator = validator;
+        return this;
     }
 
     /**添加子命令 */
@@ -83,6 +105,7 @@ export class Command {
         );
         return this;
     }
+
     /** 从Object创建命令 */
     static fromObject(obj: CommandObject): Command {
         const command = new Command(
@@ -141,33 +164,66 @@ export class Command {
         return params[0];
     }
 
-    toNative(nameSpace: string): CustomCommand {
-        const branch = this.getFlatBranch();
+    /**转换为原生命令以便注册(内部调用) */
+    toNative(nameSpace: string) {
+        const branch = this.getFlatBranch(nameSpace);
         return {
-            cheatsRequired: false,
-            description: this.explain,
-            name: `${nameSpace}:${this.name}`,
-            permissionLevel: this.isAdmin ? CommandPermissionLevel.GameDirectors : CommandPermissionLevel.Any,
-            mandatoryParameters: branch.mandatory,
-            optionalParameters: branch.optional,
+            cmd: {
+                cheatsRequired: false,
+                description: this.explain,
+                name: `${nameSpace}:${this.name}`,
+                permissionLevel: this.isAdmin
+                    ? CommandPermissionLevel.GameDirectors
+                    : CommandPermissionLevel.Any,
+                mandatoryParameters: branch.mandatory,
+                optionalParameters: branch.optional,
+            },
+            // 将收集好的枚举字典抛出
+            enums: branch.enums,
         };
     }
 
     /**获取一条参数 */
-    getFlatBranch() {
+    private getFlatBranch(nameSpace: string) {
         const branch: CustomCommandParameter[] = [];
         const optional: CustomCommandParameter[] = [];
+        const enums: Record<string, string[]> = {};
+
         let t = this.paramBranches[0];
+        let enumIndex = 0;
+
         while (t != undefined) {
-            const param = { name: t.name, type: NativeTypeMapping[t.type] };
+            const isEnum = t.type === "enum" || t.type === "flag";
+
+            const enumName = isEnum
+                ? `${nameSpace}:${this.name}_${t.name}_${enumIndex++}`
+                : undefined;
+
+            const param: CustomCommandParameter & { enumName?: string } = {
+                name: t.name,
+                type: NativeTypeMapping[t.type],
+            };
+
+            if (enumName) {
+                param.enumName = enumName;
+
+                if (t.type === "enum" && t.enums != undefined) {
+                    enums[enumName] = t.enums;
+                } else if (t.type === "flag") {
+                    enums[enumName] = [t.name];
+                }
+            }
+
             if (t.optional) {
                 optional.push(param);
             } else {
                 branch.push(param);
             }
+
             if (!t.subParams) break;
             t = t.subParams[0];
         }
-        return { mandatory: branch, optional: optional };
+
+        return { mandatory: branch, optional: optional, enums: enums };
     }
 }

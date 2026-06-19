@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "description": "A practical library for MCBE ScriptAPI",
     "main": "scripts/main.js",
     "types": "scripts/main.d.ts",
@@ -15,21 +15,30 @@
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.7.0-beta.1.26.10-stable",
-        "@minecraft/server-ui": "^2.1.0-beta.1.26.10-stable",
+        "@minecraft/server": "^2.9.0-beta.1.26.30-stable",
+        "@minecraft/server-ui": "^2.2.0-beta.1.26.30-stable",
         "@minecraft/vanilla-data": ">=1.26.0"
     },
     "devDependencies": {
+        "@types/adm-zip": "^0.5.8",
+        "@typescript/native-preview": "^7.0.0-dev.20260618.1",
+        "adm-zip": "^0.5.17",
+        "rimraf": "^6.1.3",
+        "tsc-alias": "^1.8.17",
         "typedoc": "^0.28.7",
-        "typedoc-plugin-markdown": "^4.4.2"
+        "typedoc-plugin-markdown": "^4.4.2",
+        "vitest": "^4.1.8"
     },
     "scripts": {
-        "build:nodeclare": "python3 build.py --declaration false",
-        "build": "python3 build.py --declaration true",
-        "pack": "tsgo & npm pack",
-        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources"
+        "clean": "rimraf build scripts",
+        "dev": "tsgo -p tsconfig.build.json -w",
+        "compile": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+        "package": "node tools/build.ts",
+        "build": "npm run clean && npm run compile && npm run package",
+        "pack": "npm run compile && npm pack",
+        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources",
+        "skills": "node tools/cp_skill.ts"
     },
-    "overrides": {},
     "files": [
         "scripts"
     ],
@@ -51,5 +60,6 @@
         "bedrock-edition",
         "ScriptApi",
         "library"
-    ]
+    ],
+    "sideEffects": false
 }

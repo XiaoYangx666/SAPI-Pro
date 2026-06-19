@@ -7,7 +7,7 @@ import {
     world,
 } from "@minecraft/server";
 import { LibErrorMes } from "./func";
-import { RandomUtils } from "./utils/random";
+import { RandomUtils } from "./utils/main";
 
 //先不搞优先队列了，能用就行，反正只有注册的时候排序
 export type chatFunc = (t: ChatSendBeforeEvent) => void | chatOpe;

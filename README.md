@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.7.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.10+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.9.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.30+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
@@ -17,6 +17,7 @@
     - [多语言](#多语言)
 - [示例行为包](#示例行为包)
 - [参考文档](#参考文档)
+- [SKILL（AI 辅助开发）](#skillai-辅助开发)
 - [支持与贡献](#支持与贡献)
 
 ---
@@ -235,6 +236,12 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 ## 参考文档
 
 [SAPI-Pro 参考文档](./tutorial/README.md)
+
+## SKILL（AI 辅助开发）
+
+本项目提供了 `sapi-pro-dev` Skill，供支持 Skill 机制的 AI 编码助手（如 Claude Code）使用，帮助 AI 理解 SAPI-Pro 的项目结构与开发规范。
+
+Skill 源文件：[skills/sapi-pro-dev/SKILL.md](./skills/sapi-pro-dev/SKILL.md)
 
 ## 支持与贡献
 

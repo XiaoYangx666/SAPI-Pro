@@ -4,7 +4,7 @@
 
 [sapi-pro](../globals.md) / ButtonForm
 
-# Class: ButtonForm\<U\>
+# Class: ButtonForm\<U, TData\>
 
 通用按钮表单
 
@@ -14,6 +14,10 @@
 
 `U` *extends* [`ButtonFormArgs`](../interfaces/ButtonFormArgs.md)
 
+### TData
+
+`TData` = `void`
+
 ## Implements
 
 - [`SAPIProForm`](../interfaces/SAPIProForm.md)\<`ActionFormData`, `U`\>
@@ -22,17 +26,17 @@
 
 ### Constructor
 
-> **new ButtonForm**\<`U`\>(`data`): `ButtonForm`\<`U`\>
+> **new ButtonForm**\<`U`, `TData`\>(`data`): `ButtonForm`\<`U`, `TData`\>
 
 #### Parameters
 
 ##### data
 
-[`ButtonFormData`](../interfaces/ButtonFormData.md)\<`U`\>
+[`ButtonFormData`](../interfaces/ButtonFormData.md)\<`U`, `TData`\>
 
 #### Returns
 
-`ButtonForm`\<`U`\>
+`ButtonForm`\<`U`, `TData`\>
 
 ## Methods
 

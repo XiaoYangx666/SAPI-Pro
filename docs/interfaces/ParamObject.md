@@ -62,7 +62,7 @@
 
 ### type
 
-> **type**: `"string"` \| `"boolean"` \| `"float"` \| `"position"` \| `"target"` \| `"flag"` \| `"enum"` \| `"int"`
+> **type**: `"string"` \| `"boolean"` \| `"float"` \| `"position"` \| `"target"` \| `"flag"` \| `"enum"` \| `"int"` \| `"itemType"` \| `"blockType"` \| `"player"` \| `"entity"` \| `"entityType"`
 
 参数类型
 
@@ -70,6 +70,6 @@
 
 ### validator?
 
-> `optional` **validator?**: [`ParamValidator`](ParamValidator.md)
+> `optional` **validator?**: [`ParamValidator`](../type-aliases/ParamValidator.md)
 
 参数验证器
