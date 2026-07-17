@@ -37,15 +37,6 @@ sapi-pro 分为 beta版和stable版。
 3. 如果确认已安装 sapi-pro，且使用sapi-kit进行打包(存在依赖或配置文件)，请阅读 sapi-kit/sapi-kit.md 学习用法
 4. 确认项目相关环境无误后，可以阅读 reference/modules.md 开始开发，遵循Core Principles
 
-我按 **skill.md 用途** 重写了一版，目标是让 Agent 快速掌握规则，而不是作为开发教程。重点保留：
-
-- 版本约束
-- API 查询行为
-- 执行权限
-- 性能和成就坑
-
-去掉大量解释。
-
 # Minecraft ScriptAPI 开发基础
 
 ## ScriptAPI 模块
