@@ -127,9 +127,14 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
     },
     string: {
         parser(value) {
-            return new ParseInfo(value[0]);
+            const text = value[0];
+            return new ParseInfo(
+                text.length >= 2 && text.startsWith('"') && text.endsWith('"')
+                    ? text.slice(1, -1)
+                    : text
+            );
         },
-        regex: new RegExp(/^[^\x20]+$/),
+        regex: new RegExp(/^(?:"[^"]*"|[^\x20]+)$/),
     },
     position: {
         parser(value, context) {
@@ -157,8 +162,8 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
                 const coordinate = matchResults[i * 3];
                 const operator = matchResults[i * 3 + 1];
                 const offset = matchResults[i * 3 + 2] ?? 0;
-                const offsetValue = parseInt(offset);
-                let coordinateValue = coordinate == "~" ? playerPosition[i] : parseInt(coordinate);
+                const offsetValue = Number(offset);
+                let coordinateValue = coordinate == "~" ? playerPosition[i] : Number(coordinate);
                 if (operator == "-") {
                     coordinateValue -= offsetValue;
                 } else {
@@ -168,7 +173,7 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
             }
             return new ParseInfo(Vector3Utils.fromArray(parsedCoordinates as any), j);
         },
-        regex: new RegExp(/^(?:-?\d+|~)\S*$/),
+        regex: new RegExp(/^(?:-?(?:\d+(?:\.\d*)?|\.\d+)|~)\S*$/),
         regexError: "不是坐标格式",
     },
     flag: {
@@ -212,4 +217,4 @@ export const paramParser: Record<keyof typeof paramTypes, paramParserDefinition>
 };
 
 const TOKEN_SPLIT_REGEX = /[^~\s)]+|~[^\s~]*/g;
-const TOKEN_REGEX = /^(-?\d+|~)(?:(\+|-)?(\d+))?$/;
+const TOKEN_REGEX = /^(-?(?:\d+(?:\.\d*)?|\.\d+)|~)(?:(\+|-)?(\d+(?:\.\d*)?|\.\d+))?$/;

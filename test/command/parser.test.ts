@@ -1,7 +1,7 @@
 // =====================================================
 // Command Parser - Comprehensive Vitest Tests
 // =====================================================
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // ─── Hoisted helpers: classes shared by mock and tests ─
 const { MockPlayerClass, MockItemType, MockBlockType, MockEntityType, MockEntity } =
@@ -171,6 +171,7 @@ import { paramParser } from "../../src/Command/parser/ParamTypes";
 import { Command } from "../../src/Command/commandClass";
 import { ParseInfo, ParseError, ParamObject } from "../../src/Command/interface";
 import { NativeCommandParser } from "../../src/Command/parser/nativeParser";
+import { LibConfig } from "../../src/Config";
 import {
     ItemType,
     GameMode,
@@ -315,7 +316,7 @@ describe("paramParser - 参数级解析单元测试", () => {
             expect((result as ParseInfo).value).toBe("hello");
         });
 
-        it("应支持带引号的字符串", () => {
+        it("应去除字符串外层的引号", () => {
             const result = paramParser.string.parser(['"hello world"'], {
                 player: mockPlayer as any,
                 param: { name: "msg", type: "string" },
@@ -323,7 +324,7 @@ describe("paramParser - 参数级解析单元测试", () => {
                 index: 0,
             });
             expect(result).toBeInstanceOf(ParseInfo);
-            expect((result as ParseInfo).value).toBe('"hello world"');
+            expect((result as ParseInfo).value).toBe("hello world");
         });
     });
 
@@ -437,6 +438,18 @@ describe("paramParser - 参数级解析单元测试", () => {
             expect(result).toBeInstanceOf(ParseInfo);
             const info = result as ParseInfo;
             expect(info.value).toEqual({ x: 105, y: 64, z: 190 });
+        });
+
+        it("应解析带小数的绝对和相对坐标", () => {
+            const player = new MockPlayerClass({ location: { x: 100, y: 64, z: 200 } });
+            const result = paramParser.position.parser(["1.5"] as any, {
+                player: player as any,
+                param: { name: "pos", type: "position" },
+                paramStrings: ["1.5", "~0.25", "-2.75"],
+                index: 0,
+            });
+            expect(result).toBeInstanceOf(ParseInfo);
+            expect((result as ParseInfo).value).toEqual({ x: 1.5, y: 64.25, z: -2.75 });
         });
 
         it("缺少坐标时返回 ParseError", () => {
@@ -610,6 +623,10 @@ describe("CommandParser - 集成测试", () => {
         vi.mocked(world.getAllPlayers).mockReturnValue([mockPlayer]);
     });
 
+    afterEach(() => {
+        LibConfig.isHost = false;
+    });
+
     function createSimpleCmd(name: string, params: ParamObject[]) {
         return new Command(name, "测试命令", false).addParamBranches([params]).setHandler(handlerSpy);
     }
@@ -640,6 +657,12 @@ describe("CommandParser - 集成测试", () => {
             expect(handlerSpy).toHaveBeenCalledWith(mockPlayer, { msg: "hello" });
         });
 
+        it("应去除命令输入中 string 参数的外层引号", () => {
+            const cmd = createSimpleCmd("test", [{ name: "msg", type: "string" }]);
+            parser.parseSubCommand(cmd, ['"hello world"'], mockPlayer);
+            expect(handlerSpy).toHaveBeenCalledWith(mockPlayer, { msg: "hello world" });
+        });
+
         it("应正确解析 enum 参数", () => {
             const cmd = createSimpleCmd("test", [
                 { name: "dir", type: "enum", enums: ["up", "down"] },
@@ -666,6 +689,17 @@ describe("CommandParser - 集成测试", () => {
                 name: "hello",
                 enabled: true,
             });
+        });
+    });
+
+    it("未知命令应发送 RawMessage，而不是导致 ScriptAPI 类型转换异常", () => {
+        LibConfig.isHost = true;
+        parser.parseCommand("missing", mockPlayer);
+        expect(mockPlayer.sendMessage).toHaveBeenCalledWith({
+            rawtext: [
+                { text: "§c" },
+                { translate: "commands.generic.unknown", with: ["missing"] },
+            ],
         });
     });
 
@@ -1342,6 +1376,27 @@ describe("边缘案例", () => {
             cb();
             return 0 as any;
         }) as any);
+    });
+
+    it("Command.fromObject 不应改写调用方的参数定义", () => {
+        const definition: any = {
+            name: "immutable",
+            explain: "测试",
+            paramBranches: [
+                {
+                    name: "facing",
+                    type: "flag",
+                    branches: [[{ name: "pos", type: "position" }]],
+                },
+            ],
+        };
+
+        Command.fromObject(definition);
+
+        expect(definition.paramBranches[0].branches).toEqual([
+            [{ name: "pos", type: "position" }],
+        ]);
+        expect(definition.paramBranches[0].subParams).toBeUndefined();
     });
 
     it("无参数命令应正确工作", () => {

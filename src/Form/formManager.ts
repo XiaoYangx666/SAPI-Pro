@@ -1,4 +1,5 @@
 import { Player, ScriptEventCommandMessageAfterEvent, system } from "@minecraft/server";
+import { FormRejectError } from "@minecraft/server-ui";
 import { LibConfig } from "../Config";
 import { ScriptEventBus, intervalBus } from "../Event";
 import { LibErrorMes, getPlayerById } from "../func";
@@ -78,7 +79,14 @@ export class FormManagerClass {
             return;
         }
         const builtForm = await form.builder(context.player, context.args);
-        const response = await builtForm.show(player);
+        let response;
+        try {
+            response = await builtForm.show(player);
+        } catch (err) {
+            // A rejected form is expected when a player closes it or leaves the game.
+            if (err instanceof FormRejectError) return;
+            throw err;
+        }
 
         await form.handler(response, context);
         this._handleShow(context);

@@ -78,7 +78,7 @@ export class Command {
 
     /**添加一条分支并在其中添加一条参数 */
     addParam(param: ParamDefinition) {
-        this.paramBranches.push(param);
+        this.paramBranches.push(Command.cloneParam(param));
         return this;
     }
     /**添加一条参数分支的多个参数 */
@@ -94,9 +94,8 @@ export class Command {
                 .map((param) => {
                     if (Array.isArray(param)) {
                         return Command.toTreeParam(param);
-                    } else {
-                        return param;
                     }
+                    return Command.cloneParam(param);
                 })
                 .filter((p) => p != undefined)
                 .sort((a, b) => {
@@ -136,6 +135,7 @@ export class Command {
                     if (param) subParams.push(param);
                 }
             } else {
+                branch = Command.cloneParam(branch);
                 if (branch.branches) {
                     const params = this.fromParamBranches(branch.branches);
                     branch.subParams = [...(branch.subParams ?? []), ...params];
@@ -149,6 +149,7 @@ export class Command {
         });
     }
     private static toTreeParam(params: ParamDefinition[]): ParamDefinition | undefined {
+        params = params.map((param) => Command.cloneParam(param));
         for (let i = 0; i < params.length; i++) {
             const param = params[i];
             if (param.branches && param.branches.length != 0) {
@@ -162,6 +163,20 @@ export class Command {
             }
         }
         return params[0];
+    }
+
+    /** Creates an independent parameter tree so caller-owned command definitions remain reusable. */
+    private static cloneParam(param: ParamDefinition): ParamDefinition {
+        return {
+            ...param,
+            enums: param.enums ? [...param.enums] : undefined,
+            branches: param.branches?.map((branch) =>
+                Array.isArray(branch)
+                    ? branch.map((child) => Command.cloneParam(child))
+                    : Command.cloneParam(branch)
+            ),
+            subParams: param.subParams?.map((child) => Command.cloneParam(child)),
+        };
     }
 
     /**转换为原生命令以便注册(内部调用) */
