@@ -19,7 +19,7 @@ export function regSysInfo() {
 const sysInfoCmd = new Command("sysinfo", "显示SAPI-Pro系统信息", false, (player, params) => {
     const t = translator.createPureFor(player);
 
-    player.sendMessage("\n" + t(LangSysInfo.header, { version: LibConfig.version }));
+    player.sendMessage("\n" + t(LangSysInfo.header, { version: LibConfig.versionString }));
     player.sendMessage(t(LangSysInfo.mainModule, { name: LibConfig.packInfo.name }));
     player.sendMessage(t(LangSysInfo.registeredCommands, { count: pcommand.commands.size }));
     const packs = exchangedb.get<exchangedbData["packs"]>("packs") ?? {};
@@ -64,7 +64,7 @@ const sysinfoForm = new ButtonForm({
         form.body(
             [
                 t(LangSysInfo.header, {
-                    version: `${LibConfig.version}-${LibConfig.isBeta ? "beta" : "stable"}`,
+                    version: `${LibConfig.versionString}-${LibConfig.isBeta ? "beta" : "stable"}`,
                 }),
                 t(LangSysInfo.mainModule, { name: LibConfig.packInfo.name }),
                 t(LangSysInfo.registeredCommands, { count: pcommand.commands.size }),

@@ -11,8 +11,10 @@ export const defaultPackInfo: PackInfo = {
 };
 
 class LibConfigClass {
-    /**库版本 */
-    version = 0.41;
+    /**库版本（数字，用于主机选举） */
+    version = __SAPI_PRO_VERSION_NUM__;
+    /**库显示版本 */
+    versionString = __SAPI_PRO_VERSION__;
     /**是否是beta版库 */
     isBeta = true;
     /**是否是主行为包 */

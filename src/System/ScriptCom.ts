@@ -38,7 +38,7 @@ export async function initCom() {
 
     const pack = LibConfig.packInfo;
     LibMessage(
-        `已加载模块${pack.name},lib版本:${LibConfig.version}-${LibConfig.isBeta ? "beta" : "stable"}`
+        `已加载模块${pack.name},lib版本:${LibConfig.versionString}-${LibConfig.isBeta ? "beta" : "stable"}`
     );
     //欢迎信息
     if (LibConfig.packInfo.greeting) {
