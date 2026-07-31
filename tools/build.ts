@@ -1,7 +1,7 @@
-import { rm, mkdir } from "node:fs/promises";
+import { rm, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
-import AdmZip from "adm-zip";
+import { join, relative } from "node:path";
+import { zipSync } from "fflate";
 
 async function recreateDir(dir: string) {
     await rm(dir, {
@@ -14,12 +14,42 @@ async function recreateDir(dir: string) {
     });
 }
 
-function zipDirectory(sourceDir: string, outputZip: string) {
-    const zip = new AdmZip();
+/** 递归收集目录下所有文件，key 为 zip 内相对路径 */
+async function collectFiles(sourceDir: string): Promise<Record<string, Uint8Array>> {
+    const files: Record<string, Uint8Array> = {};
 
-    zip.addLocalFolder(sourceDir);
+    const walk = async (current: string) => {
+        const entries = await readdir(current, { withFileTypes: true });
 
-    zip.writeZip(outputZip);
+        for (const entry of entries) {
+            const full = join(current, entry.name);
+
+            if (entry.isDirectory()) {
+                await walk(full);
+                continue;
+            }
+
+            if (!entry.isFile()) {
+                continue;
+            }
+
+            const rel = relative(sourceDir, full).split("\\").join("/");
+
+            files[rel] = new Uint8Array(await readFile(full));
+        }
+    };
+
+    await walk(sourceDir);
+
+    return files;
+}
+
+async function zipDirectory(sourceDir: string, outputZip: string) {
+    const files = await collectFiles(sourceDir);
+
+    const data = zipSync(files);
+
+    await writeFile(outputZip, data);
 }
 
 async function main() {
@@ -40,7 +70,7 @@ async function main() {
 
         const outputZip = join(buildDir, zipName);
 
-        zipDirectory(sourceDir, outputZip);
+        await zipDirectory(sourceDir, outputZip);
 
         console.log(`已压缩: ${outputZip}`);
     }

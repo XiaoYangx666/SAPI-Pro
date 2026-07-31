@@ -9,7 +9,7 @@ export * from "./DataBase/index";
 export * as Event from "./Event";
 export * from "./Form/main";
 export * as Func from "./func";
-export { PackInfo } from "./Config";
+export type { PackInfo } from "./Config";
 export * from "./utils/main";
 export * from "./Translate/index";
 

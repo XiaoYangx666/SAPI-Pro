@@ -1,2 +1,3 @@
-export { worldDeferredObject, createDeferredValue, DeferredValue } from "./createDeferredObject";
+export { worldDeferredObject, createDeferredValue } from "./createDeferredObject";
+export type { DeferredValue } from "./createDeferredObject";
 export { gameDeferredRegistry } from "./DeferredRegistry";
