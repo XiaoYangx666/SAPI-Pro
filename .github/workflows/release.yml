@@ -9,6 +9,10 @@ on:
 permissions:
     contents: write
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: false
+
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -21,9 +25,13 @@ jobs:
               uses: actions/setup-node@v6
               with:
                   node-version: "24"
+                  cache: npm
 
             - name: Install dependencies
               run: npm ci
+
+            - name: Test
+              run: npm test
 
             - name: Build package
               run: npm run pack
