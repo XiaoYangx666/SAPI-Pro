@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "A practical library for MCBE ScriptAPI",
     "main": "scripts/main.js",
     "types": "scripts/main.d.ts",
