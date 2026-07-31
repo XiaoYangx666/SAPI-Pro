@@ -8,7 +8,7 @@ import { CommonFormData, TextType } from "./commonFormInterface";
 import { BaseField, FieldParseError, ValueField } from "./InputFormFields";
 
 export interface InputFormArgs extends contextArgs {
-    fields?: ValueField<any>[];
+    fields?: BaseField[];
 }
 
 /**
@@ -86,7 +86,8 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
             field.build(form, t);
         }
 
-        args.fields = fields.filter((f) => f.isValueField) as ValueField<any>[];
+        // 保留全部字段（含 label/divider 等展示字段），与 formValues 槽位对齐
+        args.fields = fields;
 
         return form;
     }
@@ -97,7 +98,7 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
             return;
         }
 
-        const fields = ctx.args.fields as ValueField<any>[];
+        const fields = ctx.args.fields as BaseField[];
         const values = res.formValues;
         const t = translator.createPureFor(ctx.player);
 
@@ -114,7 +115,9 @@ export class InputForm<U extends InputFormArgs, TResult = any> implements SAPIPr
 
         // 1. 字段级解析与基础验证
         for (let i = 0; i < fields.length; i++) {
-            const field = fields[i];
+            const field = fields[i] as ValueField<any>;
+            // 展示字段（label/divider 等）占据 formValues 槽位但不产生输入值，跳过
+            if (!field.isValueField) continue;
             const rawValue = values[i];
 
             try {
