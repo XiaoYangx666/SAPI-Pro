@@ -28,6 +28,7 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 | `npm run compile:stable` | rolldown 编译 stable → `variants/stable/dist/` |
 | `npm run dev:beta` / `dev:stable` | rolldown 监听模式 |
 | `npm run build` | 完整构建：clean → 双渠道 typecheck → 双渠道 rolldown → fflate 打包 zip |
+| `npm run pack` | 完整构建 + `pack:beta` + `pack:stable`，产出 `build/*.zip` 与两个 `.tgz`（CI 用） |
 | `npm run build:beta` / `build:stable` | 单渠道 typecheck + 编译 |
 | `npm run pack:beta` | `npm pack ./variants/beta` 生成 `sapi-pro-<beta版本>.tgz` |
 | `npm run pack:stable` | 生成 `sapi-pro-<stable版本>.tgz` |

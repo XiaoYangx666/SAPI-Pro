@@ -19,7 +19,7 @@
         "build:beta": "npm run typecheck:beta && npm run compile:beta",
         "build:stable": "npm run typecheck:stable && npm run compile:stable",
         "package": "node tools/build.ts",
-        "pack": "npm run build",
+        "pack": "npm run build && npm run pack:beta && npm run pack:stable",
         "pack:beta": "npm pack ./variants/beta",
         "pack:stable": "npm pack ./variants/stable",
         "publish:beta": "npm publish ./variants/beta --tag beta",
