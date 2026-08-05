@@ -26,9 +26,13 @@ jobs:
               with:
                   node-version: "24"
                   cache: npm
+                  registry-url: "https://registry.npmjs.org"
 
             - name: Install dependencies
-              run: npm ci
+              run: |
+                  npm ci
+                  npm --prefix variants/beta ci
+                  npm --prefix variants/stable ci
 
             - name: Test
               run: npm test
@@ -42,3 +46,17 @@ jobs:
                   files: "*.tgz"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # 双渠道发布：beta 版本发 beta 标签；stable 版本发 stable 标签（均不挂 latest）。
+            # 需在仓库 Secrets 配置 NPM_TOKEN（有发布权限）；未配置则跳过。
+            - name: Publish to npm (beta -> beta tag)
+              if: ${{ secrets.NPM_TOKEN != '' }}
+              run: npm publish ./variants/beta --tag beta
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish to npm (stable -> stable tag)
+              if: ${{ secrets.NPM_TOKEN != '' }}
+              run: npm publish ./variants/stable --tag stable
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

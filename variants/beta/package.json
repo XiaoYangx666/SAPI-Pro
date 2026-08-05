@@ -1,0 +1,55 @@
+{
+    "name": "sapi-pro",
+    "version": "0.4.2",
+    "description": "A practical library for MCBE ScriptAPI (beta channel, requires ScriptAPI beta)",
+    "main": "dist/entry.beta.js",
+    "types": "dist/entry.beta.d.ts",
+    "type": "module",
+    "author": {
+        "name": "XiaoYangx666",
+        "email": "2408807389@qq.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
+    },
+    "peerDependencies": {
+        "@minecraft/server": "^2.10.0-beta.1.26.40-stable",
+        "@minecraft/server-ui": "^2.2.0-beta.1.26.40-stable",
+        "@minecraft/vanilla-data": ">=1.26.0"
+    },
+    "devDependencies": {
+        "@minecraft/common": "1.2.0",
+        "@minecraft/server": "2.10.0-beta.1.26.40-stable",
+        "@minecraft/server-ui": "2.2.0-beta.1.26.40-stable"
+    },
+    "scripts": {
+        "build": "rolldown -c rolldown.config.ts",
+        "typecheck": "tsc -p ../tsconfig.beta.json --noEmit",
+        "pack": "npm run typecheck && npm run build && npm pack"
+    },
+    "files": [
+        "dist"
+    ],
+    "exports": {
+        ".": "./dist/entry.beta.js",
+        "./Deferred": "./dist/Deferred/index.js",
+        "./Form": "./dist/Form/main.js",
+        "./Translate": "./dist/Translate/index.js",
+        "./Event": "./dist/Event.entry.beta.js",
+        "./func": "./dist/func.js",
+        "./constants": "./dist/constants.js",
+        "./utils": "./dist/utils/main.js",
+        "./Command": "./dist/Command/main.js",
+        "./DataBase": "./dist/DataBase/index.js"
+    },
+    "keywords": [
+        "minecraft",
+        "bedrock",
+        "bedrock-edition",
+        "ScriptApi",
+        "library"
+    ],
+    "sideEffects": false
+}

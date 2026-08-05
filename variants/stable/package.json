@@ -1,0 +1,55 @@
+{
+    "name": "sapi-pro",
+    "version": "0.4.2-stable",
+    "description": "A practical library for MCBE ScriptAPI (stable channel, uses stable ScriptAPI)",
+    "main": "dist/entry.stable.js",
+    "types": "dist/entry.stable.d.ts",
+    "type": "module",
+    "author": {
+        "name": "XiaoYangx666",
+        "email": "2408807389@qq.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
+    },
+    "peerDependencies": {
+        "@minecraft/server": "^2.8.0",
+        "@minecraft/server-ui": "^2.1.0",
+        "@minecraft/vanilla-data": ">=1.26.0"
+    },
+    "devDependencies": {
+        "@minecraft/common": "1.2.0",
+        "@minecraft/server": "2.8.0",
+        "@minecraft/server-ui": "2.1.0"
+    },
+    "scripts": {
+        "build": "rolldown -c rolldown.config.ts",
+        "typecheck": "tsc -p ../tsconfig.stable.json --noEmit",
+        "pack": "npm run typecheck && npm run build && npm pack"
+    },
+    "files": [
+        "dist"
+    ],
+    "exports": {
+        ".": "./dist/entry.stable.js",
+        "./Deferred": "./dist/Deferred/index.js",
+        "./Form": "./dist/Form/main.js",
+        "./Translate": "./dist/Translate/index.js",
+        "./Event": "./dist/Event.entry.stable.js",
+        "./func": "./dist/func.js",
+        "./constants": "./dist/constants.js",
+        "./utils": "./dist/utils/main.js",
+        "./Command": "./dist/Command/main.js",
+        "./DataBase": "./dist/DataBase/index.js"
+    },
+    "keywords": [
+        "minecraft",
+        "bedrock",
+        "bedrock-edition",
+        "ScriptApi",
+        "library"
+    ],
+    "sideEffects": false
+}
