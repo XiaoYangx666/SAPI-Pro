@@ -15,8 +15,8 @@ class LibConfigClass {
     version = __SAPI_PRO_VERSION_NUM__;
     /**库显示版本 */
     versionString = __SAPI_PRO_VERSION__;
-    /**是否是beta版库 */
-    isBeta = true;
+    /**是否是beta版库（构建期由 __BETA__ 注入，决定是否参与主机选举）；显式 boolean 避免按渠道收窄成字面量 */
+    isBeta: boolean = __BETA__;
     /**是否是主行为包 */
     isHost = false;
     packInfo: PackInfo;

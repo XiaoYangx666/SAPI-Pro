@@ -1,19 +1,11 @@
 {
+    "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "target": "es2023",
-        "moduleResolution": "bundler",
-        "module": "esnext",
-        "types": ["node"],
-        "noEmit": true,
-        "forceConsistentCasingInFileNames": true,
-        "preserveConstEnums": true,
-        "strict": true,
-        "noImplicitAny": true,
-        "allowJs": true,
+        // TS7 已移除 baseUrl，paths 相对本 tsconfig 所在目录解析
         "paths": {
-            "@/*": ["./src/*"],
-            "@test/*": ["./test/*"]
+            "@/*": ["./packages/core/src/*"],
+            "@test/*": ["./packages/core/test/*"]
         }
     },
-    "include": ["./src", "./test"]
+    "include": ["./packages/core/src", "./packages/core/test"]
 }

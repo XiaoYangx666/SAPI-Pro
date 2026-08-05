@@ -1,9 +1,4 @@
-import {
-    CommandPermissionLevel,
-    CustomCommand,
-    CustomCommandParameter,
-    CustomCommandParamType,
-} from "@minecraft/server";
+import { CommandPermissionLevel, CustomCommandParameter } from "@minecraft/server";
 import {
     commandHandler,
     CommandObject,
@@ -12,7 +7,6 @@ import {
     ParamDefinition,
 } from "./interface";
 import { NativeTypeMapping, paramTypes } from "./parser/ParamTypes";
-import { LibConfig } from "@/Config";
 
 export class Command {
     name: string;
