@@ -27,9 +27,6 @@
         "skills": "node tools/cp_skill.ts"
     },
     "devDependencies": {
-        "@minecraft/common": "1.2.0",
-        "@minecraft/server": "2.10.0-beta.1.26.40-stable",
-        "@minecraft/server-ui": "2.2.0-beta.1.26.40-stable",
         "@types/node": "^26.1.2",
         "fflate": "^0.8.3",
         "rimraf": "^6.1.3",
