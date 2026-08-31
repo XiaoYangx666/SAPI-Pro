@@ -3,8 +3,7 @@ import { isAdmin } from "../func";
 import { Command } from "./commandClass";
 import { enterNodeFunc, PreOrdertraverse } from "./parser/func";
 import { ParamDefinition } from "./interface";
-import { CommandParser } from "./parser/parser";
-import { CommandManager } from "./manager";
+import { CommandManager, SimulatedParserLike } from "./manager";
 
 interface helpCommandParam {
     page?: number;
@@ -14,7 +13,7 @@ export class CommandHelp {
     private readonly helpCommand: Command;
     constructor(
         private readonly pcommand: CommandManager,
-        private readonly parser: CommandParser
+        private readonly parser: SimulatedParserLike | undefined
     ) {
         this.helpCommand = new Command(
             "help",
@@ -40,7 +39,12 @@ export class CommandHelp {
     commandHelp(player: Player, args: helpCommandParam) {
         if (args.commandName) {
             const commandObj = this.pcommand.getCommandInfo(args.commandName);
-            if (commandObj == undefined)
+            if (commandObj == undefined) {
+                // stable 渠道无模拟命令解析器，直接发送错误文本
+                if (!this.parser) {
+                    player.sendMessage({ rawtext: [{ text: "§c命令不存在" }] });
+                    return;
+                }
                 return this.parser.dispatchError(
                     player,
                     true,
@@ -52,6 +56,7 @@ export class CommandHelp {
                         "命令不存在"
                     )
                 );
+            }
             this.handleCommandHelp(player, commandObj);
         }
         if (args.page != undefined) this.handlePageHelp(player, args.page - 1);

@@ -1,29 +1,32 @@
 {
-    "name": "sapi-pro",
-    "version": "0.4.1",
-    "description": "A practical library for MCBE ScriptAPI",
-    "main": "scripts/main.js",
-    "types": "scripts/main.d.ts",
+    "name": "sapi-pro-monorepo",
+    "version": "0.0.0",
+    "private": true,
+    "description": "sapi-pro monorepo：core/ 共享源码，variants/beta 与 variants/stable 双渠道构建发布",
     "type": "module",
-    "author": {
-        "name": "XiaoYangx666",
-        "email": "2408807389@qq.com"
-    },
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
-    },
-    "peerDependencies": {
-        "@minecraft/server": "^2.9.0-beta.1.26.30-stable",
-        "@minecraft/server-ui": "^2.2.0-beta.1.26.30-stable",
-        "@minecraft/vanilla-data": ">=1.26.0"
+    "scripts": {
+        "clean": "rimraf build variants/beta/dist variants/stable/dist",
+        "install:variants": "npm --prefix variants/beta install && npm --prefix variants/stable install",
+        "test": "vitest run",
+        "typecheck": "npm run typecheck:beta && npm run typecheck:stable",
+        "typecheck:beta": "tsc -p tsconfig.beta.json --noEmit",
+        "typecheck:stable": "tsc -p tsconfig.stable.json --noEmit",
+        "compile:beta": "rolldown -c variants/beta/rolldown.config.ts",
+        "compile:stable": "rolldown -c variants/stable/rolldown.config.ts",
+        "dev:beta": "rolldown -c variants/beta/rolldown.config.ts -w",
+        "dev:stable": "rolldown -c variants/stable/rolldown.config.ts -w",
+        "build": "npm run clean && npm run typecheck && npm run compile:beta && npm run compile:stable && npm run package",
+        "build:beta": "npm run typecheck:beta && npm run compile:beta",
+        "build:stable": "npm run typecheck:stable && npm run compile:stable",
+        "package": "node tools/build.ts",
+        "pack": "npm run build && npm run pack:beta && npm run pack:stable",
+        "pack:beta": "npm pack ./variants/beta",
+        "pack:stable": "npm pack ./variants/stable",
+        "publish:beta": "npm publish ./variants/beta --tag beta",
+        "publish:stable": "npm publish ./variants/stable --tag stable",
+        "skills": "node tools/cp_skill.ts"
     },
     "devDependencies": {
-        "@minecraft/common": "1.2.0",
-        "@minecraft/server": "2.9.0-beta.1.26.30-stable",
-        "@minecraft/server-ui": "2.2.0-beta.1.26.30-stable",
-        "@minecraft/vanilla-data": "1.26.10",
         "@types/node": "^26.1.2",
         "fflate": "^0.8.3",
         "rimraf": "^6.1.3",
@@ -33,40 +36,5 @@
         "typedoc-plugin-markdown": "^4.4.2",
         "typescript": "^7.0.2",
         "vitest": "^4.1.8"
-    },
-    "scripts": {
-        "clean": "rimraf build scripts",
-        "dev": "rolldown -c rolldown.config.ts -w",
-        "typecheck": "tsc --noEmit",
-        "compile": "rolldown -c rolldown.config.ts",
-        "test": "vitest run",
-        "package": "node tools/build.ts",
-        "build": "npm run clean && npm run typecheck && npm run compile && npm run package",
-        "pack": "npm run typecheck && npm run compile && npm pack",
-        "doc": "npx typedoc --plugin typedoc-plugin-markdown ./src/main.ts --disableSources",
-        "skills": "node tools/cp_skill.ts"
-    },
-    "files": [
-        "scripts"
-    ],
-    "exports": {
-        ".": "./scripts/main.js",
-        "./Deferred": "./scripts/Deferred/index.js",
-        "./Form": "./scripts/Form/main.js",
-        "./Translate": "./scripts/Translate/index.js",
-        "./Event": "./scripts/Event.js",
-        "./func": "./scripts/func.js",
-        "./constants": "./scripts/constants.js",
-        "./utils": "./scripts/utils/main.js",
-        "./Command": "./scripts/Command/main.js",
-        "./DataBase": "./scripts/DataBase/index.js"
-    },
-    "keywords": [
-        "minecraft",
-        "bedrock",
-        "bedrock-edition",
-        "ScriptApi",
-        "library"
-    ],
-    "sideEffects": false
+    }
 }

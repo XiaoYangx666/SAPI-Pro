@@ -26,9 +26,13 @@ jobs:
               with:
                   node-version: "24"
                   cache: npm
+                  registry-url: "https://registry.npmjs.org"
 
             - name: Install dependencies
-              run: npm ci
+              run: |
+                  npm ci
+                  npm --prefix variants/beta ci
+                  npm --prefix variants/stable ci
 
             - name: Test
               run: npm test
@@ -42,3 +46,26 @@ jobs:
                   files: "*.tgz"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # 双渠道发布：beta 版本发 beta 标签；stable 版本发 stable 标签（均不挂 latest）。
+            # 需在仓库 Secrets 配置 NPM_TOKEN（有发布权限）；未配置则跳过。
+            # secrets 上下文不能用于 step 级 if（报 Unrecognized named-value），先经 env 读出是否配置，
+            # 再用 steps.<id>.outputs 作为发布步骤的闸门
+            - name: Check NPM_TOKEN configured
+              id: npm_token
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  if [ -n "$NPM_TOKEN" ]; then echo "configured=true" >> "$GITHUB_OUTPUT"; else echo "configured=false" >> "$GITHUB_OUTPUT"; fi
+
+            - name: Publish to npm (beta -> beta tag)
+              if: ${{ steps.npm_token.outputs.configured == 'true' }}
+              run: npm publish ./variants/beta --tag beta
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish to npm (stable -> stable tag)
+              if: ${{ steps.npm_token.outputs.configured == 'true' }}
+              run: npm publish ./variants/stable --tag stable
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2023",
+        "moduleResolution": "bundler",
+        "module": "esnext",
+        "types": ["node"],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true,
+        "preserveConstEnums": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "allowJs": true
+    }
+}
