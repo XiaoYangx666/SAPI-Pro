@@ -6,7 +6,7 @@ import { getLibVersion } from "../../tools/libVersion";
 
 const VARIANT = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(VARIANT, "../..");
-const CORE = path.join(ROOT, "packages/core/src");
+const CORE = path.join(ROOT, "core/src");
 // dts 插件按 process.cwd() 相对路径匹配 entry glob，需与调用时的 cwd 对齐
 const CORE_REL = path.relative(process.cwd(), CORE);
 const { libVersionString, libVersionNum } = getLibVersion(path.join(VARIANT, "package.json"));
@@ -32,7 +32,7 @@ export default defineConfig({
         dir: path.join(VARIANT, "dist"),
         format: "esm",
         preserveModules: true,
-        // 全部源码（含渠道入口）都在 packages/core/src，dist 直接镜像成 dist/main.js、dist/Event.js 等
+        // 全部源码（含渠道入口）都在 core/src，dist 直接镜像成 dist/main.js、dist/Event.js 等
         preserveModulesRoot: CORE,
     },
     external: (id) => id.startsWith("@minecraft/"),

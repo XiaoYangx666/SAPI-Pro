@@ -1,7 +1,0 @@
-{
-    "name": "@sapi-pro/core",
-    "version": "0.0.0",
-    "private": true,
-    "description": "sapi-pro 共享源码（beta/stable 双渠道共用，不发布）",
-    "type": "module"
-}

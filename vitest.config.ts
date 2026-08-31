@@ -16,11 +16,11 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, "packages/core/src"),
-            "@test": path.resolve(__dirname, "packages/core/test"),
+            "@": path.resolve(__dirname, "core/src"),
+            "@test": path.resolve(__dirname, "core/test"),
         },
     },
     test: {
-        include: ["packages/core/test/**/*.test.ts"],
+        include: ["core/test/**/*.test.ts"],
     },
 });

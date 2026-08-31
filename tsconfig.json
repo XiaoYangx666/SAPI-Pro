@@ -4,11 +4,11 @@
         // TS7 已移除 baseUrl，paths 相对本 tsconfig 所在目录解析
         // 根目录不再装 @minecraft/*：编辑器/测试类型走 variants/beta 安装的 beta 版类型（与 __BETA__=true 一致）
         "paths": {
-            "@/*": ["./packages/core/src/*"],
-            "@test/*": ["./packages/core/test/*"],
+            "@/*": ["./core/src/*"],
+            "@test/*": ["./core/test/*"],
             "@minecraft/server": ["./variants/beta/node_modules/@minecraft/server/index.d.ts"],
             "@minecraft/server-ui": ["./variants/beta/node_modules/@minecraft/server-ui/index.d.ts"]
         }
     },
-    "include": ["./packages/core/src", "./packages/core/test"]
+    "include": ["./core/src", "./core/test"]
 }

@@ -4,7 +4,7 @@
         // 本文件在仓库根，paths 相对本文件解析；@minecraft/* 重定向到本渠道安装的类型。
         // dts 插件的输出 rootDir 在各自 rolldown.config.ts 里通过 compilerOptions.rootDir 显式指定（对齐 preserveModulesRoot）
         "paths": {
-            "@/*": ["./packages/core/src/*"],
+            "@/*": ["./core/src/*"],
             "@minecraft/server": [
                 "./variants/stable/node_modules/@minecraft/server/index.d.ts"
             ],
@@ -13,5 +13,5 @@
             ]
         }
     },
-    "include": ["./packages/core/src"]
+    "include": ["./core/src"]
 }

@@ -58,7 +58,7 @@ async function main() {
     await recreateDir(buildDir);
 
     const zipTasks: Array<[string, string]> = [
-        ["packages/core/src", "SAPI-Pro_ts.zip"],
+        ["core/src", "SAPI-Pro_ts.zip"],
         ["variants/beta/dist", "SAPI-Pro_js.zip"],
     ];
 

@@ -2,7 +2,7 @@
     "name": "sapi-pro-monorepo",
     "version": "0.0.0",
     "private": true,
-    "description": "sapi-pro monorepo：packages/core 共享源码，variants/beta 与 variants/stable 双渠道构建发布",
+    "description": "sapi-pro monorepo：core/ 共享源码，variants/beta 与 variants/stable 双渠道构建发布",
     "type": "module",
     "scripts": {
         "clean": "rimraf build variants/beta/dist variants/stable/dist",
