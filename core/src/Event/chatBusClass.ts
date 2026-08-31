@@ -29,8 +29,9 @@ export class chatBusClass {
         this.send = (t) => {
             return false;
         };
-        // 仅 beta 版 @minecraft/server 提供 beforeEvents.chatSend（stable 类型里不存在该属性，故断言），
-        // 整段包在 __BETA__ 里，stable 构建连类定义都会死代码消除，产物里不含任何 chatSend 引用
+        // 仅 beta 版 @minecraft/server 提供 beforeEvents.chatSend（stable 类型里不存在该属性，故断言）。
+        // 整段包在 __BETA__ 里，stable 构建时 if(false) 分支整体死代码消除，产物里不含任何 chatSend 引用；
+        // 类定义本身保留（chatBusClass / ChatSendBeforeEventLike 等是两渠道共享 API）
         if (__BETA__) {
             const beforeEvents = world.beforeEvents as unknown as {
                 chatSend: { subscribe(cb: (t: ChatSendBeforeEventLike) => void): void };
