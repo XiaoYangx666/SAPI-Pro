@@ -1,13 +1,13 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Requires-SAPI%202.9.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.30+-green)
+![Requires](https://img.shields.io/badge/Requires-SAPI%202.10.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.40+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
 ## Table of Contents
 
 - [Installation](#-installation)
-    - [Create with sapi-kit (Recommended)](#method-1-create-with-sapi-kit-recommended)
+    - [Create with create-mcbe (Recommended)](#method-1-create-with-create-mcbe-recommended)
     - [Manual Installation for Existing Projects](#method-2-manual-installation-for-existing-projects)
 - [Core Features](#core-features)
     - [Command System](#command-system)
@@ -24,50 +24,40 @@
 
 ## 📦 Installation
 
-### Method 1: Create with sapi-kit (Recommended)
+### Method 1: Create with create-mcbe (Recommended)
 
-If you want to create a new script behavior pack based on SAPI-Pro, you can use sapi-kit. sapi-kit provides template packs and supports compilation, third-party library packaging, version updates, and more, making development easier.
+To create a new script behavior pack based on SAPI-Pro, use the sapi-pro template from [create-mcbe](https://www.npmjs.com/package/create-mcbe). The template ships with [BEPack](https://www.npmjs.com/package/@bepack/cli) build/pack configuration and a built-in sapi-pro dependency-resolving plugin that automatically picks a sapi-pro version matching your `@minecraft/*` channel.
 
-1. Install sapi-kit
-
-    ```bash
-    npm i -g sapi-kit
-    ```
-
-2. Navigate to your project directory, initialize the project, and select sapi-pro during pre-installation
+1. Create the project (defaults to the stable channel)
 
     ```bash
-    sapi-kit init
+    npm create mcbe@latest my-addon -- --template sapi-pro --yes --install
     ```
 
-3. Initialize the library in src/main.ts
+2. Build / develop
 
-    ```typescript
-    //src/main.ts
-    import { PackInfo, initSAPIPro } from "sapi-pro";
-    const packInfo: PackInfo = {
-        name: "Behavior Pack Name", // behavior pack name
-        version: "1.0.0", // behavior pack version
-        author: "Author", // author
-        nameSpace: "sapipro", // namespace
-        description: "Behavior pack description", // pack description
-    };
-    // Initialize the library
-    initSAPIPro(packInfo);
+    ```bash
+    cd my-addon
+    npm run build   # build
+    npm run dev     # watch + copy to the Minecraft development folder
+    npm run pack    # package .mcpack / .mcaddon
     ```
 
-For more information about sapi-kit: [ScriptApi-Kit](https://gitee.com/ykxyx666_admin/script-api-kit)
-
-> **Note**  
-> If you're not using TypeScript, you can write JavaScript code directly in the src folder.  
-> The library must be initialized before use.
+> **Note**
+> - For the Beta API: change `@minecraft/server`, `@minecraft/server-ui` and `sapi-pro` in `packs.bp.dependencies` of `bepack.config.ts` to `"beta"`, then run `npm run bepack:install`.
+> - sapi-pro is resolved and bundled into the scripts output by BEPack; it is never written to `manifest.json`.
+> - Full BEPack documentation is packed into your project's `node_modules/@bepack/cli/` (README.md / reference.md).
 
 ### Method 2: Manual Installation for Existing Projects
 
-1.  Install the library using npm
+1.  Install the version matching your Script API channel:
 
     ```bash
-    npm i sapi-pro
+    # Beta API
+    npm i sapi-pro@beta
+
+    # Stable API
+    npm i sapi-pro@stable
     ```
 
 2.  Initialize the library:
@@ -237,6 +227,8 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 
 [SAPI-Pro Reference Documentation](./tutorial/README.md)
 
+[BEPack Build Tool](https://github.com/XiaoYangx666/BEPack)
+
 ## SKILL (AI-Assisted Development)
 
 This project provides a `sapi-pro-dev` Skill for AI coding assistants that support the Skill mechanism (e.g., Claude Code), helping AI understand SAPI-Pro's project structure and development conventions.
@@ -256,5 +248,5 @@ Gitee Repository: [gitee.com/ykxyx666_admin/SAPI-Pro](https://gitee.com/ykxyx666
 > 🛠️ Recommended Development Environment:
 >
 > - VSCode
-> - TypeScript 5.7+
+> - TypeScript 7+
 > - Node.js 20+

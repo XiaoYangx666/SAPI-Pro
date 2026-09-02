@@ -1,13 +1,13 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.9.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.30+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.10.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.40+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
 ## 目录
 
 - [安装](#安装)
-    - [使用sapi-kit创建(推荐)](#方式一使用-sapi-kit-创建推荐)
+    - [使用create-mcbe创建(推荐)](#方式一使用-create-mcbe-创建推荐)
     - [现有项目手动安装](#方式二现有项目手动安装)
 - [核心功能](#核心功能)
     - [命令系统](#命令系统)
@@ -24,50 +24,40 @@
 
 ## 📦 安装
 
-### 方式一：使用 sapi-kit 创建（推荐）
+### 方式一：使用 create-mcbe 创建（推荐）
 
-如果你想基于 SAPI-Pro 创建新的脚本行为包，你可以使用 sapi-kit。sapi-kit 提供了模板包，并支持编译，第三方库打包，更新版本等功能，方便开发。
+如果你想基于 SAPI-Pro 创建新的脚本行为包，可以使用 [create-mcbe](https://www.npmjs.com/package/create-mcbe) 的 sapi-pro 模板。模板自带 [BEPack](https://www.npmjs.com/package/@bepack/cli) 构建/打包配置，并内置 sapi-pro 依赖解析插件，自动选择与 `@minecraft/*` 渠道匹配的 sapi-pro 版本。
 
-1. 安装 sapi-kit
-
-    ```bash
-    npm i -g sapi-kit
-    ```
-
-2. 进入项目目录，初始化项目，在预装时选择sapi-pro
+1. 创建项目（默认使用 stable 渠道）
 
     ```bash
-    sapi-kit init
+    npm create mcbe@latest my-addon -- --template sapi-pro --yes --install
     ```
 
-3. 在 src/main.ts 中初始化库
+2. 构建 / 开发
 
-    ```typescript
-    //src/main.ts
-    import { PackInfo, initSAPIPro } from "sapi-pro";
-    const packInfo: PackInfo = {
-        name: "行为包名", //行为包名
-        version: "1.0.0", //行为包版本
-        author: "作者", //作者
-        nameSpace: "sapipro", //命名空间
-        description: "行为包描述", //包描述
-    };
-    // 初始化库
-    initSAPIPro(packInfo);
+    ```bash
+    cd my-addon
+    npm run build   # 构建
+    npm run dev     # 监听 + 复制到游戏开发目录
+    npm run pack    # 打包 mcpack/mcaddon
     ```
 
-有关 sapi-kit 的更多信息:[ScriptApi-Kit](https://gitee.com/ykxyx666_admin/script-api-kit)
-
-> **提示**  
-> 如果你不使用 TypeScript，可以直接在 src 中编写 js 代码。
-> 库必须初始化才能正常使用
+> **提示**
+> - 如需 Beta API：将 bepack.config.ts 中 `packs.bp.dependencies` 的 `@minecraft/server`、`@minecraft/server-ui`、`sapi-pro` 都改为 `"beta"`，再执行 `npm run bepack:install`。
+> - sapi-pro 由 BEPack 解析并打包进 scripts 产物，不写入 manifest.json。
+> - BEPack 的完整文档已打包在项目 `node_modules/@bepack/cli/` 中（README.zh-CN.md / reference.md），可随时查阅。
 
 ### 方式二：现有项目手动安装
 
-1.  使用npm安装库
+1.  根据项目使用的 Script API 渠道安装对应版本：
 
     ```bash
-    npm i sapi-pro
+    # Beta API
+    npm i sapi-pro@beta
+
+    # Stable API
+    npm i sapi-pro@stable
     ```
 
 2.  初始化库：
@@ -237,6 +227,8 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 
 [SAPI-Pro 参考文档](./tutorial/README.md)
 
+[BEPack 构建工具](https://github.com/XiaoYangx666/BEPack)
+
 ## SKILL（AI 辅助开发）
 
 本项目提供了 `sapi-pro-dev` Skill，供支持 Skill 机制的 AI 编码助手（如 Claude Code）使用，帮助 AI 理解 SAPI-Pro 的项目结构与开发规范。
@@ -256,5 +248,5 @@ Gitee 仓库: [gitee.com/ykxyx666_admin/SAPI-Pro](https://gitee.com/ykxyx666_adm
 > 🛠️ 推荐开发环境：
 >
 > - VSCode
-> - TypeScript 5.7+
+> - TypeScript 7+
 > - Node.js 20+

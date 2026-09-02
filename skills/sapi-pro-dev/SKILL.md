@@ -28,14 +28,24 @@ sapi-pro 是一个用于 Minecraft Bedrock Script API (简称：SAPI) 开发的n
 sapi-pro 分为 beta版和stable版。
 
 - beta版：全功能，需要ScriptAPI beta版本
-- stable版: 缺失部分功能，需要ScriptAPI稳定版
+- stable版: 缺失部分功能（模拟命令、chatBus等），需要ScriptAPI稳定版
 
 # SAPI-Pro开发基本步骤
 
-1. 检查项目根目录结构，是否已有文件，是否已安装saip-pro
+1. 检查项目根目录结构，是否已有文件，是否已安装sapi-pro
 2. 如果未安装，先安装sapi-pro 参考：reference/installation.md
-3. 如果确认已安装 sapi-pro，且使用sapi-kit进行打包(存在依赖或配置文件)，请阅读 sapi-kit/sapi-kit.md 学习用法
+3. 如果项目使用 BEPack 构建（存在 bepack.config.ts 或依赖 @bepack/cli），需要时阅读项目内 `node_modules/@bepack/cli/README.zh-CN.md` 与 `reference.md` 学习用法
 4. 确认项目相关环境无误后，可以阅读 reference/modules.md 开始开发，遵循Core Principles
+
+# 创建新项目
+
+创建新的 sapi-pro 项目使用 create-mcbe 的 sapi-pro 模板（不要手动搭建）：
+
+```bash
+npm create mcbe@latest <项目名> -- --template sapi-pro --yes --install
+```
+
+模板默认 stable 渠道；需要 Beta API 时把 bepack.config.ts 中 `packs.bp.dependencies` 的 `@minecraft/server`、`@minecraft/server-ui`、`sapi-pro` 都改为 `"beta"`，再执行 `npx bepack install`。BEPack 会经 `sapiPro()` 插件自动解析与 `@minecraft/*` 渠道匹配的 sapi-pro 版本，其余用法以项目 `node_modules/@bepack/cli/` 下的文档为准。
 
 # Minecraft ScriptAPI 开发基础
 
