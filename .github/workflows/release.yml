@@ -47,7 +47,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            # 双渠道发布：beta 版本发 beta 标签；stable 版本发 stable 标签（均不挂 latest）。
+            # 双渠道发布：beta 版本占用 latest，并同步 beta 别名；stable 版本使用 stable 标签。
             # 需在仓库 Secrets 配置 NPM_TOKEN（有发布权限）；未配置则跳过。
             # secrets 上下文不能用于 step 级 if（报 Unrecognized named-value），先经 env 读出是否配置，
             # 再用 steps.<id>.outputs 作为发布步骤的闸门
@@ -58,9 +58,12 @@ jobs:
               run: |
                   if [ -n "$NPM_TOKEN" ]; then echo "configured=true" >> "$GITHUB_OUTPUT"; else echo "configured=false" >> "$GITHUB_OUTPUT"; fi
 
-            - name: Publish to npm (beta -> beta tag)
+            - name: Publish to npm (beta -> latest)
               if: ${{ steps.npm_token.outputs.configured == 'true' }}
-              run: npm publish ./variants/beta --tag beta
+              run: |
+                  npm publish ./variants/beta --tag latest
+                  BETA_VERSION=$(node -p "require('./variants/beta/package.json').version")
+                  npm dist-tag add "sapi-pro@$BETA_VERSION" beta
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

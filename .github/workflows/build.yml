@@ -27,12 +27,18 @@ jobs:
               with:
                   node-version: "24"
                   cache: npm
+                  cache-dependency-path: |
+                      package-lock.json
+                      variants/beta/package-lock.json
+                      variants/stable/package-lock.json
 
             - name: Install dependencies
               run: |
-                  npm ci
-                  npm --prefix variants/beta ci
-                  npm --prefix variants/stable ci
+                  npm config set registry https://registry.npmjs.org/
+                  npm config set replace-registry-host always
+                  npm ci --prefer-offline --no-audit
+                  npm --prefix variants/beta ci --prefer-offline --no-audit
+                  npm --prefix variants/stable ci --prefer-offline --no-audit
 
             - name: Test
               run: npm test
