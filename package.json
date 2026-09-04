@@ -22,7 +22,7 @@
         "pack": "npm run build && npm run pack:beta && npm run pack:stable",
         "pack:beta": "npm pack ./variants/beta",
         "pack:stable": "npm pack ./variants/stable",
-        "publish:beta": "npm publish ./variants/beta --tag beta",
+        "publish:beta": "npm publish ./variants/beta --tag latest",
         "publish:stable": "npm publish ./variants/stable --tag stable",
         "skills": "node tools/cp_skill.ts"
     },

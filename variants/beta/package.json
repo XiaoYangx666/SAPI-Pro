@@ -24,10 +24,8 @@
         "@minecraft/server": "2.10.0-beta.1.26.40-stable",
         "@minecraft/server-ui": "2.2.0-beta.1.26.40-stable"
     },
-    "scripts": {
-        "build": "rolldown -c rolldown.config.ts",
-        "typecheck": "tsc -p ../tsconfig.beta.json --noEmit",
-        "pack": "npm run typecheck && npm run build && npm pack"
+    "publishConfig": {
+        "tag": "latest"
     },
     "files": [
         "dist"

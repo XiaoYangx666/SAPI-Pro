@@ -24,10 +24,8 @@
         "@minecraft/server": "2.8.0",
         "@minecraft/server-ui": "2.1.0"
     },
-    "scripts": {
-        "build": "rolldown -c rolldown.config.ts",
-        "typecheck": "tsc -p ../tsconfig.stable.json --noEmit",
-        "pack": "npm run typecheck && npm run build && npm pack"
+    "publishConfig": {
+        "tag": "stable"
     },
     "files": [
         "dist"
