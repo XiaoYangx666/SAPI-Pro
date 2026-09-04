@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目简介
 
-sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表单导航、数据存储、多包通信、国际化。安装/使用见 README.md，API 文档在 docs/，教程在 tutorial/。**同一个 npm 包发布双渠道**：`latest` 标签 → stable 版，`beta` 标签 → beta 版；不维护两个分支，用 monorepo 共享源码。开发时加载 `sapi-pro-dev` skill。
+sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表单导航、数据存储、多包通信、国际化。安装/使用见 README.md，API 文档在 docs/，教程在 tutorial/。**同一个 npm 包发布双渠道**：`latest` 标签 → beta 版，`stable` 标签 → stable 版；Release workflow 同时让 `beta` 标签指向当前 beta 版本。不维护两个分支，用 monorepo 共享源码。开发时加载 `sapi-pro-dev` skill。
 
 ## 目录结构
 
@@ -18,7 +18,7 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 
 | 命令 | 作用 |
 |---|---|
-| `npm install` | 安装根目录工具链 + 测试用 beta `@minecraft/*` |
+| `npm install` | 安装根目录工具链（根目录不安装 `@minecraft/*`） |
 | `npm run install:variants` | 分别安装 `variants/beta` 与 `variants/stable` 各自的 `@minecraft/*` 依赖 |
 | `npm test` | vitest 全部测试（`core/test`，打桩 `@minecraft/server`） |
 | `npm run typecheck` | 双渠道 typecheck（beta + stable，各用各的 `@minecraft/*` 类型） |
@@ -32,7 +32,7 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 | `npm run build:beta` / `build:stable` | 单渠道 typecheck + 编译 |
 | `npm run pack:beta` | `npm pack ./variants/beta` 生成 `sapi-pro-<beta版本>.tgz` |
 | `npm run pack:stable` | 生成 `sapi-pro-<stable版本>.tgz` |
-| `npm run publish:beta` | `npm publish ./variants/beta --tag beta` |
+| `npm run publish:beta` | `npm publish ./variants/beta --tag latest` |
 | `npm run publish:stable` | `npm publish ./variants/stable --tag stable` |
 
 构建产物 `build/`、`variants/*/dist`、`variants/*/node_modules`、`*.tgz` 均被 gitignore。测试在 `core/test/` 下，直接从 `../../src/...` 相对导入并用 `vi.mock("@minecraft/server")` 打桩，不走别名。
@@ -69,8 +69,10 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 ## 发版
 
 - **版本规则**：两渠道共享同一 base 版本，beta 不带后缀、stable 带 `-stable` 后缀。如 base `0.4.2`：beta 版 `0.4.2`，stable 版 `0.4.2-stable`。`libVersionString` 两边都解析为 `0.4.2`，游戏内显示 `0.4.2-beta` / `0.4.2-stable`。
-- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.2`）→ `npm run pack:beta` → `npm run publish:beta`（`--tag beta`）。
-- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.2-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。**两渠道都不挂 `latest` 标签**，安装时用 `sapi-pro@beta` / `sapi-pro@stable` 显式指定。
+- 改版本时必须同步对应 variant 的 `package.json` 与 `package-lock.json` 顶层/根包版本，避免发布元数据残留旧版本。
+- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.2`）→ `npm run pack:beta` → `npm run publish:beta`（`--tag latest`）。Release workflow 发布后再把 npm 的 `beta` dist-tag 同步指向同一版本，因此 `sapi-pro` 与 `sapi-pro@beta` 都是当前 beta。
+- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.2-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
+- 两个 variant 的 `publishConfig.tag` 分别固定为 `latest` / `stable`，防止直接在 variant 目录执行 `npm publish` 时占错 dist-tag。
 - 下游行为包通过 `file:` 按文件名依赖 `sapi-pro-<version>.tgz`，版本不同文件名不同，直接换引用即可。
 
 ## 开发规则

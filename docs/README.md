@@ -85,7 +85,7 @@
 
 ### 命令系统
 
-命令系统支持内建命令和游戏原生命令两种方式，可以注册"."开头的模拟命令和游戏内/开头的命令。
+命令系统支持模拟命令和游戏原生命令两种方式。`registerCommand` 注册以 `.` 开头的模拟命令，**仅 Beta 渠道可用**；`registerNative` 注册游戏内以 `/` 开头的原生命令，Beta / Stable 渠道均可用。Stable 渠道请使用 `registerNative`。
 
 可以使用 Command 构造函数来创建命令，或使用`Command.fromObject`。在命令较为复杂时，推荐后者。
 
@@ -110,11 +110,10 @@ const killCmd = Command.fromObject({
         });
     },
 });
-//注册
+// 注册模拟命令（仅 Beta）
 pcommand.registerCommand(ExampleCmd);
-pcommand.registerCommand(killCmd);
-//注册游戏命令
-pcommand.registerNative(ExampleCmd);
+// 注册原生命令（Beta / Stable 均可用）
+pcommand.registerNative(killCmd);
 ```
 
 #### 性能
@@ -150,8 +149,8 @@ const testForm: SAPIProForm<ModalFormData> = {
         ctx.reopen();
     },
 };
-//注册打开表单的命令
-pcommand.registerCommand(
+//注册打开表单的原生命令（Beta / Stable 均可用）
+pcommand.registerNative(
     new Command("formtest", "表单测试", false, (player) => {
         formManager.open(player, testForm, {}, 10);
     })

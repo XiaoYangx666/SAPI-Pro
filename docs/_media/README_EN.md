@@ -81,7 +81,7 @@ To create a new script behavior pack based on SAPI-Pro, use the sapi-pro templat
 
 ### Command System
 
-The command system supports both built-in commands and native Minecraft commands. You can register simulated commands starting with "." and in-game commands starting with "/".
+The command system supports simulated commands and native Minecraft commands. `registerCommand` registers simulated commands starting with `.`, and is **available only on the Beta channel**. `registerNative` registers native in-game commands starting with `/`, and works on both Beta and Stable channels. Use `registerNative` on Stable.
 
 Commands can be created using the `Command` constructor or `Command.fromObject`. The latter is recommended for more complex commands.
 
@@ -106,11 +106,10 @@ const killCmd = Command.fromObject({
         });
     },
 });
-// Register
+// Register a simulated command (Beta only)
 pcommand.registerCommand(ExampleCmd);
-pcommand.registerCommand(killCmd);
-// Register native game command
-pcommand.registerNative(ExampleCmd);
+// Register a native command (works on Beta / Stable)
+pcommand.registerNative(killCmd);
 ```
 
 #### Performance
@@ -146,8 +145,8 @@ const testForm: SAPIProForm<ModalFormData> = {
         ctx.reopen();
     },
 };
-// Register command to open the form
-pcommand.registerCommand(
+// Register a native command to open the form (works on Beta / Stable)
+pcommand.registerNative(
     new Command("formtest", "Form test", false, (player) => {
         formManager.open(player, testForm, {}, 10);
     })
