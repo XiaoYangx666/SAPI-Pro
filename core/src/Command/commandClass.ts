@@ -7,6 +7,7 @@ import {
     ParamDefinition,
 } from "./interface";
 import { NativeTypeMapping, paramTypes } from "./parser/ParamTypes";
+import { nativeEnumName, nativeEnumParamName } from "./enumName";
 
 export class Command {
     name: string;
@@ -204,18 +205,19 @@ export class Command {
         while (t != undefined) {
             const isEnum = t.type === "enum" || t.type === "flag";
 
+            // 枚举名：beta 用唯一名 + enumName 解耦；stable 只能用参数名（见 enumName.ts 的说明）
             const enumName = isEnum
-                ? `${nameSpace}:${this.name}_${t.name}_${enumIndex++}`
+                ? nativeEnumName(__BETA__, nameSpace, this.name, t.name, enumIndex++)
                 : undefined;
 
             const param: CustomCommandParameter & { enumName?: string } = {
-                name: t.name,
+                // stable 渠道运行时把参数名逐字当枚举名查表，所以 enum/flag 参数的 name 必须是 `命名空间:参数名`
+                name: enumName ? nativeEnumParamName(__BETA__, t.name, enumName) : t.name,
                 type: NativeTypeMapping[t.type],
             };
 
             if (enumName) {
-                param.enumName = enumName;
-
+                if (__BETA__) param.enumName = enumName;
                 if (t.type === "enum" && t.enums != undefined) {
                     enums[enumName] = t.enums;
                 } else if (t.type === "flag") {

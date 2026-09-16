@@ -11,6 +11,7 @@ import {
 import { LibConfig } from "../Config";
 import { exchangedb } from "../DataBase/DataBase";
 import { chatOpe, ChatSendBeforeEventLike } from "../Event";
+import { LibErrorMes } from "../func";
 import { Command } from "./commandClass";
 import { NativeCommandParser } from "./parser/nativeParser";
 
@@ -51,6 +52,8 @@ export interface HelpLike {
 export class CommandManager {
     readonly commands: Map<string, Command>;
     readonly nativeCommands: Command[] = [];
+    /**已注册的枚举：枚举名 → 值签名。stable 渠道枚举名只能是参数名，需要去重与冲突提示 */
+    private readonly registeredEnums = new Map<string, string>();
     testMode = false;
     help?: HelpLike;
 
@@ -70,18 +73,34 @@ export class CommandManager {
     /**注册所有原生命令 */
     private registerNativeCommands(t: StartupEvent) {
         this.nativeCommands.forEach((cmd) => {
-            const nativeData = cmd.toNative(LibConfig.packInfo.nameSpace);
-            // 1. 自动遍历并注册属于该命令的所有 Enum
-            for (const [enumName, enumValues] of Object.entries(nativeData.enums)) {
-                t.customCommandRegistry.registerEnum(enumName, enumValues);
-            }
-            // 2. 注册主命令
-            t.customCommandRegistry.registerCommand(
-                nativeData.cmd,
-                (origin: CustomCommandOrigin, ...args: any[]) => {
-                    return this.runNativeCommand(cmd, origin, args);
+            // 单条命令注册失败不应连带影响后面的命令（此前一条抛错会中断整个 forEach）
+            try {
+                const nativeData = cmd.toNative(LibConfig.packInfo.nameSpace);
+                // 1. 自动遍历并注册属于该命令的所有 Enum
+                for (const [enumName, enumValues] of Object.entries(nativeData.enums)) {
+                    const signature = JSON.stringify(enumValues);
+                    const registered = this.registeredEnums.get(enumName);
+                    // 同名同值：已经注册过，跳过（stable 渠道枚举名就是参数名，多条命令可能重名）
+                    if (registered === signature) continue;
+                    if (registered !== undefined) {
+                        LibErrorMes(
+                            `枚举名冲突：${enumName} 已注册为 ${registered}，命令 ${cmd.name} 需要 ${signature}`
+                        );
+                        continue;
+                    }
+                    this.registeredEnums.set(enumName, signature);
+                    t.customCommandRegistry.registerEnum(enumName, enumValues);
                 }
-            );
+                // 2. 注册主命令
+                t.customCommandRegistry.registerCommand(
+                    nativeData.cmd,
+                    (origin: CustomCommandOrigin, ...args: any[]) => {
+                        return this.runNativeCommand(cmd, origin, args);
+                    }
+                );
+            } catch (e) {
+                LibErrorMes(`原生命令注册失败：${cmd.name}`, e);
+            }
         });
     }
 
