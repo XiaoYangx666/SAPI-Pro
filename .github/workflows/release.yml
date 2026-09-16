@@ -16,6 +16,10 @@ concurrency:
 jobs:
     release:
         runs-on: ubuntu-latest
+        # 只允许版本 tag（如 v0.4.2）触发；渠道 tag（如 v0.4.2-stable）不参与。
+        # 一次 run 内会同时发布 beta 与 stable 两条渠道，若两个 tag 都触发，
+        # 第二个 run 会重复发布同一版本并报 EPUBLISHCONFLICT。
+        if: ${{ !endsWith(github.ref_name, '-stable') }}
 
         steps:
             - name: Checkout code
