@@ -16,10 +16,10 @@ concurrency:
 jobs:
     release:
         runs-on: ubuntu-latest
-        # 只允许版本 tag（如 v0.4.2）触发；渠道 tag（如 v0.4.2-stable）不参与。
-        # 一次 run 内会同时发布 beta 与 stable 两条渠道，若两个 tag 都触发，
-        # 第二个 run 会重复发布同一版本并报 EPUBLISHCONFLICT。
-        if: ${{ !endsWith(github.ref_name, '-stable') }}
+        # 一次 run 内会同时发布 beta 与 stable 两条渠道，因此只认版本 tag（如 v0.4.2）：
+        # -stable 结尾的渠道 tag 不触发，否则同一版本会被两个 tag 各跑一次，第二次重复发布
+        # 同一版本而报 EPUBLISHCONFLICT。手动触发（workflow_dispatch）不受此限，用于重发当前分支版本。
+        if: ${{ github.ref_type != 'tag' || !endsWith(github.ref_name, '-stable') }}
 
         steps:
             - name: Checkout code
@@ -45,6 +45,9 @@ jobs:
               run: npm run pack
 
             - name: Create GitHub Release
+              # 手动触发时没有 tag，action-gh-release 无法创建 release；仅推 tag 时执行。
+              # 已存在的 release 会被更新资产，但正文等未显式指定的信息会保留原样。
+              if: ${{ github.ref_type == 'tag' }}
               uses: softprops/action-gh-release@v3
               with:
                   files: "*.tgz"
