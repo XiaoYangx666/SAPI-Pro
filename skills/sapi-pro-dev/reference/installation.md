@@ -23,14 +23,14 @@
 
 ```json
 {
-    "@minecraft/server": "2.10.0-beta.1.26.40-stable"
+    "@minecraft/server": "2.11.0-beta.1.26.50-stable"
 }
 ```
 
 规则：
 
 - 若版本字符串包含 -beta或-preview，则项目使用 Beta API。
-- 若版本为普通版本号（如 2.8.0），则项目使用 Stable API。
+- 若版本为普通版本号（如 2.10.0），则项目使用 Stable API。
 
 ### 根据manifest.json
 
