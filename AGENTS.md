@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents (Claude Code、Codex、Cursor 等) when working with code in this repository.
 
 ## 项目简介
 
@@ -11,7 +11,9 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - `core/`：共享源码（`src/`）与共享测试（`test/`），**不发布**（无独立 package.json，非 npm 包，直接由两个 variant 构建）。
 - `variants/beta/`：beta 渠道构建与发布（使用最新 beta 版 `@minecraft/*`，全功能）。
 - `variants/stable/`：stable 渠道构建与发布（使用最新 stable 版 `@minecraft/*`，**无模拟命令、无 chatBus**）。
-- `tools/`：版本注入、fflate 打包等构建脚本。
+- `tools/`：构建脚本（仅 `libVersion.ts`，负责版本注入）。
+- `skills/sapi-pro-dev/`：给 AI 助手用的 skill 源文件（不随 npm 包发布，也没有安装脚本，需要时手动拷到助手的 skill 目录）。
+- `docs/`：历史 typedoc 产物（139 个文件），**生成依赖已移除，现为手动维护**。
 - 根 `package.json` 是编排层（`private: true`），不包含库源码，只做脚本编排与测试依赖。
 
 ## 常用命令
@@ -27,15 +29,15 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 | `npm run compile:beta` | rolldown 编译 beta → `variants/beta/dist/`（含 .d.ts） |
 | `npm run compile:stable` | rolldown 编译 stable → `variants/stable/dist/` |
 | `npm run dev:beta` / `dev:stable` | rolldown 监听模式 |
-| `npm run build` | 完整构建：clean → 双渠道 typecheck → 双渠道 rolldown → fflate 打包 zip |
-| `npm run pack` | 完整构建 + `pack:beta` + `pack:stable`，产出 `build/*.zip` 与两个 `.tgz`（CI 用） |
+| `npm run build` | 完整构建：clean → 双渠道 typecheck → 双渠道 rolldown（产出各自 `dist/`，含 .d.ts） |
+| `npm run pack` | 完整构建 + `pack:beta` + `pack:stable`，产出两个 `.tgz`（CI 用） |
 | `npm run build:beta` / `build:stable` | 单渠道 typecheck + 编译 |
 | `npm run pack:beta` | `npm pack ./variants/beta` 生成 `sapi-pro-<beta版本>.tgz` |
 | `npm run pack:stable` | 生成 `sapi-pro-<stable版本>.tgz` |
 | `npm run publish:beta` | `npm publish ./variants/beta --tag latest` |
 | `npm run publish:stable` | `npm publish ./variants/stable --tag stable` |
 
-构建产物 `build/`、`variants/*/dist`、`variants/*/node_modules`、`*.tgz` 均被 gitignore。测试在 `core/test/` 下，直接从 `../../src/...` 相对导入并用 `vi.mock("@minecraft/server")` 打桩，不走别名。
+构建产物 `variants/*/dist`、`variants/*/node_modules`、`*.tgz` 均被 gitignore。测试在 `core/test/` 下，源码用 `../../src/...` 相对导入（少数 `vi.mock` 用 `@/` alias，由 `vitest.config.ts` 提供），并用 `vi.mock("@minecraft/server")` 打桩。**库不再产出 zip**：分发只有 npm 包（`.tgz`）一条路径。
 
 ## 架构
 
@@ -46,11 +48,11 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - `core/src/Form/`：表单导航，`formManager` 全局管理，支持跨包 `openExternal` 打开别的行为包的表单。
 - `core/src/DataBase/`：`DPDataBase` / `ScoreBoardJSONDataBase` / `ScoreBoardDataBase`，超大文本分割存储。
 - `core/src/Deferred/`：世界加载后才求值的延迟对象，`gameDeferredRegistry` 统一绑定。
-- `core/src/Event.ts`：事件总线（聊天/间隔等）；`Translate/`：i18n，`translator`；`utils/`：random / vector / chunk / logger / vanilla-data 封装。
+- `core/src/Event.ts`：事件总线（聊天/间隔等）；`Translate/`：i18n，`translator`；`utils/`：random / vector / chunk / logger，以及 `vanila-data.ts`（仅一个 `DimensionIds` 枚举）。
 
 ## 双渠道构建（改构建相关代码时必看）
 
-- 两个 variant 各自有 `rolldown.config.ts` + `tsconfig.json` + `package.json`，**同一份 `core/src` 构建成不同 dist**。编译是 **rolldown + rolldown-plugin-dts**，`preserveModules` 逐模块镜像 `core/src` → `variants/<ch>/dist`；tsc 只做 typecheck。
+- 两个 variant 各自有 `rolldown.config.ts` + `package.json`（**渠道 tsconfig 不在 variant 里，而在仓库根**：`tsconfig.beta.json` / `tsconfig.stable.json`），**同一份 `core/src` 构建成不同 dist**。编译是 **rolldown + rolldown-plugin-dts**，`preserveModules` 逐模块镜像 `core/src` → `variants/<ch>/dist`；tsc 只做 typecheck。
 - 每个 variant 的 rolldown `input` 必须列出 `exports` 的**全部 10 个子路径根文件**。其中 `.` 与 `./Event` 是本渠道入口 barrel（`entry.<ch>.ts`、`Event.entry.<ch>.ts`），其余 8 个是共享模块根文件（如 `Event.ts`、`Command/main.ts`）。纯 re-export barrel（如 `Deferred/index.ts`）会被 rolldown 提升折叠掉，导致子路径失效。新增公开子路径时，要同步改两个 variant 的 `exports` map、`rolldown.config.ts` 的 input。
 - **dts 插件 `entry` 必须用相对 `process.cwd()` 的 glob**（`${CORE_REL}/**/*.ts`）。插件按 `path.relative(cwd, id)` 匹配，绝对路径 glob 会一个 `.d.ts` 都出不来。
 - **同一份源码对不同版本类型检查**：每渠道一个 tsconfig 在**仓库根**（`tsconfig.beta.json` / `tsconfig.stable.json`），用 `paths` 把 `@minecraft/server`、`@minecraft/server-ui` 重定向到各自 `node_modules` 里的类型。**TS7 已移除 `baseUrl`**，`paths` 相对各自 tsconfig 所在目录解析。
@@ -61,8 +63,9 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - **stable 剔除模拟命令子系统**：`CommandManager`/`CommandHelp` 通过结构接口 `SimulatedParserLike`、`HelpLike`（定义在 `Command/manager.ts`）解耦，不直接引用 `CommandParser`/`CommandHelp` 类型；`Command/main.ts` 里 `const parser = __BETA__ ? new CommandParser() : undefined`、`const help = __BETA__ ? new CommandHelp(...) : undefined`。stable 的 rolldown 配置额外用 `treeshake.moduleSideEffects` 把 `Command/parser/parser.ts`、`Command/parser/func.ts`、`Command/help.ts` 声明为**无副作用**（`main.ts` 对它们的 import 在 `__BETA__=false` 下成为未使用 import，整体丢弃），并在 dts entry glob 里排除这三个文件；因此 **stable 产物完全没有 `parser.js`、`parser/func.js`、`help.js` 及对应 `.d.ts`**。beta 配置不做这些，全量保留。新增模拟命令相关代码注意别让 stable 重新引用这三个模块。
 - **版本注入**：`tools/libVersion.ts` 的 `getLibVersion(packageJsonPath)` 读**指定 variant 的 package.json** 版本（去预发布后缀），在各自 `rolldown.config.ts` 的 `transform.define` 注入 `__SAPI_PRO_VERSION__`（显示字符串 major.minor.patch）与 `__SAPI_PRO_VERSION_NUM__`（选举数字 (major×100+minor×10+patch)/100）。`vitest.config.ts` 的 `define` 与 **beta** variant 保持一致。`core/src/global.d.ts` 声明这三个常量。
 - **`@minecraft/*` 版本钉死精确值，不要放宽成 `^`**：beta 用 `2.10.0-beta.1.26.40-stable` / `2.2.0-beta.1.26.40-stable`，stable 用 `2.8.0` / `2.1.0`（以 npm `dist-tags` 为准）。会漂到 rc 版本并破坏 API。
+- **variant 的 `peerDependencies` 除本渠道 `@minecraft/*` 外，还显式声明 `@minecraft/vanilla-data: ">=1.26.0"`**：用于给下游行为包划定 vanilla-data 版本下限。源码本身不 import 它（`utils/vanila-data.ts` 只是自带枚举），`@minecraft/server` 也自带同类 peer（`>=1.20.70`）。
 - **每渠道类型单独安装**：`variants/beta` 与 `variants/stable` 各自的 `devDependencies` 钉各自的 `@minecraft/*`，需 `npm run install:variants`（两个目录各有 package-lock.json）。**根目录不安装 `@minecraft/*`**：构建链路各自用 `tsconfig.beta/stable.json` 的 paths 重定向到渠道 node_modules；编辑器/测试类型经根 `tsconfig.json` 的 paths 指向 `variants/beta` 安装的 beta 类型（vitest 用工厂 mock 不加载真实模块）。三者不得混用。
-- `.npmrc` 的 `legacy-peer-deps=true` 是必须的（typescript@7 与 typedoc 的 peer 冲突），删掉则 `npm ci` 报 ERESOLVE。
+- `.npmrc` 的 `omit-lockfile-registry-resolved=true` 让 lock 不写入 `resolved` 里的 registry 地址（否则本地镜像源地址会被带进 CI 的 lock）。
 - **typescript@7 无编译器 API**（`require("typescript")` 只返回 version）；rolldown-plugin-dts 用其实验性 tsgo 生成器兼容 TS7。
 - 纯类型 re-export 必须写 `export type { X }`（rolldown 比 tsc 严格，漏了报 MISSING_EXPORT）。
 
