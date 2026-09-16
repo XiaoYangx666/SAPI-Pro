@@ -5,7 +5,6 @@
         // 根目录不再装 @minecraft/*：编辑器/测试类型走 variants/beta 安装的 beta 版类型（与 __BETA__=true 一致）
         "paths": {
             "@/*": ["./core/src/*"],
-            "@test/*": ["./core/test/*"],
             "@minecraft/server": ["./variants/beta/node_modules/@minecraft/server/index.d.ts"],
             "@minecraft/server-ui": ["./variants/beta/node_modules/@minecraft/server-ui/index.d.ts"]
         }

@@ -5,7 +5,7 @@
     "description": "sapi-pro monorepo：core/ 共享源码，variants/beta 与 variants/stable 双渠道构建发布",
     "type": "module",
     "scripts": {
-        "clean": "rimraf build variants/beta/dist variants/stable/dist",
+        "clean": "rimraf variants/beta/dist variants/stable/dist",
         "install:variants": "npm --prefix variants/beta install && npm --prefix variants/stable install",
         "test": "vitest run",
         "typecheck": "npm run typecheck:beta && npm run typecheck:stable",
@@ -15,25 +15,20 @@
         "compile:stable": "rolldown -c variants/stable/rolldown.config.ts",
         "dev:beta": "rolldown -c variants/beta/rolldown.config.ts -w",
         "dev:stable": "rolldown -c variants/stable/rolldown.config.ts -w",
-        "build": "npm run clean && npm run typecheck && npm run compile:beta && npm run compile:stable && npm run package",
+        "build": "npm run clean && npm run typecheck && npm run compile:beta && npm run compile:stable",
         "build:beta": "npm run typecheck:beta && npm run compile:beta",
         "build:stable": "npm run typecheck:stable && npm run compile:stable",
-        "package": "node tools/build.ts",
         "pack": "npm run build && npm run pack:beta && npm run pack:stable",
         "pack:beta": "npm pack ./variants/beta",
         "pack:stable": "npm pack ./variants/stable",
         "publish:beta": "npm publish ./variants/beta --tag latest",
-        "publish:stable": "npm publish ./variants/stable --tag stable",
-        "skills": "node tools/cp_skill.ts"
+        "publish:stable": "npm publish ./variants/stable --tag stable"
     },
     "devDependencies": {
         "@types/node": "^26.1.2",
-        "fflate": "^0.8.3",
         "rimraf": "^6.1.3",
         "rolldown": "^1.2.0",
         "rolldown-plugin-dts": "^0.28.0",
-        "typedoc": "^0.28.7",
-        "typedoc-plugin-markdown": "^4.4.2",
         "typescript": "^7.0.2",
         "vitest": "^4.1.8"
     }
