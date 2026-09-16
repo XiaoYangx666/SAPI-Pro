@@ -11,8 +11,9 @@ import {
 import { LibConfig } from "../Config";
 import { exchangedb } from "../DataBase/DataBase";
 import { chatOpe, ChatSendBeforeEventLike } from "../Event";
-import { LibErrorMes } from "../func";
+import { LibErrorMes, LibMessage } from "../func";
 import { Command } from "./commandClass";
+import { applyEnumRenames, planEnumRegistrations } from "./enumRegistry";
 import { NativeCommandParser } from "./parser/nativeParser";
 
 /**
@@ -76,19 +77,21 @@ export class CommandManager {
             // 单条命令注册失败不应连带影响后面的命令（此前一条抛错会中断整个 forEach）
             try {
                 const nativeData = cmd.toNative(LibConfig.packInfo.nameSpace);
-                // 1. 自动遍历并注册属于该命令的所有 Enum
-                for (const [enumName, enumValues] of Object.entries(nativeData.enums)) {
-                    const signature = JSON.stringify(enumValues);
-                    const registered = this.registeredEnums.get(enumName);
-                    // 同名同值：已经注册过，跳过（stable 渠道枚举名就是参数名，多条命令可能重名）
-                    if (registered === signature) continue;
-                    if (registered !== undefined) {
-                        LibErrorMes(
-                            `枚举名冲突：${enumName} 已注册为 ${registered}，命令 ${cmd.name} 需要 ${signature}`
-                        );
-                        continue;
-                    }
-                    this.registeredEnums.set(enumName, signature);
+                // 1. 规划并注册属于该命令的所有 Enum
+                //    stable 渠道枚举名就是参数名，两条命令「同名参数 + 不同枚举值」会撞名，
+                //    这里规划改名并同步改写参数引用（同名同值则直接复用）
+                const plan = planEnumRegistrations(
+                    LibConfig.packInfo.nameSpace,
+                    cmd.name,
+                    nativeData.enums,
+                    this.registeredEnums
+                );
+                applyEnumRenames(nativeData.cmd, plan.renames);
+                for (const [oldName, newName] of plan.renames) {
+                    LibMessage(`枚举重名，已自动改名：${oldName} → ${newName}（命令 ${cmd.name}）`);
+                }
+                for (const [enumName, enumValues] of plan.toRegister) {
+                    this.registeredEnums.set(enumName, JSON.stringify(enumValues));
                     t.customCommandRegistry.registerEnum(enumName, enumValues);
                 }
                 // 2. 注册主命令
