@@ -15,14 +15,14 @@
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.8.0",
-        "@minecraft/server-ui": "^2.1.0",
+        "@minecraft/server": "^2.10.0",
+        "@minecraft/server-ui": "^2.2.0",
         "@minecraft/vanilla-data": ">=1.26.0"
     },
     "devDependencies": {
         "@minecraft/common": "1.2.0",
-        "@minecraft/server": "2.8.0",
-        "@minecraft/server-ui": "2.1.0"
+        "@minecraft/server": "2.10.0",
+        "@minecraft/server-ui": "2.2.0"
     },
     "publishConfig": {
         "tag": "stable"
