@@ -21,13 +21,21 @@ class FormNotFoundError extends Error {
 
 export class FormManagerClass {
     private forms = new Map<string, SAPIProForm<any>>();
+    /**min 清理定时器是否已订阅（没开过表单的包就不会订阅） */
+    private minBound = false;
+
+    /**有表单要展示时才订阅 min 清理，之后不再退订 */
+    private ensureMinTick() {
+        if (this.minBound) return;
+        this.minBound = true;
+        intervalBus.subscribemin(() => {
+            formStackManager.clearOff();
+        });
+    }
 
     /**@internal 不要调用，不要调用，不要调用 */
     _bind() {
         ScriptEventBus.bind("form:open", this.listen.bind(this));
-        intervalBus.subscribemin(() => {
-            formStackManager.clearOff();
-        });
     }
 
     /**注册一个具名表单 */
@@ -56,6 +64,8 @@ export class FormManagerClass {
      * @internal
      */
     _showDelay(player: Player, delay = 0) {
+        //任何一条展示表单的路径（open/具名/跳转）都会经过这里，借此按需启用 min 清理
+        this.ensureMinTick();
         system.runTimeout(() => {
             this._show(player);
         }, delay);

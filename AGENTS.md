@@ -49,6 +49,8 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - `core/src/DataBase/`：`DPDataBase` / `ScoreBoardJSONDataBase` / `ScoreBoardDataBase`，超大文本分割存储。
 - `core/src/Deferred/`：世界加载后才求值的延迟对象，`gameDeferredRegistry` 统一绑定。
 - `core/src/Event.ts`：事件总线（聊天/间隔等）；`Translate/`：i18n，`translator`；`utils/`：random / vector / chunk / logger，以及 `vanila-data.ts`（仅一个 `DimensionIds` 枚举）。
+- **事件总线按需订阅（只做"没用过就不订阅"，别加退订/停表逻辑）**：`intervalBus` 首个 tick/sec/min 订阅者到来才 `system.runInterval`（启动后不再停）；定时器本身仍等 worldLoad（回调会碰世界数据）。`itemBase` 首次 `bind` 才订阅 `itemUse`。`formManager` 不再在 `_bind()` 里常驻订阅 min 清理，改为 `_showDelay`（所有展示路径的必经点）时订阅一次。这样没用周期事件/没用物品/没开过表单的包完全不建这些监听；**用过之后不做清理是刻意的**，不要补回退订。测试见 `core/test/event/lazyBind.test.ts`。
+- **事件订阅留在脚本根上下文，不要挪进 `worldLoad`**：早执行阶段允许 `world.beforeEvents/afterEvents.*.subscribe`、`system.*Events.*.subscribe`、`system.run/runInterval/clearRun`（[官方权限说明](https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/execution-privilege)、[Bedrock Wiki](https://wiki.bedrock.dev/scripting/privileges#early-execution-apis)）；把订阅推进 worldLoad 反而可能"some events not being triggered"。同理，以下三处**有意保持常驻**，不要顺手优化：`ScriptEventBus`（跨包 `form:open` 需要被动接收）、beta 的 `chatBus`（`Command/main.ts` 在根上下文接线，且主机包的命令要等 `initCom` 才导入）、`Command/manager.ts` 的 `system.beforeEvents.startup`（原生命令注册必须早执行订阅）。
 
 ## 双渠道构建（改构建相关代码时必看）
 

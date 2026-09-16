@@ -14,6 +14,11 @@ export * from "./Event/chatBusClass";
 
 /**
  * 订阅周期事件
+ *
+ * 定时器按需启动：首个 tick/sec/min 订阅者到来时才 `runInterval`。
+ * 没用过周期事件的包不会建立每 tick 调用（此前无论如何都会常驻 20Hz）。
+ * 启动后不再停表——一旦用过就继续跑，不做退订/清理那套。
+ * 启动仍延迟到 worldLoad 之后（回调会访问世界数据，如 formStackManager.clearOff）。
  */
 export class intervalBusClass {
     private secEventList: ((
@@ -24,6 +29,11 @@ export class intervalBusClass {
     private tickEvents: (() => void)[];
     private lasttime: number;
     private lastsec: number;
+    /**runInterval 返回的 id；undefined 表示未启动 */
+    private timer: number | undefined;
+    private worldLoaded = false;
+    /**worldLoad 之前就有人订阅，加载后需要补启动 */
+    private startPending = false;
     constructor() {
         this.secEventList = [];
         this.minEventList = [];
@@ -31,8 +41,24 @@ export class intervalBusClass {
         this.lasttime = Date.now() - RandomUtils.int(60000);
         this.lastsec = Date.now() - RandomUtils.int(1000);
         world.afterEvents.worldLoad.subscribe(() => {
-            system.runInterval(this.interval.bind(this));
+            this.worldLoaded = true;
+            if (this.startPending) this.startTimer();
         });
+    }
+
+    /**首个订阅者到来时启动定时器（worldLoad 之前订阅则等加载后再启动） */
+    private ensureStarted() {
+        if (this.timer !== undefined || this.startPending) return;
+        if (this.worldLoaded) {
+            this.startTimer();
+        } else {
+            this.startPending = true;
+        }
+    }
+
+    private startTimer() {
+        this.startPending = false;
+        this.timer ??= system.runInterval(() => this.interval());
     }
 
     private interval() {
@@ -49,12 +75,15 @@ export class intervalBusClass {
     }
     subscribetick(callback: () => void) {
         this.tickEvents.push(callback);
+        this.ensureStarted();
     }
     subscribesec(callback: (lastsec: number, cursec: number) => void) {
         this.secEventList.push(callback);
+        this.ensureStarted();
     }
     subscribemin(callback: () => void) {
         this.minEventList.push(callback);
+        this.ensureStarted();
     }
     private publishsec(lastsec: number, now: number) {
         for (let callback of this.secEventList) {
@@ -83,12 +112,14 @@ export class intervalBusClass {
 
 /**
  * 物品使用订阅
+ *
+ * itemUse 监听按需建立：首次 `bind` 物品时才订阅原版事件。
  */
 export class itemBase {
     private itemMap: Map<string, (player: Player) => void>;
+    private bound = false;
     constructor() {
         this.itemMap = new Map();
-        world.afterEvents.itemUse.subscribe((t) => itemBus.push(t));
     }
     /**
      * 用来绑定物品使用事件
@@ -97,6 +128,9 @@ export class itemBase {
      */
     bind(itemid: string, func: (player: Player) => void) {
         this.itemMap.set(itemid, func);
+        if (this.bound) return;
+        this.bound = true;
+        world.afterEvents.itemUse.subscribe((t) => this.push(t));
     }
     private push(t: ItemUseAfterEvent) {
         let itemid = t.itemStack.typeId;
