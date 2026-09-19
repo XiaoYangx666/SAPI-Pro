@@ -111,3 +111,31 @@ describe("DPDataBase global registry", () => {
         expect(DataBase.getDBs()).not.toContain(entityDb);
     });
 });
+
+
+describe("DPDataBase namespace isolation", () => {
+    it("clear only removes properties inside the exact database namespace", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("abc", source);
+        const neighbor = new DPDataBase("abcd", source);
+
+        db.set("own", 1);
+        neighbor.set("keep", 2);
+
+        db.clear();
+
+        expect(db.get("own")).toBeUndefined();
+        expect(neighbor.get("keep")).toBe(2);
+    });
+
+    it("getrealKeys does not include databases that only share the name prefix", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("abc", source);
+        const neighbor = new DPDataBase("abcd", source);
+
+        db.set("own", 1);
+        neighbor.set("other", 2);
+
+        expect(db.getrealKeys()).toEqual(["abc.own_"]);
+    });
+});
