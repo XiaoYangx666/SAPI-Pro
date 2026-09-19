@@ -12,7 +12,7 @@ import { cmd } from "../func";
 import { Logger } from "../utils/logger";
 
 export type DPValueTypes = string | number | boolean | Vector3;
-export type DBTypes = "DP" | "jSB" | "cSB";
+export type DBTypes = "DP" | "sDP" | "jSB" | "cSB";
 export type ValueGuard<T> = (val: unknown) => val is T;
 
 export abstract class DataBase<T> {
