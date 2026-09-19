@@ -126,6 +126,24 @@
 
 ***
 
+### has()
+
+> **has**(`key`): `boolean`
+
+判断键是否存在。对于分片记录，即使分片长度标记存在但内容已经损坏，也会返回 `true`，可用于区分“键不存在”和“记录存在但无法完整读取”。
+
+#### Parameters
+
+##### key
+
+`string`
+
+#### Returns
+
+`boolean`
+
+***
+
 ### getJSON()
 
 > **getJSON**\<`T`\>(`key`, `guard?`): `T` \| `undefined`
