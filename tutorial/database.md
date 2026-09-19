@@ -61,7 +61,7 @@ type: DBTypes; // 数据库类型
 static DBMap: Record<string, DataBase<any>>
 ```
 
-用于存储所有已注册的数据库实例。实例在构造时自动注册。
+用于存储所有已注册的全局数据库实例。全局数据库在构造时自动注册；以非 `world` 的 `DPSource`（如实体或物品堆）创建的 `DPDataBase` 属于局部实例，不进入该全局注册表。
 
 ---
 
@@ -113,7 +113,7 @@ type DPValueTypes = string | number | boolean | Vector3;
 constructor(name: string, source: DPSource = world)
 ```
 
-第二个参数 `source` 支持 `World`、`Entity`、`ItemStack`，默认为 `world`。
+第二个参数 `source` 支持 `World`、`Entity`、`ItemStack`，默认为 `world`。只有使用 `world` 的 `DPDataBase` 会注册到 `DataBase.DBMap`；实体、物品堆等局部 DP 数据库不会占用或覆盖全局同名注册项。
 
 ---
 
