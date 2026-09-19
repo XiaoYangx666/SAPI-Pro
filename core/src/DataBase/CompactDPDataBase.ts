@@ -128,6 +128,9 @@ export class CompactStructCodec<
         if (!Array.isArray(parsed)) {
             return decodeError("invalid_shape", "紧凑结构数据必须是 JSON 数组");
         }
+        if (parsed.length === 0) {
+            return decodeError("invalid_shape", "紧凑结构记录至少应包含一个字段");
+        }
 
         if (parsed.length > this.fields.length) {
             return decodeError(
