@@ -53,6 +53,7 @@ initSAPIPro(packInfo);
 SAPI-Pro 提供了几个类：
 
 - `DPDataBase`: 动态数据存储(每个行为包隔离)
+- `CompactDPDataBase`: 固定 schema 的紧凑结构化 DP 存储，适合大量同构记录
 - `ScoreBoardJSONDataBase`: 行为包JSON存储(多行为包共享)
 - `ScoreBoardDataBase`: mc的Scoreboard的简单封装
 - `NameDB`: 专门存储玩家id和名字映射(基于DPDataBase)

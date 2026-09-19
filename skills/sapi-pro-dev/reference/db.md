@@ -2,13 +2,14 @@
 
 ## 概述
 
-`DataBase` 模块提供三种不同实现的数据存储方案，用于在 MC Script API 环境中进行数据管理与跨行为包通信。
+`DataBase` 模块提供多种数据存储方案，用于在 MC Script API 环境中进行数据管理与跨行为包通信。
 
 支持以下数据库类型：
 
 | 类型                   | 标识  | 描述                                       |
 | ---------------------- | ----- | ------------------------------------------ |
 | DPDataBase             | `DP`  | 基于 DynamicProperty 的持久化存储          |
+| CompactDPDataBase      | `DP`  | 固定 schema 的紧凑位置编码 DP 存储         |
 | ScoreBoardJSONDataBase | `jSB` | 基于计分板的 JSON 数据存储（支持跨包通信） |
 | ScoreBoardDataBase     | `cSB` | 对原版计分板的封装                         |
 
@@ -17,7 +18,12 @@
 ## 导入
 
 ```ts
-import { DPDataBase, ScoreBoardJSONDataBase, ScoreBoardDataBase } from "sapi-pro/DataBase";
+import {
+    DPDataBase,
+    CompactDPDataBase,
+    ScoreBoardJSONDataBase,
+    ScoreBoardDataBase,
+} from "sapi-pro/DataBase";
 ```
 
 ---
@@ -85,6 +91,55 @@ import { Configdb } from "sapi-pro/DataBase";
 
 对于行为包配置数据,优先使用内置的 Configdb。
 不需要手动创建新的 DPDataBase 实例。
+
+---
+
+## CompactDPDataBase
+
+固定 schema 的紧凑 DynamicProperty 存储，适合玩家账户、统计、冷却等大量同构记录。字段位置由 schema 数组顺序显式定义，不按 key 排序。
+
+```ts
+const db = new CompactDPDataBase("money", [
+    ["name", "string"],
+    ["money", "int"],
+    ["welfareDay", "int"],
+    ["trusted", "boolean"],
+] as const);
+
+db.set(player.id, {
+    name: player.name,
+    money: 10000,
+    welfareDay: 20345,
+    trusted: false,
+});
+```
+
+内部把对象按 schema 顺序编码为 JSON 数组，例如：
+
+```json
+["XiaoYangx666",10000,20345,0]
+```
+
+这样不重复保存字段名，同时直接复用 JSON 的字符串转义与格式解析，不维护自定义分隔符协议。
+
+支持 `string`、`int`（安全整数）、`number`（有限数字）、`boolean`（存储为 0/1）。写入对象必须和 schema 字段完全一致，错误类型、缺字段、额外字段或 symbol 字段都会拒绝写入。
+
+`get(key)` 在损坏记录上返回 `undefined`；需要区分“不存在”和“格式损坏”时使用：
+
+```ts
+const result = db.read(player.id);
+// status: "ok" | "missing" | "invalid"
+```
+
+读取会检查底层 DP 分片完整性、JSON 格式、数组形状、字段数量与字段类型。
+
+schema 投入使用后不可重排、删除或改变已有字段类型/语义。兼容旧记录只能在末尾追加带 `default` 的字段：
+
+```ts
+["gamesPlayed", "int", { default: 0 }]
+```
+
+一旦开始使用 `default`，后续字段也必须带 `default`。
 
 ---
 
@@ -174,6 +229,7 @@ if (obj.isValid()) {
 | 使用场景      | 推荐类型               |
 | ------------- | ---------------------- |
 | 配置存储      | DPDataBase             |
+| 大量固定结构记录 | CompactDPDataBase   |
 | 大文本数据    | DPDataBase             |
 | 跨行为包通信  | ScoreBoardJSONDataBase |
 | 积分/排行系统 | ScoreBoardDataBase     |
@@ -185,4 +241,5 @@ if (obj.isValid()) {
 1. DynamicProperty 存储存在大小限制(约10mb)，应避免频繁写入超大数据
 2. ScoreBoardJSONDataBase 每次读写都会进行 JSON 序列化与反序列化，应避免存储大量内容
 3. ScoreBoardDataBase 仅适用于数值数据
-4. 长字符串操作已内部封装，无需手动处理
+4. CompactDPDataBase 的 schema 顺序属于持久化协议，发布后不要重排或中间插入字段
+5. 长字符串操作已内部封装，无需手动处理

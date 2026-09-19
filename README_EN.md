@@ -158,7 +158,7 @@ pcommand.registerNative(
 
 ### Data Storage
 
-For data storage, SAPI-Pro provides three classes: `DPDataBase`, `ScoreBoardJSONDataBase`, and `ScoreBoardDataBase`. These encapsulate vanilla data storage for faster and more convenient use, and support segmented storage for large texts—even storing 10 novels is no problem.
+For data storage, SAPI-Pro provides `DPDataBase`, `CompactDPDataBase`, `ScoreBoardJSONDataBase`, and `ScoreBoardDataBase`. `CompactDPDataBase` targets large sets of records with a fixed schema and uses positional encoding to avoid repeating JSON field names; Dynamic Property storage still supports automatic segmentation for large strings.
 
 #### Dynamic Storage Example
 

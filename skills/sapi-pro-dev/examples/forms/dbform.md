@@ -3,6 +3,7 @@ import { Player, ScoreboardIdentity } from "@minecraft/server";
 import {
     ButtonForm,
     CommonForm,
+    CompactDPDataBase,
     DataBase,
     DBTypes,
     DPDataBase,
@@ -65,6 +66,10 @@ const DbInfoForm = new ButtonForm<
         {
             label: "设置键值",
             func(ctx) {
+                if (ctx.args.db instanceof CompactDPDataBase) {
+                    ctx.player.sendMessage("§e紧凑结构数据库必须通过其 schema API 写入，通用数据库表单不允许直接修改原始值。");
+                    return ctx.reopen();
+                }
                 ctx.push(setValuePage, { db: ctx.args.db });
             },
         },
