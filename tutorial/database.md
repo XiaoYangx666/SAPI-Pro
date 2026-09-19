@@ -26,7 +26,7 @@
 | 类型                   | 标识  | 描述                                       |
 | ---------------------- | ----- | ------------------------------------------ |
 | DPDataBase             | `DP`  | 基于 DynamicProperty 的持久化存储          |
-| CompactDPDataBase      | `sDP` | 固定 schema 的紧凑结构化 DP 存储           |
+| CompactDPDataBase      | `DP`  | 固定 schema 的紧凑位置编码 DP 存储         |
 | ScoreBoardJSONDataBase | `jSB` | 基于计分板的 JSON 数据存储（支持跨包通信） |
 | ScoreBoardDataBase     | `cSB` | 对原版计分板的封装                         |
 
@@ -52,7 +52,7 @@ import {
 ### 类型定义
 
 ```ts
-type DBTypes = "DP" | "sDP" | "jSB" | "cSB";
+type DBTypes = "DP" | "jSB" | "cSB";
 ```
 
 ### 属性
@@ -231,15 +231,15 @@ import { Configdb } from "sapi-pro";
 
 ## CompactDPDataBase
 
-用于大量“同结构记录”的紧凑 DynamicProperty 存储。它只接受构造时声明的 schema，字段名和类型不会重复写入每条记录。
+用于大量“同结构记录”的紧凑 DynamicProperty 存储。它只接受构造时声明的 schema，并按 schema 的字段位置保存值，不会在每条记录里重复保存字段名。
 
 ### 适用场景
 
 - 玩家账户、统计、冷却时间等大量同构记录
-- 希望比 JSON 更节省空间
-- 数据结构由代码控制，不需要直接阅读持久化文本
+- 希望减少 JSON 对象重复字段名的空间开销
+- 数据结构由代码控制，不需要自由扩展字段
 
-配置、经常变化的对象或需要自由扩展字段的数据仍然更适合 JSON。
+配置、经常变化的对象或需要自由扩展字段的数据仍然更适合 `DPDataBase.setJSON()`。
 
 ### Schema 与字段位置
 
@@ -268,17 +268,13 @@ const moneyDb = new CompactDPDataBase("money", [
 | 类型 | 说明 |
 | --- | --- |
 | `string` | 任意字符串 |
-| `int` | JavaScript 安全整数，payload 使用 base36 |
+| `int` | JavaScript 安全整数 |
 | `number` | 有限浮点数 |
-| `boolean` | 编码为 `0` / `1` |
+| `boolean` | 对外为 boolean，存储时压缩为 `0` / `1` |
 
 ### 编码格式
 
-记录格式：
-
-```text
-<fieldCount(base36)>;<payloadLength(base36)>:<payload>...
-```
+内部采用**位置 JSON 数组**，而不是自定义分隔符协议。
 
 例如：
 
@@ -291,14 +287,21 @@ moneyDb.set("player-id", {
 });
 ```
 
-字段名和类型不会存入记录。字符串也不依赖 `|`、`,` 等分隔符，因此内容中出现这些字符不需要转义。
+实际值类似：
 
-每个 payload 使用长度前缀，记录头还保存本条记录实际包含的字段数。字段数的作用不仅是兼容旧 schema，也能区分：
+```json
+["小阳|x666",10000,20345,1]
+```
 
-- 旧记录本来只有较少字段；
-- 新记录在字段边界处被截断。
+相比对象 JSON：
 
-后者会被识别为损坏数据，而不会误用 default。
+```json
+{"name":"小阳|x666","money":10000,"welfareDay":20345,"trusted":true}
+```
+
+位置数组不重复保存 `name`、`money`、`welfareDay`、`trusted` 等字段名。字符串边界与转义交给标准 JSON 处理，因此字符串中包含 `|`、`:`、引号或反斜杠时也不需要维护自定义 stuffing/escape 协议。
+
+数组长度同时表示该记录包含的字段数量，可用于 append-only schema 演进。
 
 ### 运行时格式校验
 
@@ -306,14 +309,23 @@ moneyDb.set("player-id", {
 
 - 必须是对象；
 - 字段必须与 schema **完全一致**；
-- 不允许缺字段或额外字段；
+- 不允许缺字段、额外字段或 symbol 字段；
 - `int` 必须是安全整数；
 - `number` 不允许 `NaN` / `Infinity`；
 - 所有字段类型必须正确。
 
-非法写入会抛出 `CompactEncodeError`，且不会修改原数据。
+非法写入会抛出 `CompactEncodeError`，编码失败前不会修改原数据。
 
-读取时会检查记录头、字段数量、长度前缀、截断、字段值格式和多余数据。`get()` 在记录损坏时返回 `undefined` 并记录警告，不会自动删除或覆盖原始数据。
+读取时会检查：
+
+- 底层 DP 是否能完整还原；
+- 是否为合法 JSON；
+- JSON 根值是否为数组；
+- 数组字段数量是否超过当前 schema；
+- 每个位置的值是否符合 schema 类型；
+- 缺少的新尾字段是否提供了 `default`。
+
+`get()` 在记录损坏时返回 `undefined` 并记录 warning，不会自动删除或覆盖原始数据。
 
 需要区分“不存在”和“损坏”时使用：
 
@@ -326,17 +338,19 @@ if (result.status === "ok") {
     // 没有这条记录
 } else {
     // result.status === "invalid"
-    console.warn(result.error.code, result.error.field, result.error.offset);
+    console.warn(result.error.code, result.error.field);
 }
 ```
 
+常见错误码包括 `invalid_json`、`invalid_shape`、`schema_mismatch`、`invalid_value`、`missing_field` 和 `storage_corrupt`。
+
 ### Schema 演进
 
-位置编码依赖字段顺序，因此已投入使用的 schema：
+位置编码依赖字段位置，因此已投入使用的 schema：
 
-1. 不得重排字段；
-2. 不得删除字段；
-3. 不得在中间插入字段；
+1. 不得重排已有字段；
+2. 不得删除已有字段；
+3. 不得改变已有字段的类型或语义；
 4. 新字段只能追加到末尾。
 
 如果新字段需要兼容旧记录，必须提供 `default`：
@@ -351,13 +365,13 @@ const db = new CompactDPDataBase("money", [
 ] as const);
 ```
 
-一旦出现带 `default` 的字段，后续字段也必须带 `default`。新记录仍然写入完整 schema；`default` 只用于读取字段数更少的旧记录。
+一旦出现带 `default` 的字段，后续字段也必须带 `default`。新记录仍然写入完整 schema；`default` 只用于读取数组长度更短的旧记录。
 
 旧 schema 尝试读取字段更多的新记录时会返回 `schema_mismatch`，不会静默忽略未知尾字段。
 
 ### 长字符串
 
-`CompactDPDataBase` 内部复用 `DPDataBase`，因此大字符串仍然自动走现有的分片存储逻辑。
+`CompactDPDataBase` 内部复用 `DPDataBase`，因此编码结果超过 Dynamic Property 单值限制时仍会自动分片。底层分片缺失或类型损坏会被 `read()` 识别为 `storage_corrupt`，而不是误判为键不存在。
 
 ---
 
