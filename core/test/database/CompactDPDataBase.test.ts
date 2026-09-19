@@ -181,6 +181,12 @@ describe("CompactStructCodec", () => {
 
         expect(() =>
             new CompactStructCodec([
+                ["bad", "string", { default: "" }, "extra"],
+            ] as any),
+        ).toThrow(/必须是 \[name, kind\]/);
+
+        expect(() =>
+            new CompactStructCodec([
                 ["oldOptional", "int", { default: 0 }],
                 ["requiredAfterIt", "string"],
             ] as const),
