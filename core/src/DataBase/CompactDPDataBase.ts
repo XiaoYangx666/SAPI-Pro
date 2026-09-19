@@ -359,6 +359,10 @@ function validateSchema(fields: readonly CompactFieldDefinition[]): void {
     let defaultSuffixStarted = false;
 
     fields.forEach((field, fieldIndex) => {
+        if (!Array.isArray(field) || (field.length !== 2 && field.length !== 3)) {
+            throw new TypeError(`schema 第 ${fieldIndex} 个字段必须是 [name, kind] 或 [name, kind, { default }]`);
+        }
+
         const [name, kind] = field;
         if (typeof name !== "string" || name.length === 0) {
             throw new TypeError(`schema 第 ${fieldIndex} 个字段名不能为空`);
