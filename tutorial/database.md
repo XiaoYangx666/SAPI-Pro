@@ -10,6 +10,7 @@
 - [导入](#导入)
 - [DataBase 基类](#database-基类)
 - [DPDataBase](#dpdatabase)
+- [CompactDPDataBase](#compactdpdatabase)
 - [ScoreBoardJSONDataBase](#scoreboardjsondatabase)
 - [ScoreBoardDataBase](#scoreboarddatabase)
 - [scoreboardObj](#scoreboardobj)
@@ -18,13 +19,14 @@
 
 ## 概述
 
-`DataBase` 模块提供三种不同实现的数据存储方案，用于在 MC Script API 环境中进行数据管理与跨行为包通信。
+`DataBase` 模块提供多种存储方案，用于在 MC Script API 环境中进行数据管理与跨行为包通信。
 
 支持以下数据库类型：
 
 | 类型                   | 标识  | 描述                                       |
 | ---------------------- | ----- | ------------------------------------------ |
 | DPDataBase             | `DP`  | 基于 DynamicProperty 的持久化存储          |
+| CompactDPDataBase      | `sDP` | 固定 schema 的紧凑结构化 DP 存储           |
 | ScoreBoardJSONDataBase | `jSB` | 基于计分板的 JSON 数据存储（支持跨包通信） |
 | ScoreBoardDataBase     | `cSB` | 对原版计分板的封装                         |
 
@@ -33,7 +35,12 @@
 ## 导入
 
 ```ts
-import { DPDataBase, ScoreBoardJSONDataBase, ScoreBoardDataBase } from "SAPI-Pro/DataBase";
+import {
+    DPDataBase,
+    CompactDPDataBase,
+    ScoreBoardJSONDataBase,
+    ScoreBoardDataBase,
+} from "SAPI-Pro/DataBase";
 ```
 
 ---
@@ -45,7 +52,7 @@ import { DPDataBase, ScoreBoardJSONDataBase, ScoreBoardDataBase } from "SAPI-Pro
 ### 类型定义
 
 ```ts
-type DBTypes = "DP" | "jSB" | "cSB";
+type DBTypes = "DP" | "sDP" | "jSB" | "cSB";
 ```
 
 ### 属性
@@ -219,6 +226,138 @@ import { Configdb } from "sapi-pro";
 ```
 
 用于存储行为包配置数据。
+
+---
+
+## CompactDPDataBase
+
+用于大量“同结构记录”的紧凑 DynamicProperty 存储。它只接受构造时声明的 schema，字段名和类型不会重复写入每条记录。
+
+### 适用场景
+
+- 玩家账户、统计、冷却时间等大量同构记录
+- 希望比 JSON 更节省空间
+- 数据结构由代码控制，不需要直接阅读持久化文本
+
+配置、经常变化的对象或需要自由扩展字段的数据仍然更适合 JSON。
+
+### Schema 与字段位置
+
+schema 使用数组显式定义字段顺序，**不是按 key 排序**：
+
+```ts
+const moneyDb = new CompactDPDataBase("money", [
+    ["name", "string"],
+    ["money", "int"],
+    ["welfareDay", "int"],
+    ["trusted", "boolean"],
+] as const);
+```
+
+上面的持久化协议固定为：
+
+```text
+0 -> name
+1 -> money
+2 -> welfareDay
+3 -> trusted
+```
+
+支持字段类型：
+
+| 类型 | 说明 |
+| --- | --- |
+| `string` | 任意字符串 |
+| `int` | JavaScript 安全整数，payload 使用 base36 |
+| `number` | 有限浮点数 |
+| `boolean` | 编码为 `0` / `1` |
+
+### 编码格式
+
+记录格式：
+
+```text
+<fieldCount(base36)>;<payloadLength(base36)>:<payload>...
+```
+
+例如：
+
+```ts
+moneyDb.set("player-id", {
+    name: "小阳|x666",
+    money: 10000,
+    welfareDay: 20345,
+    trusted: true,
+});
+```
+
+字段名和类型不会存入记录。字符串也不依赖 `|`、`,` 等分隔符，因此内容中出现这些字符不需要转义。
+
+每个 payload 使用长度前缀，记录头还保存本条记录实际包含的字段数。字段数的作用不仅是兼容旧 schema，也能区分：
+
+- 旧记录本来只有较少字段；
+- 新记录在字段边界处被截断。
+
+后者会被识别为损坏数据，而不会误用 default。
+
+### 运行时格式校验
+
+写入时会校验：
+
+- 必须是对象；
+- 字段必须与 schema **完全一致**；
+- 不允许缺字段或额外字段；
+- `int` 必须是安全整数；
+- `number` 不允许 `NaN` / `Infinity`；
+- 所有字段类型必须正确。
+
+非法写入会抛出 `CompactEncodeError`，且不会修改原数据。
+
+读取时会检查记录头、字段数量、长度前缀、截断、字段值格式和多余数据。`get()` 在记录损坏时返回 `undefined` 并记录警告，不会自动删除或覆盖原始数据。
+
+需要区分“不存在”和“损坏”时使用：
+
+```ts
+const result = moneyDb.read("player-id");
+
+if (result.status === "ok") {
+    console.log(result.value);
+} else if (result.status === "missing") {
+    // 没有这条记录
+} else {
+    // result.status === "invalid"
+    console.warn(result.error.code, result.error.field, result.error.offset);
+}
+```
+
+### Schema 演进
+
+位置编码依赖字段顺序，因此已投入使用的 schema：
+
+1. 不得重排字段；
+2. 不得删除字段；
+3. 不得在中间插入字段；
+4. 新字段只能追加到末尾。
+
+如果新字段需要兼容旧记录，必须提供 `default`：
+
+```ts
+const db = new CompactDPDataBase("money", [
+    ["name", "string"],
+    ["money", "int"],
+    ["welfareDay", "int"],
+    ["gamesPlayed", "int", { default: 0 }],
+    ["trusted", "boolean", { default: false }],
+] as const);
+```
+
+一旦出现带 `default` 的字段，后续字段也必须带 `default`。新记录仍然写入完整 schema；`default` 只用于读取字段数更少的旧记录。
+
+旧 schema 尝试读取字段更多的新记录时会返回 `schema_mismatch`，不会静默忽略未知尾字段。
+
+### 长字符串
+
+`CompactDPDataBase` 内部复用 `DPDataBase`，因此大字符串仍然自动走现有的分片存储逻辑。
 
 ---
 
@@ -459,6 +598,7 @@ if (obj.isValid()) {
 | 使用场景      | 推荐类型               |
 | ------------- | ---------------------- |
 | 配置存储      | DPDataBase             |
+| 大量固定结构记录 | CompactDPDataBase   |
 | 大文本数据    | DPDataBase             |
 | 跨行为包通信  | ScoreBoardJSONDataBase |
 | 积分/排行系统 | ScoreBoardDataBase     |
@@ -470,6 +610,7 @@ if (obj.isValid()) {
 1. DynamicProperty 存储存在大小限制，应避免频繁写入超大数据
 2. ScoreBoardJSONDataBase 每次读写都会进行 JSON 序列化与反序列化，应避免存储大量内容
 3. ScoreBoardDataBase 仅适用于数值数据
-4. 长字符串操作已内部封装，无需手动处理
+4. CompactDPDataBase 的 schema 顺序属于持久化协议，发布后不要重排或在中间插入字段
+5. 长字符串操作已内部封装，无需手动处理
 
 ---
