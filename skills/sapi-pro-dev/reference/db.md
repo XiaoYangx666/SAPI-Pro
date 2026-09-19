@@ -9,7 +9,7 @@
 | 类型                   | 标识  | 描述                                       |
 | ---------------------- | ----- | ------------------------------------------ |
 | DPDataBase             | `DP`  | 基于 DynamicProperty 的持久化存储          |
-| CompactDPDataBase      | `sDP` | 固定 schema 的紧凑结构化 DP 存储           |
+| CompactDPDataBase      | `DP`  | 固定 schema 的紧凑位置编码 DP 存储         |
 | ScoreBoardJSONDataBase | `jSB` | 基于计分板的 JSON 数据存储（支持跨包通信） |
 | ScoreBoardDataBase     | `cSB` | 对原版计分板的封装                         |
 
@@ -114,9 +114,15 @@ db.set(player.id, {
 });
 ```
 
-支持 `string`、`int`（安全整数，base36）、`number`（有限数字）、`boolean`。写入对象必须和 schema 字段完全一致，错误类型、缺字段或额外字段都会拒绝写入。
+内部把对象按 schema 顺序编码为 JSON 数组，例如：
 
-编码采用字段数头 + 每字段长度前缀，不依赖分隔符转义。读取会校验字段数、长度、截断、类型与多余数据。
+```json
+["XiaoYangx666",10000,20345,0]
+```
+
+这样不重复保存字段名，同时直接复用 JSON 的字符串转义与格式解析，不维护自定义分隔符协议。
+
+支持 `string`、`int`（安全整数）、`number`（有限数字）、`boolean`（存储为 0/1）。写入对象必须和 schema 字段完全一致，错误类型、缺字段、额外字段或 symbol 字段都会拒绝写入。
 
 `get(key)` 在损坏记录上返回 `undefined`；需要区分“不存在”和“格式损坏”时使用：
 
@@ -125,7 +131,9 @@ const result = db.read(player.id);
 // status: "ok" | "missing" | "invalid"
 ```
 
-schema 投入使用后不可重排、删除或中间插入字段。兼容旧记录只能在末尾追加带 `default` 的字段：
+读取会检查底层 DP 分片完整性、JSON 格式、数组形状、字段数量与字段类型。
+
+schema 投入使用后不可重排、删除或改变已有字段类型/语义。兼容旧记录只能在末尾追加带 `default` 的字段：
 
 ```ts
 ["gamesPlayed", "int", { default: 0 }]
