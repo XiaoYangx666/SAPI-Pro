@@ -145,6 +145,7 @@ interface DPSource {
 ```ts
 set(key: string, value: DPValueTypes): void
 get<T = DPValueTypes>(key: string): T | undefined
+has(key: string): boolean
 rm(key: string): void
 keys(): string[]
 clear(): void
