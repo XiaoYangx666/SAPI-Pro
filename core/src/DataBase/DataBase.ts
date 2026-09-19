@@ -12,7 +12,7 @@ import { cmd } from "../func";
 import { Logger } from "../utils/logger";
 
 export type DPValueTypes = string | number | boolean | Vector3;
-export type DBTypes = "DP" | "sDP" | "jSB" | "cSB";
+export type DBTypes = "DP" | "jSB" | "cSB";
 export type ValueGuard<T> = (val: unknown) => val is T;
 
 export abstract class DataBase<T> {
@@ -78,8 +78,12 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         if (typeof value == "string" && checkBytes(value)) {
             const splitStrings = splitString(value, true);
             this.setList(key, splitStrings);
+            // 大字符串使用分片表示，清理可能残留的直接值。
+            this.source.setDynamicProperty(this.getKey(key));
         } else {
+            // 先写入新值，再移除旧分片，避免大字符串 -> 小值时旧分片继续遮蔽新值。
             this.source.setDynamicProperty(this.getKey(key), value);
+            if (this.getListLen(key) != undefined) this.rmList(key);
         }
     }
 
@@ -92,8 +96,10 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         if (typeof value === "string" && checkBytes(value)) {
             const splitStrings = await splitString(value);
             this.setList(key, splitStrings);
+            this.source.setDynamicProperty(this.getKey(key));
         } else {
             this.source.setDynamicProperty(this.getKey(key), value);
+            if (this.getListLen(key) != undefined) this.rmList(key);
         }
     }
 
@@ -107,12 +113,20 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         return value as T;
     }
 
+    /**键是否存在。分片损坏时仍返回 true，可用于区分“不存在”和“存在但无法读取”。 */
+    has(key: string): boolean {
+        return (
+            this.getListLen(key) != undefined ||
+            this.source.getDynamicProperty(this.getKey(key)) !== undefined
+        );
+    }
+
     rm(key: string) {
         if (this.getListLen(key) != undefined) {
             this.rmList(key);
-        } else {
-            this.source.setDynamicProperty(this.getKey(key));
         }
+        // 无论当前表示为何，都清理直接值，避免历史表示切换留下的数据重新出现。
+        this.source.setDynamicProperty(this.getKey(key));
     }
     /**获取所有键，包括list的的键,并保留DP前缀 */
     getrealKeys() {
@@ -191,11 +205,11 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         const data: string[] = new Array(length);
         for (let i = 0; i < length; i++) {
             const part = this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
-            if (part == undefined) {
+            if (typeof part !== "string") {
                 this.logger.error(`获取数组${key}的第${i}项出错`);
                 return undefined;
             }
-            data[i] = part as string;
+            data[i] = part;
         }
         return data;
     }
