@@ -212,6 +212,7 @@ describe("CompactStructCodec", () => {
 
     it.each([
         ["not json", "invalid_json"],
+        ["[]", "invalid_shape"],
         ['{"name":"A"}', "invalid_shape"],
         ['["A",1,1,"extra"]', "schema_mismatch"],
         ['["A",1.5,1]', "invalid_value"],
