@@ -116,7 +116,8 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     }
     /**获取所有键，包括list的的键,并保留DP前缀 */
     getrealKeys() {
-        return this.source.getDynamicPropertyIds().filter((t) => t.startsWith(this.keyPrefix));
+        const namespacePrefix = `${this.keyPrefix}.`;
+        return this.source.getDynamicPropertyIds().filter((t) => t.startsWith(namespacePrefix));
     }
     /**获取所有键 */
     keys() {
