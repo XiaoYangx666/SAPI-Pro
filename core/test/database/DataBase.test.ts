@@ -111,3 +111,63 @@ describe("DPDataBase global registry", () => {
         expect(DataBase.getDBs()).not.toContain(entityDb);
     });
 });
+
+describe("DPDataBase value representation", () => {
+    beforeEach(() => {
+        serverMocks.dynamicProperties.clear();
+    });
+
+    it("大字符串改写为小值后不再被旧分片遮蔽", () => {
+        const db = new DPDataBase("representation_test", createEntityDPSource());
+        const large = "x".repeat(11000);
+
+        db.set("value", large);
+        expect(db.get("value")).toBe(large);
+
+        db.set("value", "small");
+
+        expect(db.get("value")).toBe("small");
+    });
+
+    it("小值改写为大字符串再删除后不会恢复旧的小值", () => {
+        const db = new DPDataBase("representation_test", createEntityDPSource());
+        const large = "x".repeat(11000);
+
+        db.set("value", "old");
+        db.set("value", large);
+        expect(db.get("value")).toBe(large);
+
+        db.rm("value");
+
+        expect(db.has("value")).toBe(false);
+        expect(db.get("value")).toBeUndefined();
+    });
+
+    it("分片缺失时 has 仍可识别记录存在", () => {
+        const values = new Map<string, boolean | number | string | object>();
+        const source: DPSource = {
+            setDynamicProperty(identifier, value) {
+                if (value === undefined) values.delete(identifier);
+                else values.set(identifier, value);
+            },
+            getDynamicProperty(identifier) {
+                return values.get(identifier) as any;
+            },
+            getDynamicPropertyIds() {
+                return [...values.keys()];
+            },
+            clearDynamicProperties() {
+                values.clear();
+            },
+            getDynamicPropertyTotalByteCount() {
+                return 0;
+            },
+        };
+        const db = new DPDataBase("representation_test", source);
+
+        values.set("representation_test.value_arrlen", 1);
+
+        expect(db.has("value")).toBe(true);
+        expect(db.get("value")).toBeUndefined();
+    });
+});
