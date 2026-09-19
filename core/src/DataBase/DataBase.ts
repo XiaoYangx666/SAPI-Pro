@@ -21,11 +21,11 @@ export abstract class DataBase<T> {
     public name: string; //数据库名
     public type: DBTypes; //数据库类型(SB不是骂人)
 
-    constructor(name: string, type: DBTypes) {
+    constructor(name: string, type: DBTypes, registerGlobally: boolean = true) {
         this.name = name;
         this.type = type;
-        //注册数据库
-        DataBase.DBMap[name] = this;
+        // 只有全局作用域的数据库才进入全局注册表。
+        if (registerGlobally) DataBase.DBMap[name] = this;
     }
 
     abstract set(key: string, value: T): void;
@@ -60,7 +60,7 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private readonly source: DPSource;
 
     constructor(name: string, source: DPSource = world) {
-        super(name, "DP");
+        super(name, "DP", source === world);
         this.source = source;
         this.keyPrefix = this.name;
         this.logger = new Logger(`${DPDataBase.name}_${name}`);
