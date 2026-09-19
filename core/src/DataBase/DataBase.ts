@@ -113,10 +113,10 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         return value as T;
     }
 
-    /**键是否存在。分片损坏时仍返回 true，可用于区分“不存在”和“存在但无法读取”。 */
+    /**键是否存在。分片长度标记损坏时仍返回 true，可用于区分“不存在”和“存在但无法读取”。 */
     has(key: string): boolean {
         return (
-            this.getListLen(key) != undefined ||
+            this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark)) !== undefined ||
             this.source.getDynamicProperty(this.getKey(key)) !== undefined
         );
     }
