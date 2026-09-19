@@ -27,20 +27,18 @@ export type CompactStructValue<TFields extends readonly CompactFieldDefinition[]
 
 export type CompactDecodeErrorCode =
     | "invalid_input"
-    | "invalid_header"
+    | "invalid_json"
+    | "invalid_shape"
     | "schema_mismatch"
-    | "invalid_length"
-    | "truncated_field"
     | "invalid_value"
     | "missing_field"
-    | "extra_data";
+    | "storage_corrupt";
 
 export interface CompactDecodeError {
     code: CompactDecodeErrorCode;
     message: string;
     field?: string;
     fieldIndex?: number;
-    offset: number;
 }
 
 export type CompactDecodeResult<T> =
@@ -63,13 +61,13 @@ export class CompactEncodeError extends TypeError {
 }
 
 /**
- * 按 schema 中的字段顺序进行紧凑位置编码。
+ * 按 schema 中的字段顺序，把对象编码为不含字段名的紧凑 JSON 数组。
  *
- * 记录格式：
- * `<fieldCount(base36)>;<payloadLength(base36)>:<payload>...`
+ * 例如 schema [name, money, enabled]：
+ *   { name: "A", money: 10000, enabled: true }
+ * -> ["A",10000,1]
  *
- * 字段名与类型不写入数据；每个 payload 都带长度，因此字符串内容不需要任何转义。
- * fieldCount 用于区分旧 schema 记录与“尾部刚好被截断”的损坏记录。
+ * JSON 自身负责字符串转义与边界处理，不需要维护自定义分隔符或长度协议。
  */
 export class CompactStructCodec<
     const TFields extends readonly CompactFieldDefinition[],
@@ -81,7 +79,7 @@ export class CompactStructCodec<
         validateSchema(fields);
         this.fields = Object.freeze(
             fields.map((field) => {
-                if (field.length >= 3) {
+                if (field.length === 3) {
                     return Object.freeze([
                         field[0],
                         field[1],
@@ -100,178 +98,81 @@ export class CompactStructCodec<
         }
 
         const record = value as Record<string, unknown>;
-        const keys = Object.keys(record);
+        const keys = Reflect.ownKeys(record);
         if (
             keys.length !== this.fields.length ||
-            keys.some((key) => !this.fieldNames.has(key)) ||
+            keys.some((key) => typeof key !== "string" || !this.fieldNames.has(key)) ||
             this.fields.some(([name]) => !Object.prototype.hasOwnProperty.call(record, name))
         ) {
             throw new CompactEncodeError("数据字段必须与 schema 完全一致，不能缺少或增加字段");
         }
 
-        let output = `${this.fields.length.toString(36)};`;
-        for (const [name, kind] of this.fields) {
-            const payload = encodeValue(kind, record[name], name);
-            output += `${payload.length.toString(36)}:${payload}`;
-        }
-        return output;
+        const storedValues = this.fields.map(([name, kind]) =>
+            encodeStoredValue(kind, record[name], name),
+        );
+        return JSON.stringify(storedValues);
     }
 
     decode(input: unknown): CompactDecodeResult<CompactStructValue<TFields>> {
         if (typeof input !== "string") {
-            return decodeError(
-                "invalid_input",
-                "紧凑结构存储值必须是字符串",
-                0,
-            );
+            return decodeError("invalid_input", "紧凑结构存储值必须是字符串");
         }
 
-        const headerEnd = input.indexOf(";");
-        if (headerEnd <= 0) {
-            return decodeError(
-                "invalid_header",
-                "紧凑结构数据缺少有效的字段数量头",
-                0,
-            );
+        let parsed: unknown;
+        try {
+            parsed = JSON.parse(input);
+        } catch {
+            return decodeError("invalid_json", "紧凑结构数据不是合法 JSON");
         }
 
-        const fieldCountText = input.slice(0, headerEnd);
-        if (!/^[0-9a-z]+$/.test(fieldCountText)) {
-            return decodeError(
-                "invalid_header",
-                "字段数量头不是合法的 base36 整数",
-                0,
-            );
+        if (!Array.isArray(parsed)) {
+            return decodeError("invalid_shape", "紧凑结构数据必须是 JSON 数组");
         }
 
-        const storedFieldCount = Number.parseInt(fieldCountText, 36);
-        if (
-            !Number.isSafeInteger(storedFieldCount) ||
-            storedFieldCount < 1 ||
-            storedFieldCount.toString(36) !== fieldCountText
-        ) {
-            return decodeError(
-                "invalid_header",
-                "字段数量头超出范围或不是规范编码",
-                0,
-            );
-        }
-
-        if (storedFieldCount > this.fields.length) {
+        if (parsed.length > this.fields.length) {
             return decodeError(
                 "schema_mismatch",
-                `存储记录包含 ${storedFieldCount} 个字段，但当前 schema 只有 ${this.fields.length} 个字段`,
-                0,
+                `存储记录包含 ${parsed.length} 个字段，但当前 schema 只有 ${this.fields.length} 个字段`,
             );
         }
 
-        const result: Record<string, string | number | boolean> = {};
-        let offset = headerEnd + 1;
+        const entries: [string, string | number | boolean][] = [];
 
-        for (let fieldIndex = 0; fieldIndex < storedFieldCount; fieldIndex++) {
+        for (let fieldIndex = 0; fieldIndex < parsed.length; fieldIndex++) {
             const [name, kind] = this.fields[fieldIndex];
+            const decoded = decodeStoredValue(kind, parsed[fieldIndex]);
 
-            if (offset === input.length) {
-                return decodeError(
-                    "truncated_field",
-                    `记录声明包含字段 ${name}，但数据在该字段前结束`,
-                    offset,
-                    name,
-                    fieldIndex,
-                );
-            }
-
-            const colon = input.indexOf(":", offset);
-            if (colon < 0) {
-                return decodeError(
-                    "invalid_length",
-                    `字段 ${name} 缺少长度分隔符`,
-                    offset,
-                    name,
-                    fieldIndex,
-                );
-            }
-
-            const lengthText = input.slice(offset, colon);
-            if (!/^[0-9a-z]+$/.test(lengthText)) {
-                return decodeError(
-                    "invalid_length",
-                    `字段 ${name} 的长度编码无效`,
-                    offset,
-                    name,
-                    fieldIndex,
-                );
-            }
-
-            const payloadLength = Number.parseInt(lengthText, 36);
-            if (
-                !Number.isSafeInteger(payloadLength) ||
-                payloadLength < 0 ||
-                payloadLength.toString(36) !== lengthText
-            ) {
-                return decodeError(
-                    "invalid_length",
-                    `字段 ${name} 的长度超出范围或不是规范编码`,
-                    offset,
-                    name,
-                    fieldIndex,
-                );
-            }
-
-            const payloadStart = colon + 1;
-            const payloadEnd = payloadStart + payloadLength;
-            if (payloadEnd > input.length) {
-                return decodeError(
-                    "truncated_field",
-                    `字段 ${name} 的内容被截断`,
-                    payloadStart,
-                    name,
-                    fieldIndex,
-                );
-            }
-
-            const payload = input.slice(payloadStart, payloadEnd);
-            const decoded = decodeValue(kind, payload);
             if (!decoded.ok) {
                 return decodeError(
                     "invalid_value",
                     `字段 ${name} 的 ${kind} 值格式无效`,
-                    payloadStart,
                     name,
                     fieldIndex,
                 );
             }
 
-            result[name] = decoded.value;
-            offset = payloadEnd;
+            entries.push([name, decoded.value]);
         }
 
-        if (offset !== input.length) {
-            return decodeError(
-                "extra_data",
-                "记录声明的字段读取完成后仍存在多余数据",
-                offset,
-            );
-        }
-
-        for (let fieldIndex = storedFieldCount; fieldIndex < this.fields.length; fieldIndex++) {
+        for (let fieldIndex = parsed.length; fieldIndex < this.fields.length; fieldIndex++) {
             const field = this.fields[fieldIndex];
             const defaultResult = getFieldDefault(field);
+
             if (!defaultResult.hasDefault) {
                 return decodeError(
                     "missing_field",
                     `旧记录缺少当前 schema 的字段 ${field[0]}，且该字段没有 default`,
-                    offset,
                     field[0],
                     fieldIndex,
                 );
             }
-            result[field[0]] = defaultResult.value;
+
+            entries.push([field[0], defaultResult.value]);
         }
 
         return {
             ok: true,
-            value: result as CompactStructValue<TFields>,
+            value: Object.fromEntries(entries) as CompactStructValue<TFields>,
         };
     }
 }
@@ -280,8 +181,8 @@ export class CompactStructCodec<
  * 只允许读写固定 schema 的结构化数据，并使用 Dynamic Property 持久化。
  *
  * schema 数组顺序就是持久化协议中的字段位置。已投入使用后：
- * - 不得重排、删除字段或在中间插入字段；
- * - 需要兼容旧记录时，只能在末尾追加带 default 的字段。
+ * - 不得重排、删除或改变已有字段类型/语义；
+ * - 兼容旧记录的新字段只能追加到末尾，并提供 default。
  *
  * 新记录始终写入完整 schema；default 只用于读取字段数更少的旧记录。
  */
@@ -294,14 +195,15 @@ export class CompactDPDataBase<
 
     constructor(name: string, fields: TFields, source: DPSource = world) {
         const codec = new CompactStructCodec(fields);
-        super(name, "sDP", source === world);
+        // CompactDPDataBase 仍然是 DP 后端，不扩展公开 DBTypes 联合，避免破坏现有 exhaustive mapping。
+        super(name, "DP", source === world);
 
         this.codec = codec;
         this.storage = new DPDataBase(name, source);
         this.logger = new Logger(`${CompactDPDataBase.name}_${name}`);
 
         // world-backed 的内部 DPDataBase 会先占用同名全局注册项；
-        // 对外必须暴露只允许结构化数据的 facade，避免绕过 schema 写入任意 DPValueTypes。
+        // 对外暴露结构化 facade，避免通过全局表绕过 schema 写原始值。
         if (source === world) DataBase.DBMap[name] = this;
     }
 
@@ -318,7 +220,7 @@ export class CompactDPDataBase<
         if (result.status === "ok") return result.value;
         if (result.status === "invalid") {
             this.logger.warn(
-                `读取紧凑结构数据失败,key:${key},code:${result.error.code},field:${result.error.field ?? "-"},offset:${result.error.offset}`,
+                `读取紧凑结构数据失败,key:${key},code:${result.error.code},field:${result.error.field ?? "-"}`,
             );
         }
         return undefined;
@@ -330,7 +232,18 @@ export class CompactDPDataBase<
      */
     read(key: string): CompactReadResult<CompactStructValue<TFields>> {
         const raw = this.storage.get(key);
-        if (raw === undefined) return { status: "missing" };
+        if (raw === undefined) {
+            if (this.storage.has(key)) {
+                return {
+                    status: "invalid",
+                    error: {
+                        code: "storage_corrupt",
+                        message: "底层 DP 记录存在，但分片缺失或类型损坏，无法还原字符串",
+                    },
+                };
+            }
+            return { status: "missing" };
+        }
 
         const decoded = this.codec.decode(raw);
         if (!decoded.ok) return { status: "invalid", error: decoded.error };
@@ -351,7 +264,7 @@ export class CompactDPDataBase<
 }
 
 function validateSchema(fields: readonly CompactFieldDefinition[]): void {
-    if (fields.length === 0) {
+    if (!Array.isArray(fields) || fields.length === 0) {
         throw new TypeError("紧凑结构 schema 至少需要一个字段");
     }
 
@@ -360,7 +273,9 @@ function validateSchema(fields: readonly CompactFieldDefinition[]): void {
 
     fields.forEach((field, fieldIndex) => {
         if (!Array.isArray(field) || (field.length !== 2 && field.length !== 3)) {
-            throw new TypeError(`schema 第 ${fieldIndex} 个字段必须是 [name, kind] 或 [name, kind, { default }]`);
+            throw new TypeError(
+                `schema 第 ${fieldIndex} 个字段必须是 [name, kind] 或 [name, kind, { default }]`,
+            );
         }
 
         const [name, kind] = field;
@@ -376,16 +291,24 @@ function validateSchema(fields: readonly CompactFieldDefinition[]): void {
             throw new TypeError(`schema 字段 ${name} 的类型无效`);
         }
 
-        const defaultResult = getFieldDefault(field);
-        if (defaultResult.hasDefault) {
+        if (field.length === 3) {
+            const options = field[2] as Record<string, unknown> | null;
+            if (
+                typeof options !== "object" ||
+                options === null ||
+                Array.isArray(options) ||
+                Reflect.ownKeys(options).length !== 1 ||
+                !Object.prototype.hasOwnProperty.call(options, "default")
+            ) {
+                throw new TypeError(`schema 字段 ${name} 的选项只能包含 default`);
+            }
+
             defaultSuffixStarted = true;
-            validateRuntimeValue(kind, defaultResult.value, name, true);
+            validateRuntimeValue(kind, options.default, name, true);
         } else if (defaultSuffixStarted) {
             throw new TypeError(
                 `schema 字段 ${name} 没有 default；带 default 的兼容字段必须全部位于 schema 末尾`,
             );
-        } else if (field.length >= 3) {
-            throw new TypeError(`schema 字段 ${name} 的选项必须包含 default`);
         }
     });
 }
@@ -394,18 +317,36 @@ function isFieldKind(value: unknown): value is CompactFieldKind {
     return value === "string" || value === "int" || value === "number" || value === "boolean";
 }
 
-function encodeValue(kind: CompactFieldKind, value: unknown, field: string): string {
+function encodeStoredValue(
+    kind: CompactFieldKind,
+    value: unknown,
+    field: string,
+): string | number {
     validateRuntimeValue(kind, value, field, false);
 
+    if (kind === "boolean") return value ? 1 : 0;
+    return value as string | number;
+}
+
+function decodeStoredValue(
+    kind: CompactFieldKind,
+    value: unknown,
+): { ok: true; value: string | number | boolean } | { ok: false } {
     switch (kind) {
         case "string":
-            return value as string;
+            return typeof value === "string" ? { ok: true, value } : { ok: false };
         case "int":
-            return (value as number).toString(36);
+            return typeof value === "number" && Number.isSafeInteger(value)
+                ? { ok: true, value }
+                : { ok: false };
         case "number":
-            return String(value);
+            return typeof value === "number" && Number.isFinite(value)
+                ? { ok: true, value }
+                : { ok: false };
         case "boolean":
-            return value ? "1" : "0";
+            if (value === 0) return { ok: true, value: false };
+            if (value === 1) return { ok: true, value: true };
+            return { ok: false };
     }
 }
 
@@ -441,54 +382,20 @@ function validateRuntimeValue(
     }
 }
 
-function decodeValue(
-    kind: CompactFieldKind,
-    payload: string,
-): { ok: true; value: string | number | boolean } | { ok: false } {
-    switch (kind) {
-        case "string":
-            return { ok: true, value: payload };
-        case "int": {
-            if (!/^-?[0-9a-z]+$/.test(payload)) return { ok: false };
-            const value = Number.parseInt(payload, 36);
-            if (!Number.isSafeInteger(value) || value.toString(36) !== payload) {
-                return { ok: false };
-            }
-            return { ok: true, value };
-        }
-        case "number": {
-            if (payload.length === 0) return { ok: false };
-            const value = Number(payload);
-            if (!Number.isFinite(value) || String(value) !== payload) {
-                return { ok: false };
-            }
-            return { ok: true, value };
-        }
-        case "boolean":
-            if (payload === "0") return { ok: true, value: false };
-            if (payload === "1") return { ok: true, value: true };
-            return { ok: false };
-    }
-}
-
 function getFieldDefault(
     field: CompactFieldDefinition,
 ):
     | { hasDefault: false }
     | { hasDefault: true; value: string | number | boolean } {
-    if (field.length < 3) return { hasDefault: false };
+    if (field.length !== 3) return { hasDefault: false };
 
-    const options = field[2] as { default?: string | number | boolean } | undefined;
-    if (!options || !Object.prototype.hasOwnProperty.call(options, "default")) {
-        return { hasDefault: false };
-    }
-    return { hasDefault: true, value: options.default as string | number | boolean };
+    const options = field[2] as { default: string | number | boolean };
+    return { hasDefault: true, value: options.default };
 }
 
 function decodeError<T>(
     code: CompactDecodeErrorCode,
     message: string,
-    offset: number,
     field?: string,
     fieldIndex?: number,
 ): CompactDecodeResult<T> {
@@ -497,7 +404,6 @@ function decodeError<T>(
         error: {
             code,
             message,
-            offset,
             field,
             fieldIndex,
         },
