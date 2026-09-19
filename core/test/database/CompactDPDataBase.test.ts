@@ -89,14 +89,14 @@ describe("CompactStructCodec", () => {
         ["active", "boolean"],
     ] as const);
 
-    it("按 schema 顺序编码，字符串中的分隔字符不需要转义", () => {
+    it("按 schema 顺序编码为 JSON 数组，字符串分隔字符无需自定义转义", () => {
         const encoded = codec.encode({
             active: true,
             money: 10000,
             name: "a|:b",
         });
 
-        expect(encoded).toBe("3;4:a|:b3:7ps1:1");
+        expect(encoded).toBe('["a|:b",10000,1]');
         expect(codec.decode(encoded)).toEqual({
             ok: true,
             value: {
@@ -107,31 +107,34 @@ describe("CompactStructCodec", () => {
         });
     });
 
-    it("int 使用 base36，number 保持可逆的有限数字文本", () => {
+    it("保留 int / number 语义并把 boolean 紧凑编码为 0/1", () => {
         const numberCodec = new CompactStructCodec([
             ["positive", "int"],
             ["negative", "int"],
             ["ratio", "number"],
+            ["enabled", "boolean"],
         ] as const);
 
         const encoded = numberCodec.encode({
             positive: 10000,
             negative: -35,
             ratio: 12.5,
+            enabled: false,
         });
 
-        expect(encoded).toBe("3;3:7ps2:-z4:12.5");
+        expect(encoded).toBe("[10000,-35,12.5,0]");
         expect(numberCodec.decode(encoded)).toEqual({
             ok: true,
             value: {
                 positive: 10000,
                 negative: -35,
                 ratio: 12.5,
+                enabled: false,
             },
         });
     });
 
-    it("写入时拒绝缺字段、多字段和错误类型", () => {
+    it("写入时拒绝缺字段、多字段、symbol 字段和错误类型", () => {
         expect(() =>
             codec.encode({
                 name: "test",
@@ -148,6 +151,14 @@ describe("CompactStructCodec", () => {
             } as any),
         ).toThrow(CompactEncodeError);
 
+        const withSymbol = {
+            name: "test",
+            money: 1,
+            active: true,
+            [Symbol("extra")]: 1,
+        };
+        expect(() => codec.encode(withSymbol as any)).toThrow(CompactEncodeError);
+
         expect(() =>
             codec.encode({
                 name: "test",
@@ -163,7 +174,7 @@ describe("CompactStructCodec", () => {
         ).toThrow(/有限 number/);
     });
 
-    it("schema 拒绝空 schema、重复字段、非法 default 和非末尾 default", () => {
+    it("schema 拒绝空 schema、重复字段、非法 options 和非末尾 default", () => {
         expect(() => new CompactStructCodec([] as const)).toThrow(/至少需要一个字段/);
 
         expect(() =>
@@ -181,6 +192,12 @@ describe("CompactStructCodec", () => {
 
         expect(() =>
             new CompactStructCodec([
+                ["count", "int", { default: 0, extra: true }],
+            ] as any),
+        ).toThrow(/只能包含 default/);
+
+        expect(() =>
+            new CompactStructCodec([
                 ["bad", "string", { default: "" }, "extra"],
             ] as any),
         ).toThrow(/必须是 \[name, kind\]/);
@@ -194,37 +211,21 @@ describe("CompactStructCodec", () => {
     });
 
     it.each([
-        ["3", "invalid_header"],
-        ["!;1:a1:11:1", "invalid_header"],
-        ["4;1:a1:11:11:x", "schema_mismatch"],
-        ["3;5:ab", "truncated_field"],
-        ["3;1:a1:_1:1", "invalid_value"],
-        ["3;1:a1:11:2", "invalid_value"],
-        ["3;1:a1:11:1garbage", "extra_data"],
+        ["not json", "invalid_json"],
+        ['{"name":"A"}', "invalid_shape"],
+        ['["A",1,1,"extra"]', "schema_mismatch"],
+        ['["A",1.5,1]', "invalid_value"],
+        ['["A",1,2]', "invalid_value"],
+        ['["A",null,1]', "invalid_value"],
     ])("损坏数据 %s 返回明确错误 %s", (raw, code) => {
         const result = codec.decode(raw);
         expect(result.ok).toBe(false);
         if (!result.ok) expect(result.error.code).toBe(code);
     });
 
-    it("fieldCount 能区分旧记录与刚好在字段边界截断的损坏记录", () => {
-        const result = codec.decode("3;1:A1:a");
+    it("缺少必需的新尾字段会报错", () => {
+        const result = codec.decode('["A",10]');
 
-        expect(result.ok).toBe(false);
-        if (!result.ok) {
-            expect(result.error.code).toBe("truncated_field");
-            expect(result.error.field).toBe("active");
-        }
-    });
-
-    it("旧记录缺少必需的新尾字段会报错", () => {
-        const olderCodec = new CompactStructCodec([
-            ["name", "string"],
-            ["money", "int"],
-        ] as const);
-        const olderRaw = olderCodec.encode({ name: "A", money: 10 });
-
-        const result = codec.decode(olderRaw);
         expect(result.ok).toBe(false);
         if (!result.ok) {
             expect(result.error.code).toBe("missing_field");
@@ -233,10 +234,6 @@ describe("CompactStructCodec", () => {
     });
 
     it("只允许通过末尾 default 兼容字段数更少的旧记录", () => {
-        const olderCodec = new CompactStructCodec([
-            ["name", "string"],
-            ["money", "int"],
-        ] as const);
         const upgradedCodec = new CompactStructCodec([
             ["name", "string"],
             ["money", "int"],
@@ -244,9 +241,7 @@ describe("CompactStructCodec", () => {
             ["level", "int", { default: 1 }],
         ] as const);
 
-        const result = upgradedCodec.decode(
-            olderCodec.encode({ name: "A", money: 10 }),
-        );
+        const result = upgradedCodec.decode('["A",10]');
 
         expect(result).toEqual({
             ok: true,
@@ -263,15 +258,25 @@ describe("CompactStructCodec", () => {
         const oldCodec = new CompactStructCodec([
             ["name", "string"],
         ] as const);
-        const newCodec = new CompactStructCodec([
-            ["name", "string"],
-            ["money", "int"],
-        ] as const);
 
-        const result = oldCodec.decode(newCodec.encode({ name: "A", money: 10 }));
+        const result = oldCodec.decode('["A",10]');
 
         expect(result.ok).toBe(false);
         if (!result.ok) expect(result.error.code).toBe("schema_mismatch");
+    });
+
+    it("特殊字段名仍返回普通对象自身属性", () => {
+        const specialCodec = new CompactStructCodec([
+            ["__proto__", "string"],
+        ] as const);
+
+        const result = specialCodec.decode('["safe"]');
+
+        expect(result.ok).toBe(true);
+        if (result.ok) {
+            expect(Object.prototype.hasOwnProperty.call(result.value, "__proto__")).toBe(true);
+            expect(result.value.__proto__).toBe("safe");
+        }
     });
 });
 
@@ -288,7 +293,7 @@ describe("CompactDPDataBase", () => {
         ["active", "boolean"],
     ] as const;
 
-    it("只通过结构化 API 写入紧凑字符串并可正常读取", () => {
+    it("只通过结构化 API 写入位置数组并可正常读取", () => {
         const { source, values } = createDPSource();
         const db = new CompactDPDataBase("compact_entity_test", fields, source);
 
@@ -298,7 +303,7 @@ describe("CompactDPDataBase", () => {
             active: true,
         });
 
-        expect(values.get("compact_entity_test.player_")).toBe("3;7:小阳|x6663:7ps1:1");
+        expect(values.get("compact_entity_test.player_")).toBe('["小阳|x666",10000,1]');
         expect(db.get("player")).toEqual({
             name: "小阳|x666",
             money: 10000,
@@ -312,15 +317,28 @@ describe("CompactDPDataBase", () => {
 
         expect(db.read("missing")).toEqual({ status: "missing" });
 
-        values.set("compact_entity_test.bad_", "3;5:ab");
+        values.set("compact_entity_test.bad_", '{"name":"bad"}');
         const result = db.read("bad");
 
         expect(result.status).toBe("invalid");
         if (result.status === "invalid") {
-            expect(result.error.code).toBe("truncated_field");
+            expect(result.error.code).toBe("invalid_shape");
         }
         expect(db.get("bad")).toBeUndefined();
-        expect(values.get("compact_entity_test.bad_")).toBe("3;5:ab");
+        expect(values.get("compact_entity_test.bad_")).toBe('{"name":"bad"}');
+    });
+
+    it("底层分片存在但缺失内容时报告 storage_corrupt，而不是 missing", () => {
+        const { source, values } = createDPSource();
+        const db = new CompactDPDataBase("compact_entity_test", fields, source);
+
+        values.set("compact_entity_test.bad_arrlen", 1);
+
+        const result = db.read("bad");
+        expect(result.status).toBe("invalid");
+        if (result.status === "invalid") {
+            expect(result.error.code).toBe("storage_corrupt");
+        }
     });
 
     it("非字符串旧值会作为格式错误处理", () => {
@@ -336,11 +354,11 @@ describe("CompactDPDataBase", () => {
         }
     });
 
-    it("world 数据库全局注册的是结构化 facade，而不是内部原始 DPDataBase", () => {
+    it("world 数据库全局注册的是结构化 facade", () => {
         const db = new CompactDPDataBase("compact_world_test", fields);
 
         expect(DataBase.getDB("compact_world_test")).toBe(db);
-        expect(db.type).toBe("sDP");
+        expect(db.type).toBe("DP");
     });
 
     it("实体级紧凑数据库不会进入全局注册表", () => {
