@@ -158,7 +158,7 @@ pcommand.registerNative(
 
 ### 数据存储
 
-数据存储方面，SAPI-Pro 提供了三个类：`DPDataBase`,`ScoreBoardJSONDataBase`和`ScoreBoardDataBase`。封装了原版的数据存储，使得更方便快捷，并支持超大文本分割存储。存储 10 本小说也没有问题。
+数据存储方面，SAPI-Pro 提供 `DPDataBase`、`CompactDPDataBase`、`ScoreBoardJSONDataBase` 和 `ScoreBoardDataBase`。其中 `CompactDPDataBase` 面向大量固定 schema 的同构记录，以位置编码减少 JSON 字段名重复开销；DynamicProperty 长字符串仍支持自动分片。
 
 #### 动态存储示例
 
