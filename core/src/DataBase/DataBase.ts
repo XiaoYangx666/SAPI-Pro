@@ -55,7 +55,6 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private static ListMark = "arr";
 
     private keyPrefix: string; //前缀
-    private readonly re: RegExp;
     private readonly logger: Logger;
     private readonly source: DPSource;
 
@@ -64,7 +63,6 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         this.source = source;
         this.keyPrefix = this.name;
         this.logger = new Logger(`${DPDataBase.name}_${name}`);
-        this.re = new RegExp(`^${this.keyPrefix}\.([^_]+)_(?:$|${DPDataBase.ListLenMark})`);
     }
     private getKey(key: string, mark: string = "", index?: number) {
         return `${this.keyPrefix}.${key}_${mark}${index ?? ""}`;
@@ -122,9 +120,8 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     }
 
     rm(key: string) {
-        if (this.getListLen(key) != undefined) {
-            this.rmList(key);
-        }
+        // 即使分片长度标记损坏，也要清理标记和对应分片。
+        this.rmList(key);
         // 无论当前表示为何，都清理直接值，避免历史表示切换留下的数据重新出现。
         this.source.setDynamicProperty(this.getKey(key));
     }
@@ -133,12 +130,23 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         const namespacePrefix = `${this.keyPrefix}.`;
         return this.source.getDynamicPropertyIds().filter((t) => t.startsWith(namespacePrefix));
     }
-    /**获取所有键 */
+    /**获取所有键。根据存储后缀而非 key 内的字符解析，支持下划线等特殊字符。*/
     keys() {
-        const keys = this.getrealKeys()
-            .filter((t) => this.re.test(t))
-            .map((t) => t.match(this.re)?.[1] ?? "");
-        return keys;
+        const prefix = `${this.keyPrefix}.`;
+        const lenSuffix = `_${DPDataBase.ListLenMark}`;
+        const keys = new Set<string>();
+
+        for (const id of this.getrealKeys()) {
+            const storedKey = id.slice(prefix.length);
+            let key: string | undefined;
+            if (storedKey.endsWith("_")) {
+                key = storedKey.slice(0, -1);
+            } else if (storedKey.endsWith(lenSuffix)) {
+                key = storedKey.slice(0, -lenSuffix.length);
+            }
+            if (key) keys.add(key);
+        }
+        return [...keys];
     }
 
     entries(): [string, DPValueTypes | undefined][] {
@@ -217,18 +225,30 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private getListLen(key: string) {
         const lenKey = this.getKey(key, DPDataBase.ListLenMark);
         const length = this.source.getDynamicProperty(lenKey);
-        if (typeof length === "number") {
+        if (typeof length === "number" && Number.isSafeInteger(length) && length >= 0) {
             return length;
         }
     }
     private rmList(key: string) {
-        const length = this.getListLen(key);
-        if (length != undefined) {
+        const lenKey = this.getKey(key, DPDataBase.ListLenMark);
+        const length = this.source.getDynamicProperty(lenKey);
+        if (length === undefined) return;
+
+        if (typeof length === "number" && Number.isSafeInteger(length) && length >= 0) {
             for (let i = 0; i < length; i++) {
                 this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
+        } else {
+            // 长度标记损坏时无法按数量删除；只枚举当前 key 的分片，不触碰其他 key。
+            const chunkPrefix = this.getKey(key, DPDataBase.ListMark);
+            for (const id of this.source.getDynamicPropertyIds()) {
+                const index = id.slice(chunkPrefix.length);
+                if (id.startsWith(chunkPrefix) && /^[0-9]+$/.test(index)) {
+                    this.source.setDynamicProperty(id);
+                }
+            }
         }
-        this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
+        this.source.setDynamicProperty(lenKey);
     }
 
     //静态方法

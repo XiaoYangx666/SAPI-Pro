@@ -199,3 +199,53 @@ describe("DPDataBase namespace isolation", () => {
         expect(db.getrealKeys()).toEqual(["abc.own_"]);
     });
 });
+
+describe("DPDataBase key parsing and damaged record cleanup", () => {
+    it("lists keys with underscores and suffix-like names exactly once", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("key_parse_test", source);
+        db.set("table_state", "x".repeat(11000));
+        db.set("table_state_arrlen", 1);
+        db.set("a.b_c", "value");
+
+        expect(db.keys()).toEqual(["table_state", "table_state_arrlen", "a.b_c"]);
+        expect(db.entries()).toEqual([
+            ["table_state", "x".repeat(11000)],
+            ["table_state_arrlen", 1],
+            ["a.b_c", "value"],
+        ]);
+    });
+
+    it("removes a damaged length marker and its chunks without touching neighboring keys", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("damage_test", source);
+        const neighbor = new DPDataBase("damage_test_other", source);
+        db.set("state_arr1", "another key");
+        neighbor.set("state", "another database");
+        source.setDynamicProperty("damage_test.state_arrlen", "corrupt");
+        source.setDynamicProperty("damage_test.state_arr0", "first");
+        source.setDynamicProperty("damage_test.state_arr12", "later");
+
+        expect(db.has("state")).toBe(true);
+        db.rm("state");
+
+        expect(db.has("state")).toBe(false);
+        expect(source.getDynamicProperty("damage_test.state_arrlen")).toBeUndefined();
+        expect(source.getDynamicProperty("damage_test.state_arr0")).toBeUndefined();
+        expect(source.getDynamicProperty("damage_test.state_arr12")).toBeUndefined();
+        expect(db.get("state_arr1")).toBe("another key");
+        expect(neighbor.get("state")).toBe("another database");
+    });
+
+    it("cleans malformed numeric length markers without unbounded loops", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("damage_number_test", source);
+        source.setDynamicProperty("damage_number_test.state_arrlen", Number.NaN);
+        source.setDynamicProperty("damage_number_test.state_arr0", "fragment");
+
+        db.rm("state");
+
+        expect(db.has("state")).toBe(false);
+        expect(source.getDynamicPropertyIds()).toEqual([]);
+    });
+});

@@ -369,4 +369,56 @@ describe("CompactDPDataBase", () => {
         expect(DataBase.getDB("compact_entity_test")).toBeUndefined();
         expect(DataBase.getDBs()).not.toContain(db);
     });
+    it("isolates two entities and the world when they share a database name and key", () => {
+        const first = createDPSource();
+        const second = createDPSource();
+        const worldDb = new CompactDPDataBase("compact_world_test", fields);
+        const entityA = new CompactDPDataBase("compact_world_test", fields, first.source);
+        const entityB = new CompactDPDataBase("compact_world_test", fields, second.source);
+
+        worldDb.set("table_state", { name: "world", money: 1, active: true });
+        entityA.set("table_state", { name: "entity A", money: 2, active: false });
+        entityB.set("table_state", { name: "entity B", money: 3, active: true });
+
+        expect(worldDb.get("table_state")?.name).toBe("world");
+        expect(entityA.get("table_state")?.name).toBe("entity A");
+        expect(entityB.get("table_state")?.name).toBe("entity B");
+        expect(DataBase.getDB("compact_world_test")).toBe(worldDb);
+        expect(DataBase.getDBs()).not.toContain(entityA);
+        expect(DataBase.getDBs()).not.toContain(entityB);
+        expect(entityA.keys()).toEqual(["table_state"]);
+
+        entityA.clear();
+        expect(entityA.read("table_state")).toEqual({ status: "missing" });
+        expect(worldDb.get("table_state")?.name).toBe("world");
+        expect(entityB.get("table_state")?.name).toBe("entity B");
+    });
+
+    it("supports chunked entity records and deletion of a damaged record", () => {
+        const { source, values } = createDPSource();
+        const db = new CompactDPDataBase("compact_entity_test", fields, source);
+        const record = { name: "x".repeat(11000), money: 10000, active: true };
+
+        db.set("table_state", record);
+        expect(values.has("compact_entity_test.table_state_arrlen")).toBe(true);
+        expect(db.keys()).toEqual(["table_state"]);
+        expect(db.get("table_state")).toEqual(record);
+
+        db.rm("table_state");
+        expect(db.read("table_state")).toEqual({ status: "missing" });
+        expect(values.size).toBe(0);
+
+        values.set("compact_entity_test.table_state_arrlen", "invalid");
+        values.set("compact_entity_test.table_state_arr0", "broken");
+        expect(db.read("table_state").status).toBe("invalid");
+
+        // 数字类型的损坏标记也应返回格式错误，而不是在读取时创建非法长度数组。
+        values.set("compact_entity_test.table_state_arrlen", Number.NaN);
+        expect(db.read("table_state").status).toBe("invalid");
+
+        db.rm("table_state");
+        expect(db.read("table_state")).toEqual({ status: "missing" });
+        expect(values.size).toBe(0);
+    });
+
 });
