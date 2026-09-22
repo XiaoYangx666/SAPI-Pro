@@ -35,9 +35,10 @@ export class NameDB {
             this.repairReverseIndex();
         });
         if (!this.options.autoUpdate) return;
-        intervalBus.subscribesec((sec) => {
-            if (sec - this.lastUpdate >= this.options.updateInterval) {
-                this.lastUpdate = sec;
+        intervalBus.subscribesec((_lastsec, now) => {
+            // intervalBus 传入的是毫秒时间戳，而 updateInterval 的配置单位是秒。
+            if (now - this.lastUpdate >= this.options.updateInterval * 1000) {
+                this.lastUpdate = now;
                 this.updateAll();
             }
         });
