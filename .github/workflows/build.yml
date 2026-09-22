@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
 
         steps:
             - name: Checkout code
@@ -43,10 +43,4 @@ jobs:
               run: npm test
 
             - name: Build
-              run: npm run pack
-
-            - name: Upload pack artifact
-              uses: actions/upload-artifact@v5
-              with:
-                  name: dev-package
-                  path: "*.tgz"
+              run: npm run build
