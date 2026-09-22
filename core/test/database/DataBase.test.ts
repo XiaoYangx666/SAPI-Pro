@@ -31,7 +31,9 @@ vi.mock("@minecraft/server", () => ({
     world: serverMocks.world,
     system: {
         run: vi.fn(),
-        runJob: vi.fn(),
+        runJob: vi.fn((job: Generator) => {
+            for (const _ of job) { /* advance the mock job to completion */ }
+        }),
     },
     DisplaySlotId: {},
     Entity: class {},
@@ -248,4 +250,155 @@ describe("DPDataBase key parsing and damaged record cleanup", () => {
         expect(db.has("state")).toBe(false);
         expect(source.getDynamicPropertyIds()).toEqual([]);
     });
+});
+
+describe("DPDataBase corrupted chunk validation", () => {
+    it.each([0, -1, 1.5, 1025, 1_000_000_000, Number.NaN, Infinity])(
+        "does not allocate or loop over damaged chunk length %s",
+        (length) => {
+            const source = createEntityDPSource();
+            const db = new DPDataBase("bounds_test", source);
+            source.setDynamicProperty("bounds_test.state_arrlen", length);
+            source.setDynamicProperty("bounds_test.state_arr0", "fragment");
+            source.setDynamicProperty("bounds_test.state_", "stale");
+
+            expect(db.get("state")).toBeUndefined();
+            expect(db.has("state")).toBe(true);
+            db.rm("state");
+            expect(db.has("state")).toBe(false);
+            expect(source.getDynamicPropertyIds()).toEqual([]);
+        },
+    );
+
+    it("does not return an old direct value when an invalid string chunk marker remains", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("bounds_test", source);
+        source.setDynamicProperty("bounds_test.state_", "old");
+        source.setDynamicProperty("bounds_test.state_arrlen", "invalid");
+        expect(db.get("state")).toBeUndefined();
+
+        db.set("state", "new");
+        expect(db.get("state")).toBe("new");
+        expect(source.getDynamicProperty("bounds_test.state_arrlen")).toBeUndefined();
+    });
+
+    it("replaces a damaged huge marker with a new chunked value without trusting old length", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("bounds_test", source);
+        source.setDynamicProperty("bounds_test.state_arrlen", 1_000_000_000);
+        source.setDynamicProperty("bounds_test.state_arr0", "stale");
+        source.setDynamicProperty("bounds_test.state_arr20", "orphan");
+        const large = "x".repeat(11000);
+
+        db.set("state", large);
+        expect(db.get("state")).toBe(large);
+        expect(source.getDynamicProperty("bounds_test.state_arr20")).toBeUndefined();
+        db.rm("state");
+        expect(source.getDynamicPropertyIds()).toEqual([]);
+    });
+
+    it("supports async replacement of corrupt markers for small and chunked values", async () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("bounds_test", source);
+        source.setDynamicProperty("bounds_test.state_arrlen", "invalid");
+        source.setDynamicProperty("bounds_test.state_arr0", "old");
+
+        await db.setAsync("state", "small");
+        expect(db.get("state")).toBe("small");
+        expect(source.getDynamicProperty("bounds_test.state_arr0")).toBeUndefined();
+
+        await db.setAsync("state", "y".repeat(11000));
+        expect(db.get("state")).toBe("y".repeat(11000));
+        await db.setAsync("state", "final");
+        expect(db.get("state")).toBe("final");
+        expect(source.getDynamicPropertyIds()).toEqual(["bounds_test.state_"]);
+    });
+    it("reads a complete legacy record with 2000 chunks without an artificial write-format limit", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("legacy_large", source);
+        source.setDynamicProperty("legacy_large.value_arrlen", 2000);
+        for (let i = 0; i < 2000; i++) {
+            source.setDynamicProperty(`legacy_large.value_arr${i}`, "x");
+        }
+
+        expect(db.get("value")).toBe("x".repeat(2000));
+        db.rm("value");
+        expect(source.getDynamicPropertyIds()).toEqual([]);
+    });
+
+    it("rejects oversized markers with missing or non-contiguous fragments before allocating an array", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("large_corrupt", source);
+        source.setDynamicProperty("large_corrupt.value_arrlen", 2000);
+        for (let i = 0; i < 1999; i++) {
+            source.setDynamicProperty(`large_corrupt.value_arr${i}`, "x");
+        }
+        source.setDynamicProperty("large_corrupt.value_", "outdated");
+
+        expect(db.get("value")).toBeUndefined();
+        // Count matches but one index falls outside [0, 2000) -- still invalid.
+        source.setDynamicProperty("large_corrupt.value_arr2000", "x");
+        expect(db.get("value")).toBeUndefined();
+    });
+
+    it("uses direct-key operations without enumerating DP ids for normal writes and removals", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("fast_path", source);
+        const getIds = vi.spyOn(source, "getDynamicPropertyIds");
+        db.set("plain", "value");
+        db.rm("plain");
+        db.set("chunked", "x".repeat(11000));
+        db.set("chunked", "y".repeat(11000));
+        db.set("chunked", "small");
+        db.set("chunked", "z".repeat(11000));
+        db.rm("chunked");
+
+        expect(db.get("chunked")).toBeUndefined();
+        expect(db.get("plain")).toBeUndefined();
+        expect(getIds).not.toHaveBeenCalled();
+    });
+
+    it("enumerates only when a malformed marker requires removal or replacement cleanup", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("orphan", source);
+        const getIds = vi.spyOn(source, "getDynamicPropertyIds");
+        db.set("state_arr20", "neighbor key");
+        db.set("state_other", "neighbor key");
+        source.setDynamicProperty("orphan.state_arrlen", "corrupt");
+        source.setDynamicProperty("orphan.state_arr0", "first");
+        source.setDynamicProperty("orphan.state_arr20", "orphan");
+        db.rm("state");
+
+        expect(getIds).toHaveBeenCalledTimes(1);
+        expect(source.getDynamicProperty("orphan.state_arr0")).toBeUndefined();
+        expect(source.getDynamicProperty("orphan.state_arr20")).toBeUndefined();
+        expect(db.get("state_arr20")).toBe("neighbor key");
+        expect(db.get("state_other")).toBe("neighbor key");
+
+        source.setDynamicProperty("orphan.state_arrlen", 1_000_000_000);
+        source.setDynamicProperty("orphan.state_arr17", "orphan");
+        db.set("state", "x".repeat(11000));
+        expect(source.getDynamicProperty("orphan.state_arr17")).toBeUndefined();
+        expect(db.get("state")).toBe("x".repeat(11000));
+        expect(getIds).toHaveBeenCalledTimes(2);
+    });
+
+    it("cleans normal chunk tails using the old length without enumerating", () => {
+        const source = createEntityDPSource();
+        const db = new DPDataBase("overwrite", source);
+        const getIds = vi.spyOn(source, "getDynamicPropertyIds");
+        const longValue = "x".repeat(22000);
+        const shortValue = "y".repeat(11000);
+        db.set("key", longValue);
+        const oldCount = source.getDynamicProperty("overwrite.key_arrlen") as number;
+        db.set("key", shortValue);
+        const newCount = source.getDynamicProperty("overwrite.key_arrlen") as number;
+
+        expect(db.get("key")).toBe(shortValue);
+        for (let i = newCount; i < oldCount; i++) {
+            expect(source.getDynamicProperty(`overwrite.key_arr${i}`)).toBeUndefined();
+        }
+        expect(getIds).not.toHaveBeenCalled();
+    });
+
 });

@@ -53,6 +53,8 @@ export interface DPSource {
 export class DPDataBase extends DataBase<DPValueTypes> {
     private static ListLenMark = "arrlen";
     private static ListMark = "arr";
+    // 旧格式不限制分片数量；超过此数量时先校验实际分片，防止损坏长度触发巨量分配。
+    private static ChunkValidationThreshold = 1024;
 
     private keyPrefix: string; //前缀
     private readonly logger: Logger;
@@ -81,7 +83,9 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         } else {
             // 先写入新值，再移除旧分片，避免大字符串 -> 小值时旧分片继续遮蔽新值。
             this.source.setDynamicProperty(this.getKey(key), value);
-            if (this.getListLen(key) != undefined) this.rmList(key);
+            if (this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark)) !== undefined) {
+                this.rmList(key);
+            }
         }
     }
 
@@ -97,14 +101,18 @@ export class DPDataBase extends DataBase<DPValueTypes> {
             this.source.setDynamicProperty(this.getKey(key));
         } else {
             this.source.setDynamicProperty(this.getKey(key), value);
-            if (this.getListLen(key) != undefined) this.rmList(key);
+            if (this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark)) !== undefined) {
+                this.rmList(key);
+            }
         }
     }
 
     get<T extends DPValueTypes = DPValueTypes>(key: string): T | undefined {
         let value: DPValueTypes | undefined;
-        if (this.getListLen(key) != undefined) {
-            value = this.getLargeString(key);
+        const marker = this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
+        if (marker !== undefined) {
+            // 标记存在但无效时不能回退到可能残留的旧直接值。
+            value = this.isValidListLen(marker) ? this.getLargeString(key) : undefined;
         } else {
             value = this.source.getDynamicProperty(this.getKey(key));
         }
@@ -120,9 +128,8 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     }
 
     rm(key: string) {
-        // 即使分片长度标记损坏，也要清理标记和对应分片。
+        // 正常记录按长度直接删除，只有识别到损坏标记时才枚举整个 DPSource。
         this.rmList(key);
-        // 无论当前表示为何，都清理直接值，避免历史表示切换留下的数据重新出现。
         this.source.setDynamicProperty(this.getKey(key));
     }
     /**获取所有键，包括list的的键,并保留DP前缀 */
@@ -195,22 +202,26 @@ export class DPDataBase extends DataBase<DPValueTypes> {
     private setList(key: string, list: string[]) {
         const lenKey = this.getKey(key, DPDataBase.ListLenMark);
         const oldLength = this.source.getDynamicProperty(lenKey);
-        //设置数组长度
         this.source.setDynamicProperty(lenKey, list.length);
-        //设置数组每一项
         for (let i = 0; i < list.length; i++) {
             this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i), list[i]);
         }
-        //如果oldLength大于数组长度，要删除多余的
-        if (typeof oldLength == "number" && oldLength > list.length) {
+        if (this.isValidListLen(oldLength) && oldLength <= DPDataBase.ChunkValidationThreshold) {
+            // 正常覆写只处理旧长度中超出新长度的部分，不全量枚举动态属性。
             for (let i = list.length; i < oldLength; i++) {
                 this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
+        } else if (oldLength !== undefined) {
+            // 仅长度标记损坏时扫描真实分片；不能直接相信异常长度做循环。
+            this.cleanChunkIds(key, list.length);
         }
     }
     private getList(key: string) {
         const length = this.getListLen(key);
         if (length == undefined) return;
+        if (length > DPDataBase.ChunkValidationThreshold && !this.hasCompleteChunkSet(key, length)) {
+            return undefined;
+        }
         const data: string[] = new Array(length);
         for (let i = 0; i < length; i++) {
             const part = this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
@@ -222,31 +233,51 @@ export class DPDataBase extends DataBase<DPValueTypes> {
         }
         return data;
     }
+    private isValidListLen(value: unknown): value is number {
+        return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
+    }
+    /**对超大长度，先核对真实连续分片再分配数组，兼容旧版本的大记录。*/
+    private hasCompleteChunkSet(key: string, length: number): boolean {
+        const chunkPrefix = this.getKey(key, DPDataBase.ListMark);
+        let count = 0;
+        for (const id of this.source.getDynamicPropertyIds()) {
+            if (!id.startsWith(chunkPrefix)) continue;
+            const suffix = id.slice(chunkPrefix.length);
+            // 只认可写入器实际生成的规范索引，不能把其它合法键误当成分片。
+            if (!/^(0|[1-9][0-9]*)$/.test(suffix)) continue;
+            const index = Number(suffix);
+            if (!Number.isSafeInteger(index) || index >= length) return false;
+            count++;
+        }
+        // 索引唯一且均在 [0,length)，数量一致即可确保没有缺片。
+        return count === length;
+    }
     private getListLen(key: string) {
-        const lenKey = this.getKey(key, DPDataBase.ListLenMark);
-        const length = this.source.getDynamicProperty(lenKey);
-        if (typeof length === "number" && Number.isSafeInteger(length) && length >= 0) {
-            return length;
+        const length = this.source.getDynamicProperty(this.getKey(key, DPDataBase.ListLenMark));
+        return this.isValidListLen(length) ? length : undefined;
+    }
+    private cleanChunkIds(key: string, startIndex: number = 0) {
+        const chunkPrefix = this.getKey(key, DPDataBase.ListMark);
+        for (const id of this.source.getDynamicPropertyIds()) {
+            if (!id.startsWith(chunkPrefix)) continue;
+            const index = id.slice(chunkPrefix.length);
+            if (/^[0-9]+$/.test(index) && Number(index) >= startIndex) {
+                this.source.setDynamicProperty(id);
+            }
         }
     }
     private rmList(key: string) {
         const lenKey = this.getKey(key, DPDataBase.ListLenMark);
         const length = this.source.getDynamicProperty(lenKey);
         if (length === undefined) return;
-
-        if (typeof length === "number" && Number.isSafeInteger(length) && length >= 0) {
+        if (this.isValidListLen(length) && length <= DPDataBase.ChunkValidationThreshold) {
+            // 常规删除按已知的分片数量进行，避免枚举世界全部 DP。
             for (let i = 0; i < length; i++) {
                 this.source.setDynamicProperty(this.getKey(key, DPDataBase.ListMark, i));
             }
         } else {
-            // 长度标记损坏时无法按数量删除；只枚举当前 key 的分片，不触碰其他 key。
-            const chunkPrefix = this.getKey(key, DPDataBase.ListMark);
-            for (const id of this.source.getDynamicPropertyIds()) {
-                const index = id.slice(chunkPrefix.length);
-                if (id.startsWith(chunkPrefix) && /^[0-9]+$/.test(index)) {
-                    this.source.setDynamicProperty(id);
-                }
-            }
+            // 标记明显损坏时才走枚举兜底。
+            this.cleanChunkIds(key);
         }
         this.source.setDynamicProperty(lenKey);
     }
