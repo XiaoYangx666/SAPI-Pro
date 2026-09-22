@@ -421,4 +421,38 @@ describe("CompactDPDataBase", () => {
         expect(values.size).toBe(0);
     });
 
+    it("reports oversized chunk markers as storage corruption instead of decoding stale direct data", () => {
+        const { source, values } = createDPSource();
+        const db = new CompactDPDataBase("compact_entity_test", fields, source);
+        const previous = '["old",100,1]';
+        values.set("compact_entity_test.player_", previous);
+        values.set("compact_entity_test.player_arrlen", 1_000_000_000);
+
+        const result = db.read("player");
+        expect(result.status).toBe("invalid");
+        if (result.status === "invalid") {
+            expect(result.error.code).toBe("storage_corrupt");
+        }
+
+        db.set("player", { name: "new", money: 200, active: false });
+        expect(db.read("player")).toEqual({
+            status: "ok",
+            value: { name: "new", money: 200, active: false },
+        });
+    });
+
+    it("reads legacy compact records stored in more than 1024 valid chunks", () => {
+        const { source, values } = createDPSource();
+        const db = new CompactDPDataBase("compact_entity_test", fields, source);
+        const record = { name: "x".repeat(2000), money: 10000, active: true };
+        const raw = JSON.stringify([record.name, record.money, 1]);
+        const chunks = Array.from({ length: 2000 }, (_, i) => raw.slice(i, i + 1));
+        // Keep the final JSON suffix in the last chunk while preserving a valid contiguous chunk set.
+        chunks[chunks.length - 1] += raw.slice(chunks.length);
+        values.set("compact_entity_test.player_arrlen", chunks.length);
+        chunks.forEach((chunk, index) => values.set(`compact_entity_test.player_arr${index}`, chunk));
+
+        expect(db.read("player")).toEqual({ status: "ok", value: record });
+    });
+
 });

@@ -16,10 +16,10 @@ concurrency:
 jobs:
     release:
         runs-on: ubuntu-latest
-        # 一次 run 内会同时发布 beta 与 stable 两条渠道，因此只认版本 tag（如 v0.4.2）：
-        # -stable 结尾的渠道 tag 不触发，否则同一版本会被两个 tag 各跑一次，第二次重复发布
-        # 同一版本而报 EPUBLISHCONFLICT。手动触发（workflow_dispatch）不受此限，用于重发当前分支版本。
-        if: ${{ github.ref_type != 'tag' || !endsWith(github.ref_name, '-stable') }}
+        # 一次 run 会同时发布 beta 与 stable，两渠道后缀 tag（如 v0.4.3-beta / v0.4.3-stable）
+        # 不应再触发完整发布，以免第二次 npm publish 报 EPUBLISHCONFLICT。
+        # workflow_dispatch 保持可手动运行。
+        if: ${{ github.ref_type != 'tag' || !contains(github.ref_name, '-') }}
 
         steps:
             - name: Checkout code
