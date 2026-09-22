@@ -157,6 +157,10 @@ pcommand.registerNative(
 
 ### Data Storage
 
+#### v0.4.3 storage changes
+
+Pass an entity or other DPSource as the third argument to `CompactDPDataBase`; non-world databases do not register in the global `DataBase.DBMap`. Use `read()` to distinguish `ok`, `missing`, and `invalid`. Normal DP operations do not enumerate all dynamic-property IDs for corruption cleanup; malformed chunk markers and oversized legacy records trigger additional checks. See the [database tutorial](../../tutorial/database.md).
+
 For data storage, SAPI-Pro provides `DPDataBase`, `CompactDPDataBase`, `ScoreBoardJSONDataBase`, and `ScoreBoardDataBase`. `CompactDPDataBase` targets large sets of records with a fixed schema and uses positional encoding to avoid repeating JSON field names; Dynamic Property storage still supports automatic segmentation for large strings.
 
 #### Dynamic Storage Example

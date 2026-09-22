@@ -4,7 +4,7 @@
 
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.10.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.40+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.11.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.50+-green)
 
 [简体中文](globals.md)|[English](_media/README_EN.md)
 
@@ -160,6 +160,10 @@ pcommand.registerNative(
 ---
 
 ### 数据存储
+
+#### v0.4.3 存储更新
+
+`CompactDPDataBase` 可通过第三个构造参数指定实体等 DPSource；非 world 数据库不进入全局 `DataBase.DBMap`。使用 `read()` 可区分 `ok`、`missing`、`invalid`。正常 DP 操作不会因损坏数据清理而全量枚举动态属性；异常长度标记和旧版超大记录才执行额外检查。详见 [数据库教程](../tutorial/database.md)。
 
 数据存储方面，SAPI-Pro 提供 `DPDataBase`、`CompactDPDataBase`、`ScoreBoardJSONDataBase` 和 `ScoreBoardDataBase`。其中 `CompactDPDataBase` 面向大量固定 schema 的同构记录，以位置编码减少 JSON 字段名重复开销；DynamicProperty 长字符串仍支持自动分片。
 

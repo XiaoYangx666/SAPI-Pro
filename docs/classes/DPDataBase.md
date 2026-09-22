@@ -6,6 +6,8 @@
 
 # Class: DPDataBase
 
+> v0.4.3：`keys()` 支持下划线键，`clear()` 只清理当前数据库命名空间。分片长度标记损坏时，`get()` 不回退读取旧普通值；正常读写、删除不为异常数据全量枚举整个 DPSource。超过 1024 片的完整旧记录经过校验仍可读取。
+
 ## Extends
 
 - [`DataBase`](DataBase.md)\<[`DPValueTypes`](../type-aliases/DPValueTypes.md)\>

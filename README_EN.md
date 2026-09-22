@@ -158,6 +158,14 @@ pcommand.registerNative(
 
 ### Data Storage
 
+#### What's new in v0.4.3
+
+- Added `CompactDPDataBase`: fixed-schema positional encoding for world and entity DP sources; `read()` distinguishes missing and invalid records.
+- Fixed global database registration for entity-backed DP, namespace-safe clearing, and chunk representation/corruption handling. Ordinary reads, writes, and deletes do not enumerate all dynamic-property IDs for corruption cleanup.
+- Fixed `NameDB`'s auto-update interval: `updateInterval` is in seconds (60 seconds by default).
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes and the [database tutorial](tutorial/database.md) for usage.
+
 For data storage, SAPI-Pro provides `DPDataBase`, `CompactDPDataBase`, `ScoreBoardJSONDataBase`, and `ScoreBoardDataBase`. `CompactDPDataBase` targets large sets of records with a fixed schema and uses positional encoding to avoid repeating JSON field names; Dynamic Property storage still supports automatic segmentation for large strings.
 
 #### Dynamic Storage Example

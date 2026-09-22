@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "description": "A practical library for MCBE ScriptAPI (beta channel, requires ScriptAPI beta)",
     "main": "dist/entry.beta.js",
     "types": "dist/entry.beta.d.ts",

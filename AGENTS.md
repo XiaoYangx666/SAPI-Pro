@@ -74,10 +74,11 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 
 ## 发版
 
-- **版本规则**：两渠道共享同一 base 版本，beta 不带后缀、stable 带 `-stable` 后缀。如 base `0.4.2`：beta 版 `0.4.2`，stable 版 `0.4.2-stable`。`libVersionString` 两边都解析为 `0.4.2`，游戏内显示 `0.4.2-beta` / `0.4.2-stable`。
+- **版本规则**：两渠道共享同一 base 版本，beta 不带后缀、stable 带 `-stable` 后缀。如 base `0.4.3`：beta 版 `0.4.3`，stable 版 `0.4.3-stable`。`libVersionString` 两边都解析为 `0.4.3`，游戏内显示 `0.4.3-beta` / `0.4.3-stable`。
 - 改版本时必须同步对应 variant 的 `package.json` 与 `package-lock.json` 顶层/根包版本，避免发布元数据残留旧版本。
-- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.2`）→ `npm run pack:beta` → `npm run publish:beta`（`--tag latest`）。Release workflow 发布后再把 npm 的 `beta` dist-tag 同步指向同一版本，因此 `sapi-pro` 与 `sapi-pro@beta` 都是当前 beta。
-- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.2-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
+- 准备发版先提交代码/文档，确认 `dev` 测试和双渠道构建通过；**准备阶段不要推 tag 或手动运行 Release**。确认正式发版后仅创建基础版本 tag `v0.4.3`，不要创建渠道后缀 tag 来重复发布。
+- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.3`）→ `npm run pack:beta` → `npm run publish:beta`（`--tag latest`）。Release workflow 发布后再把 npm 的 `beta` dist-tag 同步指向同一版本，因此 `sapi-pro` 与 `sapi-pro@beta` 都是当前 beta。
+- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.3-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
 - 两个 variant 的 `publishConfig.tag` 分别固定为 `latest` / `stable`，防止直接在 variant 目录执行 `npm publish` 时占错 dist-tag。
 - 下游行为包通过 `file:` 按文件名依赖 `sapi-pro-<version>.tgz`，版本不同文件名不同，直接换引用即可。
 
@@ -88,8 +89,8 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 
 | 工程 | 渠道（依赖） | 命名空间 | 世界要求 |
 |---|---|---|---|
-| `E:\MCDev\sapi-pro-tests` | stable（`sapi-pro-0.4.2-stable.tgz`） | `sapitest` | 普通世界 |
-| `E:\MCDev\sapi-beta-test` | beta（`sapi-pro-0.4.2.tgz`） | `sapibeta` | 需开 Beta APIs |
+| `E:\MCDev\sapi-pro-tests` | stable（`sapi-pro-0.4.3-stable.tgz`） | `sapitest` | 普通世界 |
+| `E:\MCDev\sapi-beta-test` | beta（`sapi-pro-0.4.3.tgz`） | `sapibeta` | 需开 Beta APIs |
 
 流程：本仓库 `npm run pack` → 测试工程里 **`npm uninstall sapi-pro` 再 `npm install ../SAPI-Pro/sapi-pro-0.4.x[-stable].tgz`** → `npm run build` → 进游戏看聊天栏自检清单。
 

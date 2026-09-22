@@ -58,7 +58,7 @@ npm create mcbe@latest <项目名> -- --template sapi-pro --yes --install
 
 ### 使用 BEPack
 
-1. 在 bepack.config.ts 的 `packs.bp.dependencies` 中声明 `sapi-pro`（取值 `"stable"`、`"beta"` 或精确版本，如 `"0.4.2-stable"`），并启用 `sapiPro()` 插件：
+1. 在 bepack.config.ts 的 `packs.bp.dependencies` 中声明 `sapi-pro`（取值 `"stable"`、`"beta"` 或精确版本，如 `"0.4.3-stable"`），并启用 `sapiPro()` 插件：
     ```ts
     import { defineConfig, sapiPro } from "@bepack/cli";
     export default defineConfig({

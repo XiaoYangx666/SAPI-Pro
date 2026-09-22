@@ -38,6 +38,8 @@ db.set(player.id, {
 - `fields`：有序 schema，支持 `string` / `int` / `number` / `boolean`。
 - `source?: DPSource`：默认 `world`，也可使用实体、ItemStack 等 DPSource。
 
+只有使用默认 `world` 的实例进入全局 `DataBase.DBMap`；实体数据库不会覆盖同名世界数据库。
+
 ## Methods
 
 ### set()
@@ -57,6 +59,8 @@ db.set(player.id, {
 > **get**(`key`): schema 对应对象 | `undefined`
 
 键不存在或记录格式无效时返回 `undefined`。损坏记录不会被自动删除。
+
+底层分片长度标记损坏时不会回退读取旧普通值；`read()` 可报告 `storage_corrupt`。超过 1024 分片的完整旧记录经额外校验仍可读取。
 
 ### read()
 

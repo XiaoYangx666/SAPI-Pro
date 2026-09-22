@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.2-stable",
+    "version": "0.4.3-stable",
     "description": "A practical library for MCBE ScriptAPI (stable channel, uses stable ScriptAPI)",
     "main": "dist/entry.stable.js",
     "types": "dist/entry.stable.d.ts",

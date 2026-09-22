@@ -55,6 +55,8 @@ constructor(name: string, source: DPSource = world)
 - 自动处理长字符串分片
 - 性能较高
 
+- v0.4.3：`keys()` 支持下划线，`clear()` 只清理当前命名空间。正常读写、删除不为异常数据全量枚举属性；损坏分片标记不会回退读取旧普通值。1024 片仅为超大记录额外验证阈值，不是硬性上限。
+
 #### JSON 存储
 
 ```ts
@@ -97,6 +99,8 @@ import { Configdb } from "sapi-pro/DataBase";
 ## CompactDPDataBase
 
 固定 schema 的紧凑 DynamicProperty 存储，适合玩家账户、统计、冷却等大量同构记录。字段位置由 schema 数组顺序显式定义，不按 key 排序。
+
+第三个构造参数可传入实体等 DPSource；实体数据库不会进入全局 `DataBase.DBMap`。
 
 ```ts
 const db = new CompactDPDataBase("money", [
