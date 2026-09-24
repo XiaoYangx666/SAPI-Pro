@@ -83,24 +83,6 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - 下游行为包通过 `file:` 按文件名依赖 `sapi-pro-<version>.tgz`，版本不同文件名不同，直接换引用即可。
 - **变更日志不落仓库**：不要在仓库里维护 `CHANGELOG.md`（或任何发版说明文件），也不要加进 `README`。发版说明写进 GitHub Release 正文即可，仓库只保留代码与文档。
 
-## 实机自检（改动影响运行时行为时必看）
-
-两个自检工程在仓库外，用 `file:` 依赖本仓库打出的 tgz；`npm run build` = `bepack build --copy`，成品自动复制到
-`%USERPROFILE%\AppData\Roaming\Minecraft Bedrock\Users\Shared\games\com.mojang\development_behavior_packs\`：
-
-| 工程 | 渠道（依赖） | 命名空间 | 世界要求 |
-|---|---|---|---|
-| `E:\MCDev\sapi-pro-tests` | stable（`sapi-pro-0.4.3-stable.tgz`） | `sapitest` | 普通世界 |
-| `E:\MCDev\sapi-beta-test` | beta（`sapi-pro-0.4.3.tgz`） | `sapibeta` | 需开 Beta APIs |
-
-流程：本仓库 `npm run pack` → 测试工程里 **`npm uninstall sapi-pro` 再 `npm install ../SAPI-Pro/sapi-pro-0.4.x[-stable].tgz`** → `npm run build` → 进游戏看聊天栏自检清单。
-
-- **同名同版本的 `file:` tgz 内容变了时，只跑 `npm install`（连 `--force`）不会更新**：npm 复用上次解包结果，必须卸载后重装。
-- 游戏内**必须开作弊**，否则原生命令的枚举取值不会出现在命令提示里（容易被误判成"枚举没生效"）。
-- 覆盖：事件总线按需订阅（worldLoad 之后才订阅/绑定）、表单与 min 清理、原生命令 enum/flag/可选参数、同名枚举自动改名、beta 的 chatBus 与模拟命令。
-- 加新功能时同步补一条自检命令，并更新各自工程的 `TESTING.md`（含判定标准与"什么才算失败"）。
-- 两个自检工程**不是 git 仓库**，改动只落在磁盘上。
-
 ## 开发规则
 
 - 调用/修改 sapi-pro 与 `@minecraft/*` API 时，以各渠道 `node_modules` 里实际安装的类型定义为准，不要凭记忆写。
