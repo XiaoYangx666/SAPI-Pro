@@ -81,6 +81,7 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.3-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
 - 两个 variant 的 `publishConfig.tag` 分别固定为 `latest` / `stable`，防止直接在 variant 目录执行 `npm publish` 时占错 dist-tag。
 - 下游行为包通过 `file:` 按文件名依赖 `sapi-pro-<version>.tgz`，版本不同文件名不同，直接换引用即可。
+- **变更日志不落仓库**：不要在仓库里维护 `CHANGELOG.md`（或任何发版说明文件），也不要加进 `README`。发版说明写进 GitHub Release 正文即可，仓库只保留代码与文档。
 
 ## 实机自检（改动影响运行时行为时必看）
 

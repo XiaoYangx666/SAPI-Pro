@@ -164,7 +164,7 @@ pcommand.registerNative(
 - 修复实体 DP 数据库占用全局注册表、数据库名前缀清理误伤，以及分片表示切换和损坏标记处理问题。正常 DP 读写与删除不会为了处理损坏数据而全量枚举动态属性。
 - 修复 `NameDB` 自动刷新间隔，`updateInterval` 按秒计算（默认 60 秒）。
 
-变更详见 [CHANGELOG.md](CHANGELOG.md)，数据库用法详见 [数据库教程](tutorial/database.md)。
+数据库用法详见 [数据库教程](tutorial/database.md)。
 
 数据存储方面，SAPI-Pro 提供 `DPDataBase`、`CompactDPDataBase`、`ScoreBoardJSONDataBase` 和 `ScoreBoardDataBase`。其中 `CompactDPDataBase` 面向大量固定 schema 的同构记录，以位置编码减少 JSON 字段名重复开销；DynamicProperty 长字符串仍支持自动分片。
 
