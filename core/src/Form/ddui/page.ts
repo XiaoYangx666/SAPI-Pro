@@ -1,5 +1,5 @@
 import type { Player } from "@minecraft/server";
-import { CustomForm } from "@minecraft/server-ui";
+import { CustomForm, DataDrivenScreenClosedReason } from "@minecraft/server-ui";
 import { LibLogger } from "../../utils/logger";
 import type { SAPIProForm, SAPIProFormContext } from "../form";
 import type { contextArgs } from "../interface";
@@ -219,7 +219,17 @@ export function dduiPage<TArgs extends contextArgs = contextArgs>(
         },
         handler(reason, context) {
             const session = takeSession(context);
-            session?.finish();
+            if (!session) return;
+            // 玩家主动关闭（ESC / 客户端关闭按钮）：还有上一页时回退一层，
+            // 而不是清空整个栈。根页面才关闭界面。
+            if (
+                (reason as unknown as string) === DataDrivenScreenClosedReason.ClientClosed &&
+                context.depth > 1
+            ) {
+                session.navigate(() => context.back());
+                return;
+            }
+            session.finish();
         },
     };
     return page;

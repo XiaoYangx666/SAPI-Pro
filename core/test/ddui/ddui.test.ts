@@ -729,6 +729,38 @@ describe("DDUI 表单栈与导航", () => {
         await settle();
     });
 
+    it("子页面被玩家关闭时回退上一层，根页面关闭才清空栈", async () => {
+        const player = createPlayer();
+        let builds = 0;
+        const child = dduiPage("子页", (ctx) => ctx.label("child"));
+        const parent = dduiPage("父页", (ctx) => {
+            builds++;
+            ctx.button("子页", () => ctx.push(child));
+        });
+
+        DDUI.open(player, parent);
+        await settle();
+        lastForm().click(0);
+        await settle();
+        expect(stackDepth(player)).toBe(2);
+        const childForm = lastForm();
+
+        // 玩家按 ESC / 关闭按钮：只回退一层，父页面重建并重新显示
+        childForm.playerClose();
+        await settle();
+        expect(childForm.isShowing()).toBe(false);
+        expect(stackDepth(player)).toBe(1);
+        expect(builds).toBe(2);
+        expect(lastForm().title).toBe("父页");
+        expect(lastForm().isShowing()).toBe(true);
+
+        // 根页面关闭：清空栈并结束界面
+        lastForm().playerClose();
+        await settle();
+        expect(stackDepth(player)).toBe(0);
+        expect(DDUI.active(player)).toBeUndefined();
+    });
+
     it("快速连续点击只会执行一次导航", async () => {
         const player = createPlayer();
         const child = plainPage("子页");
@@ -749,7 +781,8 @@ describe("DDUI 表单栈与导航", () => {
         expect(MockForm.all).toHaveLength(2);
         expect(DDUI.active(player)).toBeDefined();
 
-        lastForm().playerClose();
+        // 子页关闭会回到父页；这里直接结束整个界面做清理
+        formManager.close(player);
         await settle();
     });
 
