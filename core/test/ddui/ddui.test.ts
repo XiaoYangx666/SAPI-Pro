@@ -350,6 +350,27 @@ afterEach(() => {
 
 // =====================================================
 describe("DDUI 状态与作用域", () => {
+    it("已完成的 timeout 立即释放清理记录，长期页面不会累积回调", async () => {
+        const scope = new DDScope();
+        let executed = 0;
+        const cleanups = () => (scope as unknown as { items: unknown[] }).items.length;
+
+        for (let i = 0; i < 120; i++) scope.timeout(() => { executed++; }, 1);
+        expect(cleanups()).toBe(120);
+        env.advance(1);
+        await flush();
+        expect(executed).toBe(120);
+        expect(cleanups()).toBe(0);
+
+        const cancel = scope.timeout(() => { executed++; }, 10);
+        expect(cleanups()).toBe(1);
+        cancel();
+        expect(cleanups()).toBe(0);
+        env.advance(20);
+        expect(executed).toBe(120);
+        scope.dispose();
+    });
+
     it("页面关闭后自动退订 Observable，迟到的回调不再执行", async () => {
         const player = createPlayer();
         const calls: number[] = [];
