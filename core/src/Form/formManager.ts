@@ -209,7 +209,8 @@ export class FormManagerClass {
             if (isCurrent()) this._handleShow(context);
             return;
         } finally {
-            this.showingLegacy.delete(player.id);
+            // 旧表单 show() 可能晚于新表单结算；不能删除新表单的 showing 标记。
+            if (isCurrent()) this.showingLegacy.delete(player.id);
         }
 
         if (!isCurrent()) {
