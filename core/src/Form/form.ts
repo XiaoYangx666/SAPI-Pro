@@ -62,7 +62,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     }
 
     /**@internal 表单栈深度（DDUI 判断是否还有上一页） */
-    get depth() {
+    get depth(): number {
         return this.stack?.depth ?? 0;
     }
 
