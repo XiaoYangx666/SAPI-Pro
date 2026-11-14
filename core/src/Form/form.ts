@@ -36,6 +36,8 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
      * 每次关闭页面都会把 context 和它的 args 一起留在内存里。
      */
     readonly player: Player;
+    /** 当前表单所在栈的身份；只存数字，避免反向持有栈对象形成引用环。 */
+    private readonly stackInstanceId: number;
 
     constructor(
         readonly args: U,
@@ -43,6 +45,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
         form?: FormLike<any>
     ) {
         this.player = stack.getPlayer();
+        this.stackInstanceId = stack.instanceId;
         this._form = form;
         this._willBuild = true;
         this._showData = undefined;
@@ -50,7 +53,12 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
 
     /** @internal 当前玩家的表单栈（按需获取，绝不反向持有） */
     private get stack() {
-        return formStackManager.getStack(this.player);
+        const current = formStackManager.getStack(this.player);
+        // 旧异步 handler / beforeBuild 不得修改后来新开的页面，
+        // 历史页面还在栈中、但已不是栈顶时也不得抢占前台导航。
+        return current?.instanceId === this.stackInstanceId && current.getTop() === this
+            ? current
+            : undefined;
     }
 
     /**@internal 表单栈深度（DDUI 判断是否还有上一页） */
@@ -84,7 +92,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     /**关闭所有表单 */
     close() {
         this._willBuild = false;
-        formStackManager.resetStack(this.player);
+        if (this.stack) formStackManager.resetStack(this.player);
     }
     /**替换当前表单为新的命名表单 */
     replace<TArgs extends contextArgs>(form: FormLike<TArgs>, args?: NoInfer<TArgs>, delay = 0) {
@@ -104,15 +112,21 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     }
     /**清空堆栈，并打开表单 */
     offAll<TArgs extends contextArgs>(form: FormLike<TArgs>, args?: NoInfer<TArgs>, delay = 0) {
+        const stack = this.stack;
+        if (!stack) return;
         this._willBuild = false;
-        this.stack?.clear();
-        this.push(form, args, delay);
+        stack.clear();
+        stack.push(args ?? {}, form);
+        this._showData = { delay };
     }
     /**清空堆栈，并打开命名表单 */
     offAllNamed(name: string, args?: contextArgs, delay = 0) {
+        const stack = this.stack;
+        if (!stack) return;
         this._willBuild = false;
-        this.stack?.clear();
-        this.pushNamed(name, args, delay);
+        stack.clear();
+        stack.push(args ?? {});
+        this._showData = { delay, name };
     }
     /**一直返回到指定页 */
     until(form: FormLike<any>, delay = 0) {
