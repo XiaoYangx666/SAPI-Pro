@@ -508,6 +508,46 @@ describe("DDUI 状态与作用域", () => {
         expect(listeners.size).toBe(0);
     });
 
+    it("原生事件信号返回回调时通过 unsubscribe 退订，反复开关不累积监听", async () => {
+        const player = createPlayer();
+        const listeners = new Set<(value: number) => void>();
+        let unexpectedCalls = 0;
+        const signal = {
+            subscribe(callback: (value: number) => void) {
+                listeners.add(callback);
+                return callback; // Minecraft 原生 EventSignal 返回回调，而不是清理函数
+            },
+            unsubscribe(callback: (value: number) => void) {
+                return listeners.delete(callback);
+            },
+            publish(value: number) {
+                for (const listener of [...listeners]) listener(value);
+            },
+        };
+        let received = 0;
+        const page = dduiPage("事件订阅", (ctx) => {
+            ctx.subscribe(signal, (value) => {
+                if (value === -1) unexpectedCalls++;
+                received++;
+            });
+        });
+
+        for (let i = 0; i < 20; i++) {
+            DDUI.open(player, page);
+            await settle(2);
+            expect(listeners.size).toBe(1);
+            signal.publish(i);
+            expect(received).toBe(i + 1);
+
+            lastForm().playerClose();
+            await settle(2);
+            expect(listeners.size).toBe(0);
+            signal.publish(-1);
+            expect(unexpectedCalls).toBe(0);
+        }
+        expect(DDUI.stats().sessions).toBe(0);
+    });
+
     it("服务器周期性同步不会触发玩家输入回调", async () => {
         const player = createPlayer();
         const calls: number[] = [];
