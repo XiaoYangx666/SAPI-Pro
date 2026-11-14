@@ -2,7 +2,11 @@ import { Player } from "@minecraft/server";
 import { SAPIProFormContext } from "./form";
 import { contextArgs, FormLike } from "./interface";
 
+// 栈身份只存原始数字，避免 FormContext 反向引用栈导致 QuickJS 引用环。
+let nextStackInstanceId = 0;
+
 export class PlayerFormStack {
+    readonly instanceId = ++nextStackInstanceId;
     private stack: SAPIProFormContext<any, any>[] = [];
     /**
      * 导航代际：每次真正调度一次展示就自增。
