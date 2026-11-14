@@ -177,3 +177,48 @@ builder
     ↓
 handler
 ```
+
+---
+
+# DDUI（CustomForm 响应式表单）
+
+需要滑块/输入框/开关实时联动、页面栈或多页面跳转时优先使用 DDUI，不要手写 `CustomForm` 会话。
+
+```ts
+import { DDUI } from "sapi-pro";
+
+const Page = DDUI.page<{ piano: PianoRuntime }>("标题", (ui, args) => {
+    const volume = ui.number(100);          // 默认 clientWritable
+    const label = ui.computed([volume], () => `音量 ${volume.getData()}%`);
+
+    ui.set(volume, args.piano.volume);      // 服务器同步，不触发 onChange
+    ui.onChange(volume, (v) => args.piano.setVolume(v));
+
+    ui.subscribe(args.piano.disposedSignal, () => ui.close());
+    ui.onClose(() => args.piano.flush());
+    ui.retain(sharedViewModel);             // 关闭时自动 release
+
+    ui.label(label)
+      .slider("音量", volume, 0, 200, { step: 1 })
+      .button("子页", () => ui.push(ChildPage, { piano: args.piano }))
+      .closeButton();
+});
+
+DDUI.open(player, Page, { piano });
+```
+
+要点：
+
+- 页面关闭时自动释放：Observable 订阅、`ui.subscribe` 的外部信号、`ui.timeout` / `ui.interval`、`ui.retain`。
+- 导航：`ui.push / back / replace / reopen / reset / close`，默认 0 tick（下一游戏刻）显示，可按需传 `delay`，禁止再写“关闭 + runTimeout + 重新 open”。
+- 传统表单与 DDUI 共用一个表单栈：`ctx.push(dduiPage, args)` 和 `ui.push(CommonForm, args)` 都可用。
+- `ui.set()` 用于程序写入（同步服务器状态、纠正越界值），不触发 `ui.onChange`；值不变时不写回。
+- `ui.onChange()` 响应其余变化（客户端输入或业务代码直接 `setData`）。
+- 控件方法返回 `ui` 本身，链式调用不会绕过按钮保护；需要原生表单用 `ui.form`。
+- `DDUI.open()` 会自动关闭该玩家正在显示的旧表单；`UserBusy` 表示本次无法显示，直接结束、不重试。
+- 页面构建函数里 `ui.close()` 会取消本次显示，`ui.push()` 可以构建期重定向。
+- `DDUI.page()` 的返回值也是 `SAPIProForm`，可以直接 `formManager.open()`。
+- 点击跳转后 `ui.closed` 立即为 true，订阅/定时器已释放，异步回调不要再写状态。
+
+详细文档：`tutorial/ddui.md`。
+
