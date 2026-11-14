@@ -45,7 +45,7 @@ export class DDUIContext<TArgs extends contextArgs = contextArgs> {
     /** 打开本页时的参数（返回时原样保留；页面释放后清空引用） */
     readonly args: TArgs;
     private formContext?: SAPIProFormContext<CustomForm, TArgs>;
-    private readonly owner: Player;
+    private owner: Player;
     /** 本页创建的 Observable，释放时清空其中的文本，避免被原生表单继续留住 */
     private readonly created: Array<ObservableLike<any>> = [];
 
@@ -86,6 +86,8 @@ export class DDUIContext<TArgs extends contextArgs = contextArgs> {
         (this as { args?: TArgs }).args = undefined;
         this.formContext = undefined;
         (this as unknown as { session?: DDUISession }).session = undefined;
+        // 未结算的 show() 可能仍持有本上下文；断开玩家 wrapper，避免 Players/Entity 句柄滞留。
+        (this as unknown as { owner?: Player }).owner = undefined;
     }
 
     // ───────────────────────── 状态 ─────────────────────────
@@ -268,7 +270,14 @@ export class DDUIContext<TArgs extends contextArgs = contextArgs> {
      * 按钮：回调带页面失效保护，关闭后迟到的点击、快速连点都不会重复执行/重复导航。
      */
     button(label: DDText, onClick: () => void, options?: ButtonOptions): this {
-        this.form?.button(label, () => this.session?.invoke(onClick), options);
+        // 回调放进可清空的盒子里：原生 CustomForm 可能被尚未结算的 show() 留住，
+        // 直接闭包捕获 onClick 会让整页参数/钢琴运行时随表单一起滞留。
+        const holder: { callback?: () => void } = { callback: onClick };
+        this.scope.own(() => { holder.callback = undefined; }, "button");
+        this.form?.button(label, () => {
+            const callback = holder.callback;
+            if (callback) this.session?.invoke(callback);
+        }, options);
         return this;
     }
 

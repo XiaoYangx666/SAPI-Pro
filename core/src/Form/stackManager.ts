@@ -36,6 +36,10 @@ export class PlayerFormStack {
     clear() {
         this.stack = [];
     }
+    /** 表单上下文是否仍在栈里（导航后父页面还要用它的 args 重建）。 */
+    has(context: SAPIProFormContext<any, any>) {
+        return this.stack.includes(context);
+    }
     getPlayer() {
         return this.player;
     }

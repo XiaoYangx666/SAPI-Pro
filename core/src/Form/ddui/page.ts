@@ -165,8 +165,24 @@ export class DDUISession {
         this.ui?.release();
         this.ui = undefined;
         this.form = undefined;
+        // 未结算的 show() 反应闭包会保留 formContext；把 args（通常是
+        // {piano, block}）和会话反向引用断开，否则 UI 关闭后这些对象仍被
+        // 原生表单的 Promise 链钉住。
+        const context = this.formContext as unknown as
+            { args?: unknown; _dduiSession?: unknown; _form?: unknown; _showData?: unknown; player?: unknown } | undefined;
         this.args = undefined as never;
         this.formContext = undefined as never;
+        // 导航（push/reopen）时旧 context 仍留在表单栈里，之后 back 需要用它
+        // 的 args 重建父页面；只有真正离开栈的 context 才能清空参数。
+        const queued = !!context && !!formStackManager.getStack(this.player)?.has(context as never);
+        if (context) {
+            context._dduiSession = undefined;
+            if (!queued) {
+                context.args = undefined;
+                context._form = undefined;
+                if (!context._showData) context.player = undefined;
+            }
+        }
     }
 }
 
