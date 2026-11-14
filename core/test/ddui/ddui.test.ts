@@ -1196,6 +1196,102 @@ describe("DDUI 与传统表单混合入栈", () => {
         await settle();
     });
 
+    it("传统表单异步 handler 迟到时不能修改后来打开的页面或关闭它", async () => {
+        const player = createPlayer();
+        let releaseHandler!: () => void;
+        const pending = new Promise<void>((resolve) => { releaseHandler = resolve; });
+        const unwanted = dduiPage("过期跳转", (ctx) => ctx.label("旧任务"));
+        const oldForm: SAPIProForm<any, any> = {
+            builder() {
+                const form = new ui.MockActionForm();
+                legacyInstances.push(form);
+                return form as any;
+            },
+            async handler(_response, ctx) {
+                await pending;
+                ctx.push(unwanted);
+                ctx.close();
+            },
+        };
+
+        formManager.open(player, oldForm);
+        await settle();
+        legacyInstances[legacyInstances.length - 1].playerClose();
+        await settle();
+
+        const latest = dduiPage("最新页面", (ctx) => ctx.label("current"));
+        DDUI.open(player, latest);
+        await settle();
+        releaseHandler();
+        await settle();
+
+        expect(stackDepth(player)).toBe(1);
+        expect(formStackManager.getTop(player)?._form).toBe(latest);
+        expect(lastForm().title).toBe("最新页面");
+        expect(lastForm().isShowing()).toBe(true);
+        lastForm().playerClose();
+        await settle();
+    });
+
+    it("过期 beforeBuild 的迟到导航不能污染新表单栈", async () => {
+        const player = createPlayer();
+        let releaseBeforeBuild!: () => void;
+        const pending = new Promise<void>((resolve) => { releaseBeforeBuild = resolve; });
+        const unwanted = dduiPage("无效跳转", (ctx) => ctx.label("旧任务"));
+        const stale: SAPIProForm<any, any> = {
+            async beforeBuild(ctx) {
+                await pending;
+                ctx.push(unwanted);
+            },
+            builder() {
+                const form = new ui.MockActionForm();
+                legacyInstances.push(form);
+                return form as any;
+            },
+            handler() {},
+        };
+        formManager.open(player, stale);
+        await settle(2);
+
+        const latest = dduiPage("最新页面", (ctx) => ctx.label("current"));
+        DDUI.open(player, latest);
+        await settle();
+        releaseBeforeBuild();
+        await settle();
+
+        expect(stackDepth(player)).toBe(1);
+        expect(formStackManager.getTop(player)?._form).toBe(latest);
+        expect(lastForm().isShowing()).toBe(true);
+        lastForm().playerClose();
+        await settle();
+    });
+
+    it("旧传统表单延迟结算不能清除新传统表单的 showing 状态", async () => {
+        const player = createPlayer();
+        const first = makeLegacyForm(() => {});
+        const second = makeLegacyForm(() => {});
+        formManager.open(player, first);
+        await settle();
+        const firstInstance = legacyInstances[legacyInstances.length - 1];
+
+        // 旧 show() 尚未结算，但新页面已经显示。
+        formManager.open(player, second);
+        await settle();
+        const secondInstance = legacyInstances[legacyInstances.length - 1];
+        expect(secondInstance).not.toBe(firstInstance);
+        expect(formManager.isShowing(player)).toBe(true);
+
+        // 此时旧 show() 才完成，不能覆盖新页面的 showing 状态。
+        firstInstance.playerClose();
+        await settle();
+        expect(formManager.isShowing(player)).toBe(true);
+        expect(stackDepth(player)).toBe(1);
+
+        secondInstance.playerClose();
+        await settle();
+        expect(formManager.isShowing(player)).toBe(false);
+    });
+
     it("DDUI / 传统表单多层混合入栈后可以逐层返回", async () => {
         const player = createPlayer();
         const log: string[] = [];
