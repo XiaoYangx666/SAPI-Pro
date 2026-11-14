@@ -29,7 +29,7 @@ export class PlayerFormStack {
     pop() {
         return this.stack.pop();
     }
-    getTop() {
+    getTop(): SAPIProFormContext<any, any> | undefined {
         if (this.stack.length == 0) return;
         return this.stack[this.stack.length - 1];
     }
