@@ -98,8 +98,9 @@ export class DDScope {
             safeRun(() => listener(value), label);
         };
         const handle = source.subscribe(wrapped);
-        if (typeof source.getData === "function" && typeof source.unsubscribe === "function") {
-            // 原生 Observable：返回的 handle 就是回调，不能当退订函数调用
+        if (typeof source.unsubscribe === "function") {
+            // 原生 Observable 和 Minecraft 事件信号均返回订阅回调，
+            // 不能把它当作清理函数执行；统一使用 unsubscribe(回调)。
             const unsubscribe = source.unsubscribe.bind(source);
             return this.own(() => {
                 unsubscribe(wrapped);
