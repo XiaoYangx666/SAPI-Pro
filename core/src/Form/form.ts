@@ -52,7 +52,7 @@ export class SAPIProFormContext<T extends formDataType, U extends contextArgs> {
     }
 
     /** @internal 当前玩家的表单栈（按需获取，绝不反向持有） */
-    private get stack() {
+    private get stack(): PlayerFormStack | undefined {
         const current = formStackManager.getStack(this.player);
         // 旧异步 handler / beforeBuild 不得修改后来新开的页面，
         // 历史页面还在栈中、但已不是栈顶时也不得抢占前台导航。
