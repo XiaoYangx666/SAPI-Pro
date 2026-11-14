@@ -114,17 +114,22 @@ export class DDScope {
     timeout(callback: () => void, ticks = 1, label = "timeout"): () => void {
         if (this.closed) return () => {};
         let done = false;
+        let release: () => void = () => {};
         const id = system.runTimeout(() => {
             if (done) return;
             done = true;
+            // 定时任务已经完成，立即移除清理登记，避免长时间打开的
+            // 页面不断累积已执行 timeout 的闭包和回调引用。
+            release();
             if (this.closed) return;
             safeRun(callback, label);
         }, ticks);
-        return this.own(() => {
+        release = this.own(() => {
             if (done) return;
             done = true;
             system.clearRun(id);
         }, label);
+        return release;
     }
 
     /** 托管一个循环任务；页面关闭后自动取消 */
