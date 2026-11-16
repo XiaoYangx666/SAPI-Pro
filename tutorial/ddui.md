@@ -63,7 +63,7 @@ ui.push(page, args);             // 入栈打开（可返回）
 | `ui.number(initial)` | 创建 `ObservableNumber`（默认 `clientWritable: true`） |
 | `ui.string(initial)` | 创建 `ObservableString` |
 | `ui.boolean(initial)` | 创建 `ObservableBoolean` |
-| `ui.computed(deps, fn)` | 由其他 Observable 派生的只读 Observable，值不变不写回 |
+| `ui.computed(deps, fn)` | 由其他 Observable 派生的只读 Observable，值不变不写回；依赖必须显式列出，不做自动追踪 |
 | `ui.onChange(obs, fn)` | 变化回调（客户端输入或业务代码直接 `setData`）；`ui.set()` 不触发 |
 | `ui.watch(deps, fn, immediate?)` | 依赖变化时执行副作用（默认立即执行一次） |
 | `ui.set(obs, value)` | 程序写入：不触发 `onChange`，值不变时不写回、不通知 |

@@ -113,18 +113,15 @@ export class DDUIContext<TArgs extends contextArgs = contextArgs> {
         return observable;
     }
 
-    /** 由若干 Observable 派生的只读 Observable，页面关闭后自动停止计算 */
+    /**
+     * 由若干 Observable 派生的只读 Observable，页面关闭后自动停止计算。
+     *
+     * 依赖必须显式传入：这里不做自动依赖追踪，因此不提供省略 `deps` 的重载。
+     */
     computed<T extends ObservableValue>(
         deps: readonly ObservableLike<any>[],
         compute: () => T
-    ): ObservableOf<T>;
-    computed<T extends ObservableValue>(compute: () => T): ObservableOf<T>;
-    computed<T extends ObservableValue>(
-        depsOrCompute: readonly ObservableLike<any>[] | (() => T),
-        maybeCompute?: () => T
     ): ObservableOf<T> {
-        const deps = typeof depsOrCompute === "function" ? [] : depsOrCompute;
-        const compute = typeof depsOrCompute === "function" ? depsOrCompute : maybeCompute!;
         const observable = computedObservable(this.scope, deps, compute);
         this.created.push(observable);
         return observable;
