@@ -1,14 +1,15 @@
 import { Player, ScriptEventCommandMessageAfterEvent, system } from "@minecraft/server";
-import { FormRejectError } from "@minecraft/server-ui";
+import { CustomForm, FormRejectError, uiManager } from "@minecraft/server-ui";
 import { LibConfig } from "../Config";
 import { ScriptEventBus, intervalBus } from "../Event";
 import { LibErrorMes, getPlayerById } from "../func";
 import { SAPIProForm, SAPIProFormContext } from "./form";
-import { contextArgs, formDataType, openFormData } from "./interface";
+import { contextArgs, formDataType, FormLike, openFormData } from "./interface";
 import { formStackManager } from "./stackManager";
+import { DDUI_SETTLE_TICKS, activeDDUISession, closeDDUIPage, disposeDDUISession, disposeOfflineDDUISessions, showDDUIContext } from "./ddui/page";
 
 interface SAPIProFormBatchRegister {
-    [key: string]: SAPIProForm<formDataType>;
+    [key: string]: FormLike<any>;
 }
 
 class FormNotFoundError extends Error {
@@ -19,10 +20,35 @@ class FormNotFoundError extends Error {
     }
 }
 
+/** 正常的“表单结束”异常：玩家关窗、离开游戏、表单被另一条路径关闭 */
+function isBenignShowError(error: unknown) {
+    if (error instanceof FormRejectError) return true;
+    const e = error as { name?: string; reason?: string } | undefined;
+    return (
+        e?.name === "PlayerLeftError" ||
+        e?.name === "FormVisibilityError" ||
+        e?.name === "InvalidEntityError" ||
+        e?.reason === "PlayerQuit" ||
+        e?.reason === "ServerShutdown" ||
+        e?.reason === "AlreadyShowing" ||
+        e?.reason === "NotShowing"
+    );
+}
+
+function closeAllForms(player: Player) {
+    try {
+        (uiManager as { closeAllForms?: (player: Player) => void } | undefined)?.closeAllForms?.(player);
+    } catch {
+        // 没有可关闭的表单 / 旧版本没有该 API
+    }
+}
+
 export class FormManagerClass {
-    private forms = new Map<string, SAPIProForm<any>>();
+    private forms = new Map<string, FormLike<any>>();
     /**min 清理定时器是否已订阅（没开过表单的包就不会订阅） */
     private minBound = false;
+    /** 正在显示传统表单的玩家，用于在重新打开时先关掉旧界面 */
+    private showingLegacy = new Set<string>();
 
     /**有表单要展示时才订阅 min 清理，之后不再退订 */
     private ensureMinTick() {
@@ -30,6 +56,7 @@ export class FormManagerClass {
         this.minBound = true;
         intervalBus.subscribemin(() => {
             formStackManager.clearOff();
+            disposeOfflineDDUISessions();
         });
     }
 
@@ -39,7 +66,7 @@ export class FormManagerClass {
     }
 
     /**注册一个具名表单 */
-    registerNamed<T extends formDataType>(name: string, form: SAPIProForm<T>) {
+    registerNamed<TArgs extends contextArgs>(name: string, form: FormLike<TArgs>) {
         this.forms.set(name, form);
     }
 
@@ -66,39 +93,145 @@ export class FormManagerClass {
     _showDelay(player: Player, delay = 0) {
         //任何一条展示表单的路径（open/具名/跳转）都会经过这里，借此按需启用 min 清理
         this.ensureMinTick();
-        system.runTimeout(() => {
-            this._show(player);
-        }, delay);
+        const stack = formStackManager.getStack(player);
+        if (!stack) return;
+        //代际令牌：同一玩家只允许最后一次调度生效，丢弃之前排队的旧任务
+        const generation = stack.bumpGeneration();
+        const show = () => {
+            if (formStackManager.getStack(player) !== stack) return;
+            if (stack.navGeneration !== generation) return;
+            void this._show(player);
+        };
+        // 必须等至少一个游戏刻：玩家关闭旧表单后，客户端还需要时间结算，
+        // 立即 show() 下一张会被引擎拒绝（表现为“点按钮没反应”）。
+        system.runTimeout(show, delay);
+    }
+
+    /** 诊断：尚未结算的 show 次数；长时间不归零说明某次 show 没有走完 */
+    private pendingShows = 0;
+    private completedShows = 0;
+
+    /** @internal 诊断用 */
+    dduiShowStats() {
+        return { pendingShows: this.pendingShows, completedShows: this.completedShows };
     }
 
     /**显示form
      * @internal 不要调用
      */
     async _show(player: Player) {
-        const context = formStackManager.getTop(player);
-        if (!context?._form) return;
-        const form = context._form;
-        //重置
-        context._willBuild = true;
-        if (form.beforeBuild) {
-            await form.beforeBuild(context);
+        this.pendingShows++;
+        try {
+            await this._showInner(player);
+        } finally {
+            this.pendingShows--;
+            this.completedShows++;
         }
+    }
+
+    private async _showInner(player: Player) {
+        const stack = formStackManager.getStack(player);
+        const context = stack?.getTop();
+        const form = context?._form;
+        if (!stack || !context || !form) return;
+        if (!player.isValid) {
+            disposeDDUISession(context);
+            formStackManager.resetStack(player);
+            return;
+        }
+
+        const generation = stack.navGeneration;
+        /** 本次展示是否仍然是当前导航（旧 show 不能操作新栈） */
+        const isCurrent = () => formStackManager.getStack(player) === stack && stack.navGeneration === generation;
+
+        context._willBuild = true;
+
+        // DDUI 页面：用 Promise 回调完成构建/显示/释放。
+        // 不走下面的 async/await 链——`await show()` 期间帧会一直持有
+        // context / form / builtForm，反复开关时表现为每次约 1KB 的残留。
+        if (form._ddui === true) {
+            showDDUIContext(
+                player,
+                context as SAPIProFormContext<CustomForm, contextArgs>,
+                isCurrent,
+                () => {
+                    if (isCurrent()) this._handleShow(context);
+                }
+            );
+            return;
+        }
+
+        if (form.beforeBuild) {
+            try {
+                await form.beforeBuild(context);
+            } catch (e) {
+                LibErrorMes("表单 beforeBuild 异常", e);
+            }
+        }
+        if (!isCurrent()) return;
+
         //如果不build了就返回
         if (!context._willBuild) {
             this._handleShow(context);
             return;
         }
-        const builtForm = await form.builder(context.player, context.args);
-        let response;
+
+        let builtForm: formDataType;
         try {
-            response = await builtForm.show(player);
-        } catch (err) {
-            // A rejected form is expected when a player closes it or leaves the game.
-            if (err instanceof FormRejectError) return;
-            throw err;
+            builtForm = await form.builder(player, context.args, context);
+        } catch (e) {
+            LibErrorMes("构建表单失败", e);
+            disposeDDUISession(context);
+            if (formStackManager.getTop(player) === context) stack.pop();
+            return;
         }
 
-        await form.handler(response, context);
+        if (!isCurrent()) {
+            // 展示前栈已被新的导航替换：释放刚构建的页面资源，绝不显示旧页面
+            disposeDDUISession(context);
+            return;
+        }
+
+        // 构建过程中页面主动关闭/重定向：不再显示这个表单
+        if (!context._willBuild) {
+            disposeDDUISession(context);
+            if (isCurrent()) this._handleShow(context);
+            return;
+        }
+
+        // 到这里只剩传统表单（DDUI 页面在上面已提前返回）
+        this.showingLegacy.add(player.id);        let response: unknown;
+        try {
+            response = await (builtForm as unknown as { show(player: Player): Promise<unknown> }).show(player);
+        } catch (e) {
+            if (!isBenignShowError(e)) LibErrorMes("展示表单异常", e);
+            disposeDDUISession(context);
+            if (isCurrent()) this._handleShow(context);
+            return;
+        } finally {
+            // 旧表单 show() 可能晚于新表单结算；不能删除新表单的 showing 标记。
+            if (isCurrent()) this.showingLegacy.delete(player.id);
+        }
+
+        if (!isCurrent()) {
+            disposeDDUISession(context);
+            return;
+        }
+
+        try {
+            await form.handler(response as never, context);
+        } catch (e) {
+            LibErrorMes("表单处理异常", e);
+        }
+
+        if (!isCurrent()) return;
+
+        // 顶层关闭：与 DDUI 一致，换一条空栈释放全部上下文。
+        // 页面跳转（_showData 已设置）时保留，返回时还要用 args。
+        if (!context._showData) {
+            formStackManager.resetStack(player);
+        }
+
         this._handleShow(context);
     }
 
@@ -139,9 +272,36 @@ export class FormManagerClass {
         args?: NoInfer<TArgs>,
         delay = 0
     ) {
+        if (!player.isValid) return;
+        //同一玩家只能有一个界面：先关掉仍在显示的表单，避免新旧表单互相抢 UI
+        const closed = this.closeCurrent(player);
         const stack = formStackManager.resetStack(player);
         stack.push(args ?? {}, form as any);
-        this._showDelay(player, delay);
+        this._showDelay(player, closed ? Math.max(delay, DDUI_SETTLE_TICKS) : delay);
+    }
+
+    /**
+     * 关闭该玩家当前界面并清空表单栈（DDUI 与传统表单都适用）。
+     * 运行时的对象销毁、玩家退出等场景直接调用即可。
+     */
+    close(player: Player) {
+        closeDDUIPage(player);
+        formStackManager.resetStack(player);
+        this.showingLegacy.delete(player.id);
+        closeAllForms(player);
+    }
+
+    /** 该玩家当前是否有表单在显示（不区分 DDUI / 传统表单） */
+    isShowing(player: Player) {
+        return this.showingLegacy.has(player.id) || activeDDUISession(player) !== undefined;
+    }
+
+    /** 关闭仍在前台的表单，返回是否真的关了东西 */
+    private closeCurrent(player: Player) {
+        if (closeDDUIPage(player)) return true;
+        if (!this.showingLegacy.delete(player.id)) return false;
+        closeAllForms(player);
+        return true;
     }
 
     /**打开指定名字的表单，需要先注册

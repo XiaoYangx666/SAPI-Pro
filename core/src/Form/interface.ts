@@ -2,6 +2,8 @@ import { Player } from "@minecraft/server";
 import {
     ActionFormData,
     ActionFormResponse,
+    CustomForm,
+    DataDrivenScreenClosedReason,
     MessageFormData,
     MessageFormResponse,
     ModalFormData,
@@ -9,7 +11,8 @@ import {
 } from "@minecraft/server-ui";
 import { SAPIProFormContext } from "./form";
 
-export type formDataType = ActionFormData | ModalFormData | MessageFormData;
+/** 传统表单与 DDUI（CustomForm）都可以放进同一个表单栈 */
+export type formDataType = ActionFormData | ModalFormData | MessageFormData | CustomForm;
 export type formResponse = MessageFormResponse | ModalFormResponse | ActionFormResponse;
 
 export type formResponseType<T extends formDataType> = T extends MessageFormData
@@ -18,10 +21,25 @@ export type formResponseType<T extends formDataType> = T extends MessageFormData
       ? ModalFormResponse
       : T extends ActionFormData
         ? ActionFormResponse
-        : never;
+        : T extends CustomForm
+          ? DataDrivenScreenClosedReason
+          : never;
 
 export interface contextArgs {
     [key: string]: any;
+}
+
+/**
+ * 任意表单（传统表单或 DDUI 页面）。
+ *
+ * 用于只关心“能入栈/能返回”、不关心具体响应类型的导航 API，
+ * 避免把 `SAPIProForm<any>` 的响应联合类型传染给调用方。
+ */
+export interface FormLike<TArgs extends contextArgs = contextArgs> {
+    builder(player: Player, args: TArgs, context: SAPIProFormContext<any, any>): any;
+    handler(response: any, context: SAPIProFormContext<any, any>): any;
+    beforeBuild?(context: SAPIProFormContext<any, any>): any;
+    _ddui?: true;
 }
 
 export interface openFormData {
@@ -34,7 +52,8 @@ export interface openFormData {
 
 export type FormBuilder<T extends formDataType, U extends contextArgs> = (
     player: Player,
-    args: U
+    args: U,
+    context: SAPIProFormContext<T, U>
 ) => Promise<T> | T;
 
 export type formBeforeBuild<T extends formDataType, U extends contextArgs> = (
