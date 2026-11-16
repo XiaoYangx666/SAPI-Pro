@@ -33,13 +33,26 @@ export function toCleanup(handle: UnsubscribeLike): (() => void) | undefined {
     return;
 }
 
-function safeRun(run: () => void, label: string) {
+/**
+ * 统一执行回调：同步异常与 Promise 拒绝都交给 onError。
+ *
+ * 业务回调常写成 async，调用点同步 try/catch 抓不到拒绝；在这里接住，
+ * 避免框架托管的回调产生未处理拒绝。
+ */
+export function safeInvoke(run: () => unknown, onError: (e: unknown) => void) {
     try {
-        run();
+        const result = run();
+        if (result && typeof (result as PromiseLike<unknown>).then === "function") {
+            (result as PromiseLike<unknown>).then(undefined, (e) => onError(e));
+        }
     } catch (e) {
-        // 单个清理失败不能中断其余清理，也不能让表单关闭流程抛错
-        LibLogger.warn(`DDUI 清理失败: ${label}`, e);
+        onError(e);
     }
+}
+
+function safeRun(run: () => void, label: string) {
+    // 单个清理失败不能中断其余清理，也不能让表单关闭流程抛错
+    safeInvoke(run, (e) => LibLogger.warn(`DDUI 清理失败: ${label}`, e));
 }
 
 /**

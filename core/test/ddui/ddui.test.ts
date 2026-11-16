@@ -105,12 +105,14 @@ const ui = vi.hoisted(() => {
     class MockForm {
         static all: MockForm[] = [];
         static showError: Error | undefined;
+        static showErrorSync: Error | undefined;
         static busyCount = 0;
         static buildCount = 0;
 
         static reset() {
             MockForm.all = [];
             MockForm.showError = undefined;
+            MockForm.showErrorSync = undefined;
             MockForm.busyCount = 0;
             MockForm.buildCount = 0;
         }
@@ -129,6 +131,11 @@ const ui = vi.hoisted(() => {
 
         show(): Promise<string> {
             this.showCalls++;
+            if (MockForm.showErrorSync) {
+                const error = MockForm.showErrorSync;
+                MockForm.showErrorSync = undefined;
+                throw error;
+            }
             if (MockForm.showError) {
                 const error = MockForm.showError;
                 MockForm.showError = undefined;
@@ -280,6 +287,7 @@ import { DDUI, dduiPage, type DDUIContext } from "../../src/Form/ddui/main";
 import { DDScope } from "../../src/Form/ddui/scope";
 import { formManager } from "../../src/Form/formManager";
 import { formStackManager } from "../../src/Form/stackManager";
+import { LibLogger } from "../../src/utils/logger";
 import type { SAPIProForm } from "../../src/Form/form";
 
 const MockForm = ui.MockForm;
@@ -985,6 +993,67 @@ describe("DDUI 表单栈与导航", () => {
         expect(lastForm().title).toBe("正常");
         lastForm().playerClose();
         await settle();
+    });
+
+    it("show 同步抛出异常时也释放页面资源", async () => {
+        const player = createPlayer();
+        let cleaned = 0;
+        const page = dduiPage("同步异常", (ctx) => {
+            ctx.onClose(() => cleaned++);
+        });
+
+        MockForm.showErrorSync = new Error("sync-boom");
+        const errorSpy = vi.spyOn(LibLogger, "error").mockImplementation(() => {});
+        DDUI.open(player, page);
+        await settle();
+
+        expect(cleaned).toBe(1);
+        expect(DDUI.active(player)).toBeUndefined();
+        expect(MockForm.all.filter((form) => form.isShowing())).toHaveLength(0);
+        errorSpy.mockRestore();
+
+        // 同步异常不能把栈/会话留在“显示中”，后续还能正常打开
+        DDUI.open(player, plainPage("正常"));
+        await settle();
+        expect(lastForm().title).toBe("正常");
+        lastForm().playerClose();
+        await settle();
+    });
+
+    it("按钮异步回调的拒绝被捕获，不产生未处理拒绝", async () => {
+        const player = createPlayer();
+        const page = dduiPage("异步异常", (ctx) => {
+            ctx.button("go", async () => {
+                throw new Error("async-boom");
+            });
+        });
+
+        const errorSpy = vi.spyOn(LibLogger, "error").mockImplementation(() => {});
+        DDUI.open(player, page);
+        await settle();
+        lastForm().click(0);
+        await flush();
+        await flush();
+
+        expect(errorSpy).toHaveBeenCalledWith("DDUI 按钮回调异常", expect.any(Error));
+        errorSpy.mockRestore();
+
+        lastForm().playerClose();
+        await settle();
+    });
+
+    it("作用域异步清理的拒绝被捕获", async () => {
+        const warnSpy = vi.spyOn(LibLogger, "warn").mockImplementation(() => {});
+        const scope = new DDScope();
+        scope.own(async () => {
+            throw new Error("cleanup-boom");
+        });
+        scope.dispose();
+        await flush();
+        await flush();
+
+        expect(warnSpy).toHaveBeenCalledWith("DDUI 清理失败: cleanup", expect.any(Error));
+        warnSpy.mockRestore();
     });
 
     it("DDUI.open 支持逐次 delay：到点前不构建，到点后显示", async () => {

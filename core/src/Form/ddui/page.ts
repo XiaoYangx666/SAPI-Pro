@@ -5,7 +5,7 @@ import type { SAPIProForm, SAPIProFormContext } from "../form";
 import type { contextArgs } from "../interface";
 import { DDUIContext } from "./context";
 import { WriteGuard } from "./observable";
-import { DDScope } from "./scope";
+import { DDScope, safeInvoke } from "./scope";
 import { formStackManager } from "../stackManager";
 
 /** 关闭旧表单到显示新表单之间等待的游戏刻（0 = 下一 tick 立即显示） */
@@ -90,11 +90,8 @@ export class DDUISession {
     /** 按钮回调入口：页面关闭后迟到的点击、同一次显示内的连点都会忽略 */
     invoke(callback: () => void) {
         if (this.disposed || this.navigating || !this.player.isValid) return;
-        try {
-            callback();
-        } catch (e) {
-            LibLogger.error("DDUI 按钮回调异常", e);
-        }
+        // 按钮回调可能是 async：同步 try/catch 抓不到 Promise 拒绝
+        safeInvoke(callback, (e) => LibLogger.error("DDUI 按钮回调异常", e));
     }
 
     /** 修改表单栈后关闭当前表单，由 formManager 负责显示目标页面 */
@@ -339,7 +336,23 @@ export function showDDUIContext(
             return;
         }
 
-        void form.show().then(
+        const close = () => {
+            disposeDDUISession(context);
+            if (isCurrent()) after();
+        };
+
+        let shown: Promise<unknown>;
+        try {
+            shown = form.show();
+        } catch (e) {
+            // 官方 API 声明 show() 可能同步抛错；不能只依赖 Promise 拒绝回调，
+            // 否则会话、作用域与表单栈都不会释放。
+            LibLogger.error("DDUI 展示表单异常", e);
+            close();
+            return;
+        }
+
+        void shown.then(
             (response) => {
                 if (!isCurrent()) {
                     disposeDDUISession(context);
@@ -352,11 +365,8 @@ export function showDDUIContext(
                 }
                 if (isCurrent()) after();
             },
-            () => {
-                // 玩家离开 / 表单被其它路径关闭：释放页面资源后继续
-                disposeDDUISession(context);
-                if (isCurrent()) after();
-            }
+            // 玩家离开 / 表单被其它路径关闭：释放页面资源后继续
+            close
         );
-    });
+    }).catch((e) => LibLogger.error("DDUI 展示流程异常", e));
 }
