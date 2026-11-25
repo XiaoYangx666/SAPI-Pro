@@ -6,15 +6,17 @@
 
 ## 目录
 
-- [安装](#安装)
+- [安装](#-安装)
     - [使用create-mcbe创建(推荐)](#方式一使用-create-mcbe-创建推荐)
     - [现有项目手动安装](#方式二现有项目手动安装)
 - [核心功能](#核心功能)
     - [命令系统](#命令系统)
     - [表单导航](#表单导航)
-    - [数据存储](#-数据存储)
+    - [DDUI 响应式表单](#ddui-响应式表单)
+    - [数据存储](#数据存储)
     - [多包通信](#多包通信)
     - [多语言](#多语言)
+- [更新要点](#更新要点)
 - [示例行为包](#示例行为包)
 - [参考文档](#参考文档)
 - [SKILL（AI 辅助开发）](#skillai-辅助开发)
@@ -125,7 +127,7 @@ pcommand.registerNative(killCmd);
 
 以下是一个简单的让用户不断输入的表单的示例，表单还有更多用法，请查阅[表单系统](./tutorial/form.md#表单系统)。
 
-需要由状态驱动、带真正表单栈的页面时，可以使用 DDUI 响应式表单，详见 [DDUI 响应式表单](./tutorial/ddui.md)。
+需要由状态驱动、带表单栈的页面时，见下一节 [DDUI 响应式表单](#ddui-响应式表单)。
 
 #### 表单示例
 
@@ -158,13 +160,37 @@ pcommand.registerNative(
 
 ---
 
+### DDUI 响应式表单
+
+DDUI 是对原生 `CustomForm` 的响应式封装。`DDUI.page()` 创建的页面同样是一个 `SAPIProForm`，与传统表单共用同一个表单栈；页面关闭时，页面里登记的订阅、定时器与外部信号会自动释放。
+
+```typescript
+import { DDUI } from "sapi-pro";
+
+const SettingsPage = DDUI.page<{ save: (volume: number) => void }>(
+    "设置",
+    (ui, args) => {
+        const volume = ui.number(100);
+        const label = ui.computed([volume], () => `当前音量：${volume.getData()}%`);
+
+        ui.onChange(volume, (value) => args.save(value));
+        ui.label(label).slider("音量", volume, 0, 200, { step: 1 });
+        ui.closeButton();
+    }
+);
+
+const saveVolume = (volume: number) => {
+    // 保存音量
+};
+
+DDUI.open(player, SettingsPage, { save: saveVolume });
+```
+
+页面之间用 `ui.push` / `ui.back` / `ui.replace` / `ui.reopen` / `ui.reset` / `ui.close` 跳转，不需要“关闭 + 延时 + 重新 open”。完整用法见 [DDUI 响应式表单](./tutorial/ddui.md)。
+
+---
+
 ### 数据存储
-
-#### v0.4.4 更新要点
-
-- 新增 DDUI 响应式表单：基于原生 `CustomForm` 与 Observable，提供页面级资源托管、`computed` / `watch` 派生状态，以及与表单导航共用的表单栈（`push` / `back` / `replace` / `reopen` / `reset` / `close`）。见 [DDUI 响应式表单](./tutorial/ddui.md)。
-- 修复表单导航在异步展示期间的状态问题：过期回调不再修改当前导航，玩家关闭页面在有上级时按返回处理，页面关闭后释放表单栈引用。
-- `@minecraft/server` 与 `@minecraft/server-ui` 升级到 2.12.0 Beta / 2.4.0 Beta（stable 渠道 2.11.0 / 2.3.0）。
 
 数据库用法详见 [数据库教程](tutorial/database.md)。
 
@@ -223,6 +249,14 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 ```
 
 ---
+
+## 更新要点
+
+### v0.4.4
+
+- 新增 DDUI 响应式表单：基于原生 `CustomForm` 与 Observable，提供页面级资源托管、`computed` / `watch` 派生状态，以及与表单导航共用的表单栈（`push` / `back` / `replace` / `reopen` / `reset` / `close`）。
+- 修复表单导航在异步展示期间的状态问题：过期回调不再修改当前导航，玩家关闭页面在有上级时按返回处理，页面关闭后释放表单栈引用。
+- `@minecraft/server` 与 `@minecraft/server-ui` 升级到 2.12.0 Beta / 2.4.0 Beta（stable 渠道 2.11.0 / 2.3.0）。
 
 ## 示例行为包
 

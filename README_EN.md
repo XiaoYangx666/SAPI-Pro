@@ -12,9 +12,11 @@
 - [Core Features](#core-features)
     - [Command System](#command-system)
     - [Form Navigation](#form-navigation)
+    - [DDUI Reactive Forms](#ddui-reactive-forms)
     - [Data Storage](#data-storage)
     - [Multi-pack Communication](#multi-pack-communication)
     - [Multi-language Support](#multi-language-support)
+- [What's New](#whats-new)
 - [Example Behavior Packs](#example-behavior-packs)
 - [Reference Documentation](#reference-documentation)
 - [SKILL (AI-Assisted Development)](#skill-ai-assisted-development)
@@ -125,7 +127,7 @@ With SAPI-Pro, you can easily create forms and navigate between them.
 
 Below is a simple example of a form that repeatedly prompts the user for input. Forms have many more features—check [Form System](./tutorial/form.md#form-system) for details.
 
-For state-driven pages with a real form stack, use DDUI reactive forms: see [DDUI reactive forms](./tutorial/ddui.md).
+For state-driven pages with a form stack, see [DDUI Reactive Forms](#ddui-reactive-forms) below.
 
 #### Form Example
 
@@ -158,13 +160,37 @@ pcommand.registerNative(
 
 ---
 
+### DDUI Reactive Forms
+
+DDUI is a reactive wrapper around the native `CustomForm`. A page created with `DDUI.page()` is also a `SAPIProForm`, so it shares the same form stack as traditional forms; when a page closes, the subscriptions, timers and external signals registered in it are released automatically.
+
+```typescript
+import { DDUI } from "sapi-pro";
+
+const SettingsPage = DDUI.page<{ save: (volume: number) => void }>(
+    "Settings",
+    (ui, args) => {
+        const volume = ui.number(100);
+        const label = ui.computed([volume], () => `Volume: ${volume.getData()}%`);
+
+        ui.onChange(volume, (value) => args.save(value));
+        ui.label(label).slider("Volume", volume, 0, 200, { step: 1 });
+        ui.closeButton();
+    }
+);
+
+const saveVolume = (volume: number) => {
+    // persist the volume
+};
+
+DDUI.open(player, SettingsPage, { save: saveVolume });
+```
+
+Navigate with `ui.push` / `ui.back` / `ui.replace` / `ui.reopen` / `ui.reset` / `ui.close`; there is no need for "close + delay + reopen". See [DDUI reactive forms](tutorial/ddui.md) for the full API.
+
+---
+
 ### Data Storage
-
-#### What's new in v0.4.4
-
-- Added DDUI reactive forms: built on the native `CustomForm` and Observable, with page-level resource ownership, `computed` / `watch` derived state, and a form stack (`push` / `back` / `replace` / `reopen` / `reset` / `close`) shared with form navigation. See [DDUI reactive forms](tutorial/ddui.md).
-- Fixed form navigation during async display: stale callbacks no longer mutate the current navigation, a player close is treated as back when a parent page exists, and a closed page releases its form-stack references.
-- Upgraded `@minecraft/server` and `@minecraft/server-ui` to 2.12.0 Beta / 2.4.0 Beta (stable channel: 2.11.0 / 2.3.0).
 
 See the [database tutorial](tutorial/database.md) for usage.
 
@@ -223,6 +249,14 @@ const form = new ModalFormData().title(t("设置", LangUI.title));
 ```
 
 ---
+
+## What's New
+
+### v0.4.4
+
+- Added DDUI reactive forms: built on the native `CustomForm` and Observable, with page-level resource ownership, `computed` / `watch` derived state, and a form stack (`push` / `back` / `replace` / `reopen` / `reset` / `close`) shared with form navigation.
+- Fixed form navigation during async display: stale callbacks no longer mutate the current navigation, a player close is treated as back when a parent page exists, and a closed page releases its form-stack references.
+- Upgraded `@minecraft/server` and `@minecraft/server-ui` to 2.12.0 Beta / 2.4.0 Beta (stable channel: 2.11.0 / 2.3.0).
 
 ## Example Behavior Packs
 
