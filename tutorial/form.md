@@ -20,7 +20,9 @@
 
 ### SAPI-Pro 表单
 
-所有表单均基于 [SAPIProForm<T, U>](../docs/interfaces/SAPIProForm.md) 接口构建。
+所有表单均基于 [SAPIProForm<T, U>](../skills/sapi-pro-dev/reference/form.md) 接口构建。
+
+需要 Observable 驱动的响应式页面（滑块/输入实时联动、多级页面栈）时，使用 [DDUI 响应式表单](ddui.md)。
 
 - `T`: 表单类型（`ActionFormData | ModalFormData | MessageFormData`）。
 
@@ -48,7 +50,7 @@ const myForm: SAPIProForm<ActionFormData, MyArgs> = {
 };
 ```
 
-#### builder:[FormBuiler](../docs/type-aliases/FormBuilder.md)
+#### builder:[FormBuiler](../skills/sapi-pro-dev/reference/form.md)
 
 `FormBuilder: (player, args) => Promise<T> | T`
 
@@ -56,13 +58,13 @@ builder 需要提供一个创建函数，每次都会使用它来创建表单。
 
 你可以为上下文参数设置属性如:`args.a=1`，这样你就可以在 handler 里拿到。
 
-#### handler:[formHandler](../docs/type-aliases/formHandler.md)
+#### handler:[formHandler](../skills/sapi-pro-dev/reference/form.md)
 
 `formHandler: (response: formResponseType<T>, context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
 **参数**：第一个参数是表单返回值，它和你的表单类型有关，例如:ActionFormData 将会返回 ActionFormResponse ; 第二个参数是上下文，你可以通过它进行导航，获得玩家等，具体后面介绍。
 
-#### beforeBuild?[formBeforeBuild](../docs/type-aliases/formBeforeBuild.md)
+#### beforeBuild?[formBeforeBuild](../skills/sapi-pro-dev/reference/form.md)
 
 `formBeforeBuild: (context: SAPIProFormContext<T, U>) => void | Promise<void>`
 
@@ -118,13 +120,13 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 表单多数是无名的，可以直接通过对象打开，但如果需要在多行为包间打开表单，则需要为表单命名。
 
-使用[formManager.registerNamed](../docs/classes/FormManagerClass.md#registernamed) 来注册具名表单
+使用[formManager.registerNamed](../skills/sapi-pro-dev/reference/form.md) 来注册具名表单
 
-使用[formManager.openNamed](../docs/classes/FormManagerClass.md#opennamed) 来打开具名表单
+使用[formManager.openNamed](../skills/sapi-pro-dev/reference/form.md) 来打开具名表单
 
 ### 表单上下文 SAPIProFormContext
 
-参考:[SAPIProFormContext](../docs/classes/SAPIProFormContext.md)
+参考:[SAPIProFormContext](../skills/sapi-pro-dev/reference/form.md)
 
 `SAPIProFormContext<T, U>` 是表单处理的核心，提供了导航和数据访问能力。
 
@@ -177,7 +179,7 @@ const spCreate: SAPIProForm<ModalFormData> = {
 
 #### CommonFormData
 
-以下所有的常用表单定义数据都继承了[CommonFormData](../docs/interfaces/CommonFormData.md)。`CommonForm`中的`generator`在表单构建后被调用，用于动态生成title与body。
+以下所有的常用表单定义数据都继承了[CommonFormData](../skills/sapi-pro-dev/reference/form.md)。`CommonForm`中的`generator`在表单构建后被调用，用于动态生成title与body。
 
 ```typescript
 interface CommonFormData<T extends formDataType, U extends contextArgs = contextArgs> {
@@ -201,7 +203,7 @@ CommonForm.ButtonForm<U, TData>(data: ButtonFormData<U, TData>): ButtonForm<U, T
 - `U`: 上下文参数类型
 - `TData`: 按钮附带数据类型（默认 `void`，不携带额外数据时省略）
 
-参考：[ButtonFormData](../docs/interfaces/ButtonFormData.md)
+参考：[ButtonFormData](../skills/sapi-pro-dev/reference/form.md)
 
 #### 按钮处理逻辑
 
@@ -398,7 +400,7 @@ const promptPage = CommonForm.BodyInfoForm("AIChat系统提示词", (form, playe
 
 `CommonForm.SimpleMessageForm(data: SimpleMessageFormData)`
 
-其中 [SimpleMessageFormData](../docs/interfaces/SimpleMessageFormData.md) 定义如下:
+其中 [SimpleMessageFormData](../skills/sapi-pro-dev/reference/form.md) 定义如下:
 
 ```ts
 interface SimpleMessageFormData<U extends contextArgs = contextArgs> extends CommonFormData<
@@ -448,7 +450,7 @@ CommonForm.SimpleMessageForm({
 
 `InputForm` 用于构建输入的表单界面，通过 ValueField 实现数据自动解析和校验。
 
-参考:[InputFormData](../docs/interfaces/InputFormData.md)
+参考:[InputFormData](../skills/sapi-pro-dev/reference/form.md)
 
 #### 核心 Field 组件
 
@@ -525,7 +527,7 @@ const configPage = CommonForm.InputForm<AIChatConfig, { models: string[]; prompt
 
 ### CommonForm.ConfigForm
 
-参考:[ConfigForm](../docs/interfaces/ConfigFormOptions.md)
+参考:[ConfigForm](../skills/sapi-pro-dev/reference/form.md)
 
 `ConfigForm` 是 `InputForm` 的高级声明式封装。它通过一个配置对象（Schema）自动生成表单字段、处理动态默认值、执行字段级逻辑（Setter）并提供完美的类型推导，非常适合用于制作插件配置、玩家设置等界面。
 

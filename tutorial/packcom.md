@@ -10,8 +10,8 @@
 
 使用以下数据库实现跨包数据共享：
 
-- [ScoreboardDataBase](../docs/classes/ScoreBoardDataBase.md)
-- [ScoreboardJSONDataBase](../docs/classes/ScoreBoardJSONDataBase.md)
+- [ScoreboardDataBase](../skills/sapi-pro-dev/reference/db.md)
+- [ScoreboardJSONDataBase](../skills/sapi-pro-dev/reference/db.md)
 
 共享数据结构统一存储于 `exchangedb` 中，用于：
 
@@ -25,7 +25,7 @@
 
 使用以下方法实现跨包 UI 调用：
 
-- [formManager.openExternal](../docs/classes/FormManagerClass.md#openexternal)
+- [formManager.openExternal](../skills/sapi-pro-dev/reference/packcom.md)
 
 底层通过 `scriptEvent` 进行事件分发，实现模块间解耦调用。
 

@@ -40,6 +40,7 @@ initSAPIPro(packInfo);
 
 - 通过`SAPIProForm`创建基本的sapi-pro表单。
 - 通过`commomForm`创建常用表单，`commomForm`都是对`SAPIProForm`的包装。
+- 通过`DDUI.page`创建 `CustomForm` 响应式页面：Observable 驱动、关闭自动释放资源、与传统表单共用同一个表单栈（`ui.push/back/replace`）。需要滑块/输入框联动或多级页面时优先用它，不要手写 `CustomForm` 会话。
 
 表单导航和传值:
 

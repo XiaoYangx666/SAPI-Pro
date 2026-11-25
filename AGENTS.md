@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents (Claude Code、Codex、Cursor �
 
 ## 项目简介
 
-sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表单导航、数据存储、多包通信、国际化。安装/使用见 README.md，API 文档在 docs/，教程在 tutorial/。**同一个 npm 包发布双渠道**：`latest` 标签 → beta 版，`stable` 标签 → stable 版；Release workflow 同时让 `beta` 标签指向当前 beta 版本。不维护两个分支，用 monorepo 共享源码。开发时加载 `sapi-pro-dev` skill。
+sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表单导航、数据存储、多包通信、国际化。安装/使用见 README.md，教程在 tutorial/，AI 助手参考文档在 skills/sapi-pro-dev/reference/。**同一个 npm 包发布双渠道**：`latest` 标签 → beta 版，`stable` 标签 → stable 版；Release workflow 同时让 `beta` 标签指向当前 beta 版本。不维护两个分支，用 monorepo 共享源码。开发时加载 `sapi-pro-dev` skill。
 
 ## 目录结构
 
@@ -13,7 +13,7 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 - `variants/stable/`：stable 渠道构建与发布（使用最新 stable 版 `@minecraft/*`，**无模拟命令、无 chatBus**）。
 - `tools/`：构建脚本（仅 `libVersion.ts`，负责版本注入）。
 - `skills/sapi-pro-dev/`：给 AI 助手用的 skill 源文件（不随 npm 包发布，也没有安装脚本，需要时手动拷到助手的 skill 目录）。
-- `docs/`：历史 typedoc 产物（139 个文件），**生成依赖已移除，现为手动维护**。
+- `docs/` 已删除（原为 typedoc 自动生成产物），API 参考改由 `tutorial/` 与 `skills/sapi-pro-dev/reference/` 手动维护，不要再引用 `docs/` 路径。
 - 根 `package.json` 是编排层（`private: true`），不包含库源码，只做脚本编排与测试依赖。
 
 ## 常用命令

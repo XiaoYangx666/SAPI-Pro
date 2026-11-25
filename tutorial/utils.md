@@ -4,7 +4,7 @@
 
 ## 工具类
 
-#### [RandomUtils](../docs/sapi-pro/namespaces/RandomUtils/README.md)
+#### [RandomUtils](../skills/sapi-pro-dev/reference/utils.md)
 
 ```typescript
 import { RandomUtils } from "sapi-pro";
@@ -12,7 +12,7 @@ import { RandomUtils } from "sapi-pro";
 
 随机工具类，包含多个方法，生成随机数、shuffle 等。
 
-#### [Vector3Utils](../docs/classes/Vector3Utils.md)
+#### [Vector3Utils](../skills/sapi-pro-dev/reference/utils.md)
 
 ```typescript
 import { VectorUtils } from "sapi-pro";
@@ -20,7 +20,7 @@ import { VectorUtils } from "sapi-pro";
 
 提供多个向量方法，用于处理坐标相关运算
 
-#### [Logger](../docs/classes/Logger.md)
+#### [Logger](../skills/sapi-pro-dev/reference/utils.md)
 
 ```typescript
 import { Logger } from "sapi-pro";
@@ -32,7 +32,7 @@ import { Logger } from "sapi-pro";
 <namespace>[loggerName] message
 ```
 
-#### [ChunkUtils](../docs/classes/ChunkUtils.md)
+#### [ChunkUtils](../skills/sapi-pro-dev/reference/utils.md)
 
 ```typescript
 import { ChunkUtils } from "sapi-pro";

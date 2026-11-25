@@ -21,7 +21,7 @@
 
 使用 `const CommandName = new Command(参数)` 即可创建一个新命令。
 
-相关资料：[Command](../docs/classes/Command.md)类
+相关资料：[Command](../skills/sapi-pro-dev/reference/command.md)类
 
 ```typescript
 import { Command, pcommand } from "sapi-pro";

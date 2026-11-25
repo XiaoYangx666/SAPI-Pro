@@ -24,11 +24,11 @@
 
 ### 参考
 
-- [pcommand](../docs/variables/pcommand.md) "点"命令管理器
-- [FormManager](../docs/classes/FormManager.md) 表单管理器
-- [CommonForm](../docs/classes/CommonForm.md) 常用表单
-- [DataBase](../docs/classes/DataBase.md) 游戏内数据存储
-- [Event](../docs/namespaces/Event/README.md) 游戏事件订阅
-- [全部参考文档](../docs/globals.md)
+- [pcommand](../skills/sapi-pro-dev/reference/command.md) "点"命令管理器
+- [FormManager](../skills/sapi-pro-dev/reference/form.md) 表单管理器
+- [CommonForm](../skills/sapi-pro-dev/reference/form.md) 常用表单
+- [DataBase](../skills/sapi-pro-dev/reference/db.md) 游戏内数据存储
+- [Event](../skills/sapi-pro-dev/reference/event.md) 游戏事件订阅
+- [全部参考文档](../skills/sapi-pro-dev/reference/modules.md)
 
 ---
