@@ -77,9 +77,11 @@ sapi-pro 是 Minecraft Bedrock ScriptAPI（SAPI）库，提供命令系统、表
 
 - **版本规则**：两渠道共享同一 base 版本，beta 不带后缀、stable 带 `-stable` 后缀。如 base `0.4.3`：beta 版 `0.4.3`，stable 版 `0.4.3-stable`。`libVersionString` 两边都解析为 `0.4.3`，游戏内显示 `0.4.3-beta` / `0.4.3-stable`。
 - 改版本时必须同步对应 variant 的 `package.json` 与 `package-lock.json` 顶层/根包版本，避免发布元数据残留旧版本。
-- 准备发版先提交代码/文档，确认 `dev` 测试和双渠道构建通过；**准备阶段不要推 tag 或手动运行 Release**。确认正式发版后仅创建基础版本 tag `v0.4.3`，不要创建渠道后缀 tag 来重复发布。
-- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.3`）→ `npm run pack:beta` → `npm run publish:beta`（`--tag latest`）。Release workflow 发布后再把 npm 的 `beta` dist-tag 同步指向同一版本，因此 `sapi-pro` 与 `sapi-pro@beta` 都是当前 beta。
-- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.3-stable`）→ `npm run pack:stable` → `npm run publish:stable`（`--tag stable`）。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
+- 准备发版先提交代码/文档，确认 `dev` 测试和双渠道构建通过；**准备阶段不要推 tag 或手动运行 Release**。确认正式发版后仅创建基础版本 tag（如 `v0.4.4`），不要创建渠道后缀 tag 来重复发布。
+- **发布走 npm Trusted Publishing (OIDC)**：`release.yml` 声明 `permissions.id-token: write`，不依赖 `NPM_TOKEN`。npm 包设置里的 Trusted Publisher 为 `XiaoYangX666 / SAPI-Pro / release.yml`，并勾选允许 `npm publish` 与 `npm dist-tag`。发布前 workflow 会把 npm 升到 `11.21.3`（dist-tag 的 OIDC 支持要求 ≥ 11.21.0，Node 24 自带的 npm 不够）。
+- beta 渠道：改 `variants/beta/package.json` 的 `version`（如 `0.4.4`）→ 提交并推 `dev` → 打基础版本 tag `v0.4.4` 推送（自动触发 Release），或 `gh workflow run Release --ref dev` 手动触发。workflow 会 `npm publish ./variants/beta --tag latest`，再把 npm 的 `beta` dist-tag 指向同一版本，因此 `sapi-pro` 与 `sapi-pro@beta` 都是当前 beta。
+- stable 渠道：改 `variants/stable/package.json` 的 `version`（如 `0.4.4-stable`）→ 同上一次 workflow 内 `npm publish ./variants/stable --tag stable`。默认 `npm i sapi-pro` 安装 beta；stable 必须显式使用 `sapi-pro@stable`。
+- **本地 `npm run publish:*` 只在 npm 账号仍有 token 发布权限时可用**；启用 OIDC 后若在包设置里禁用 token 发布，本地发布会被拒绝，必须走 workflow。OIDC 发布会自动生成 provenance。
 - 两个 variant 的 `publishConfig.tag` 分别固定为 `latest` / `stable`，防止直接在 variant 目录执行 `npm publish` 时占错 dist-tag。
 - 下游行为包通过 `file:` 按文件名依赖 `sapi-pro-<version>.tgz`，版本不同文件名不同，直接换引用即可。
 - **变更日志不落仓库**：不要在仓库里维护 `CHANGELOG.md`（或任何发版说明文件），也不要加进 `README`。发版说明写进 GitHub Release 正文即可，仓库只保留代码与文档。
