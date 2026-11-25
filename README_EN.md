@@ -183,6 +183,7 @@ const saveVolume = (volume: number) => {
     // persist the volume
 };
 
+// player comes from a command or event callback
 DDUI.open(player, SettingsPage, { save: saveVolume });
 ```
 

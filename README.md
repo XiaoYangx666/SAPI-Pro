@@ -183,6 +183,7 @@ const saveVolume = (volume: number) => {
     // 保存音量
 };
 
+// player 来自命令或事件回调
 DDUI.open(player, SettingsPage, { save: saveVolume });
 ```
 
