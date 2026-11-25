@@ -165,13 +165,16 @@ ui.onChange(search, async (keyword) => {
 
 ---
 
-## 原生限制（需要在实机确认）
+## 原生 API 限制
 
-- `CustomForm` 的 `show()` 不需要 `player` 参数，返回关闭原因（`ClientClosed` / `ServerClosed` / `UserBusy`），失败时抛 `FormVisibilityError` / `PlayerLeftError` 等。
-- 原生 Observable 的 `subscribe` 是同步回调，`setData` 写入相同值不会通知。
-- 关闭后继续使用已关闭表单的组件会抛错；DDUI 已避免这种调用，但自定义原生代码需要自行判断 `ui.closed`。
-- 客户端写入来源、`Observable` 的 `dispose` 都不存在，不要依赖。
-- 传统表单（`ActionFormData` 等）没有服务端 `close()`，只能通过 `uiManager.closeAllForms(player)` 关闭；DDUI 只在重新打开界面时使用它。
+以下结论均对照 `@minecraft/server-ui` 的类型定义（stable 2.3.0 / beta 2.4.0-beta）确认：
+
+- `CustomForm` 构造时需要 `Player` 与标题；`show()` 不接收 `player`，返回 `DataDrivenScreenClosedReason`（`ClientClosed` / `ServerClosed` / `UserBusy`）。失败时抛 `FormVisibilityError`（`reason` 为 `AlreadyShowing` / `NotShowing`）或 `InvalidEntityError`。
+- `Observable.setData()` 只有在值真正变化时才通知订阅者；`subscribe()` 返回的是回调本身，用 `unsubscribe(回调)` 退订，没有 `dispose`。
+- API 不提供“这次变化来自客户端还是服务端”的来源标识，也没有 `clientWritable` 的运行时查询。
+- 传统表单（`ActionFormData` 等）没有服务端 `close()`，只能通过 `uiManager.closeAllForms(player)` 关闭；DDUI 只在重新打开界面时调用它。
+
+> **实现依赖（尚未实机验证）**：`ui.set()` 用“写入期间的同步标记”过滤掉自己触发的回调，前提是 `setData()` 在当前调用栈内同步通知订阅者。类型定义没有写明通知时机；如果实机是异步通知，这套区分方式需要改。
 
 ---
 

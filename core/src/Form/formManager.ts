@@ -24,6 +24,8 @@ class FormNotFoundError extends Error {
 function isBenignShowError(error: unknown) {
     if (error instanceof FormRejectError) return true;
     const e = error as { name?: string; reason?: string } | undefined;
+    // 名称兜底：当前 @minecraft/server 类型里只有 FormVisibilityError / InvalidEntityError，
+    // PlayerLeftError 等不存在于类型定义，只作为运行时/历史错误名按“正常结束”处理。
     return (
         e?.name === "PlayerLeftError" ||
         e?.name === "FormVisibilityError" ||
