@@ -23,7 +23,7 @@
 
 ```json
 {
-    "@minecraft/server": "2.11.0-beta.1.26.50-stable"
+    "@minecraft/server": "2.12.0-beta.1.26.66-stable"
 }
 ```
 

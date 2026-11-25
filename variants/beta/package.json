@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "description": "A practical library for MCBE ScriptAPI (beta channel, requires ScriptAPI beta)",
     "main": "dist/entry.beta.js",
     "types": "dist/entry.beta.d.ts",
@@ -15,14 +15,14 @@
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.11.0-beta.1.26.50-stable",
-        "@minecraft/server-ui": "^2.3.0-beta.1.26.50-stable",
+        "@minecraft/server": "^2.12.0-beta.1.26.66-stable",
+        "@minecraft/server-ui": "^2.4.0-beta.1.26.66-stable",
         "@minecraft/vanilla-data": ">=1.26.0"
     },
     "devDependencies": {
         "@minecraft/common": "1.2.0",
-        "@minecraft/server": "2.11.0-beta.1.26.50-stable",
-        "@minecraft/server-ui": "2.3.0-beta.1.26.50-stable"
+        "@minecraft/server": "2.12.0-beta.1.26.66-stable",
+        "@minecraft/server-ui": "2.4.0-beta.1.26.66-stable"
     },
     "publishConfig": {
         "tag": "latest"

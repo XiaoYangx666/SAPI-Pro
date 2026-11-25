@@ -1,6 +1,6 @@
 {
     "name": "sapi-pro",
-    "version": "0.4.3-stable",
+    "version": "0.4.4-stable",
     "description": "A practical library for MCBE ScriptAPI (stable channel, uses stable ScriptAPI)",
     "main": "dist/entry.stable.js",
     "types": "dist/entry.stable.d.ts",
@@ -15,14 +15,14 @@
         "url": "https://github.com/XiaoYangx666/SAPI-Pro.git"
     },
     "peerDependencies": {
-        "@minecraft/server": "^2.10.0",
-        "@minecraft/server-ui": "^2.2.0",
+        "@minecraft/server": "^2.11.0",
+        "@minecraft/server-ui": "^2.3.0",
         "@minecraft/vanilla-data": ">=1.26.0"
     },
     "devDependencies": {
         "@minecraft/common": "1.2.0",
-        "@minecraft/server": "2.10.0",
-        "@minecraft/server-ui": "2.2.0"
+        "@minecraft/server": "2.11.0",
+        "@minecraft/server-ui": "2.3.0"
     },
     "publishConfig": {
         "tag": "stable"

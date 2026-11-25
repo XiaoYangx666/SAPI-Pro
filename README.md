@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/依赖-SAPI%202.11.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.50+-green)
+![Requires](https://img.shields.io/badge/依赖-SAPI%202.12.0%20Beta-red) ![Support](https://img.shields.io/badge/支持版本-MCBE%2026.66+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
@@ -125,6 +125,8 @@ pcommand.registerNative(killCmd);
 
 以下是一个简单的让用户不断输入的表单的示例，表单还有更多用法，请查阅[表单系统](./tutorial/form.md#表单系统)。
 
+需要由状态驱动、带真正表单栈的页面时，可以使用 DDUI 响应式表单，详见 [DDUI 响应式表单](./tutorial/ddui.md)。
+
 #### 表单示例
 
 ```typescript
@@ -158,11 +160,11 @@ pcommand.registerNative(
 
 ### 数据存储
 
-#### v0.4.3 更新要点
+#### v0.4.4 更新要点
 
-- 新增 `CompactDPDataBase`：固定 schema 的位置编码存储，支持世界和实体等 DPSource；`read()` 可区分记录不存在与数据损坏。
-- 修复实体 DP 数据库占用全局注册表、数据库名前缀清理误伤，以及分片表示切换和损坏标记处理问题。正常 DP 读写与删除不会为了处理损坏数据而全量枚举动态属性。
-- 修复 `NameDB` 自动刷新间隔，`updateInterval` 按秒计算（默认 60 秒）。
+- 新增 DDUI 响应式表单：基于原生 `CustomForm` 与 Observable，提供页面级资源托管、`computed` / `watch` 派生状态，以及与表单导航共用的表单栈（`push` / `back` / `replace` / `reopen` / `reset` / `close`）。见 [DDUI 响应式表单](./tutorial/ddui.md)。
+- 修复表单导航在异步展示期间的状态问题：过期回调不再修改当前导航，玩家关闭页面在有上级时按返回处理，页面关闭后释放表单栈引用。
+- `@minecraft/server` 与 `@minecraft/server-ui` 升级到 2.12.0 Beta / 2.4.0 Beta（stable 渠道 2.11.0 / 2.3.0）。
 
 数据库用法详见 [数据库教程](tutorial/database.md)。
 

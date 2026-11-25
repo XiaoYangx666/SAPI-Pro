@@ -1,6 +1,6 @@
 # SAPI-Pro
 
-![Requires](https://img.shields.io/badge/Requires-SAPI%202.11.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.50+-green)
+![Requires](https://img.shields.io/badge/Requires-SAPI%202.12.0%20Beta-red) ![Support](https://img.shields.io/badge/Support-MCBE%2026.66+-green)
 
 [简体中文](README.md)|[English](README_EN.md)
 
@@ -125,6 +125,8 @@ With SAPI-Pro, you can easily create forms and navigate between them.
 
 Below is a simple example of a form that repeatedly prompts the user for input. Forms have many more features—check [Form System](./tutorial/form.md#form-system) for details.
 
+For state-driven pages with a real form stack, use DDUI reactive forms: see [DDUI reactive forms](./tutorial/ddui.md).
+
 #### Form Example
 
 ```typescript
@@ -158,11 +160,11 @@ pcommand.registerNative(
 
 ### Data Storage
 
-#### What's new in v0.4.3
+#### What's new in v0.4.4
 
-- Added `CompactDPDataBase`: fixed-schema positional encoding for world and entity DP sources; `read()` distinguishes missing and invalid records.
-- Fixed global database registration for entity-backed DP, namespace-safe clearing, and chunk representation/corruption handling. Ordinary reads, writes, and deletes do not enumerate all dynamic-property IDs for corruption cleanup.
-- Fixed `NameDB`'s auto-update interval: `updateInterval` is in seconds (60 seconds by default).
+- Added DDUI reactive forms: built on the native `CustomForm` and Observable, with page-level resource ownership, `computed` / `watch` derived state, and a form stack (`push` / `back` / `replace` / `reopen` / `reset` / `close`) shared with form navigation. See [DDUI reactive forms](tutorial/ddui.md).
+- Fixed form navigation during async display: stale callbacks no longer mutate the current navigation, a player close is treated as back when a parent page exists, and a closed page releases its form-stack references.
+- Upgraded `@minecraft/server` and `@minecraft/server-ui` to 2.12.0 Beta / 2.4.0 Beta (stable channel: 2.11.0 / 2.3.0).
 
 See the [database tutorial](tutorial/database.md) for usage.
 
